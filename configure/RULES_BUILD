@@ -71,7 +71,7 @@ endif
 
 ## Run the tests of the tools, and of the server with the composite model
 test: check-tool.perl check-tool.prove build probe certificate
-	$(QUIET) SIM_SERVER=$(SERVER_BIN) SIM_PROBE=$(PROBE_BIN) SIM_DI=$(UA_NODESET_PATH)/DI/Opc.Ua.Di.NodeSet2.xml prove $(TOP)/t
+	$(QUIET) SIM_SERVER=$(SERVER_BIN) SIM_PROBE=$(PROBE_BIN) SIM_DI=$(UA_NODESET_PATH)/DI/Opc.Ua.Di.NodeSet2.xml SIM_EPICS_TREE=$(EPICS_TREE) prove $(TOP)/t
 
 ## Create the self-signed server certificate of a model that carries pki.cnf
 certificate: $(if $(MODEL_PKI_CONFIG),$(MODEL_CERT))

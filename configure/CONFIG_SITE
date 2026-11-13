@@ -38,5 +38,10 @@ CERT_DAYS     := 3650
 # OPC Foundation NodeSet2 files; the open62541 source tree carries a copy.
 UA_NODESET_PATH = $(OPEN62541_ENV_PATH)/open62541-src/deps/ua-nodeset
 
+# EPICS distribution tree (it holds base/bin/<arch>/iocsh.bash and the opcua
+# module) for t/ioc.t. Empty skips that test; give it as
+# make test EPICS_TREE=<tree>.
+EPICS_TREE =
+
 -include $(TOP)/../CONFIG_SITE.local
 -include $(TOP)/configure/CONFIG_SITE.local

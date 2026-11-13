@@ -1,0 +1,96 @@
+# Records for the composite model. Every record that reads is on I/O Intr, so
+# the subscription delivers its value; an output record on I/O Intr also takes
+# the value the server holds (bidirectional).
+#
+# A put to an output record on I/O Intr does not process it. To write to the
+# server, put the value and then put 1 to <record>.PROC. SIM:Run is not on
+# I/O Intr and is written by one put.
+
+# DataStatic scalar tags, session OPC1
+record(bi, "SIM:Static:Bool") {
+    field(DTYP, "OPCUA")
+    field(INP,  "@SUB1 ns=3;s=\"DataStatic\".\"myBool\"")
+    field(SCAN, "I/O Intr")
+    field(ZNAM, "false")
+    field(ONAM, "true")
+}
+record(longin, "SIM:Static:Byte") {
+    field(DTYP, "OPCUA")
+    field(INP,  "@SUB1 ns=3;s=\"DataStatic\".\"myByte\"")
+    field(SCAN, "I/O Intr")
+}
+record(longin, "SIM:Static:Word") {
+    field(DTYP, "OPCUA")
+    field(INP,  "@SUB1 ns=3;s=\"DataStatic\".\"myWord\"")
+    field(SCAN, "I/O Intr")
+}
+record(longin, "SIM:Static:Int") {
+    field(DTYP, "OPCUA")
+    field(INP,  "@SUB1 ns=3;s=\"DataStatic\".\"myInt\"")
+    field(SCAN, "I/O Intr")
+}
+
+# Structure myUdt: the root record holds the structure, one record per member
+record(opcuaItem, "SIM:Udt") {
+    field(DTYP,    "OPCUA")
+    field(INP,     "@SUB1 ns=3;s=\"DataStatic\".\"myUdt\"")
+    field(SCAN,    "I/O Intr")
+    field(DEFACTN, "read")
+    field(WOC,     "immediate")
+}
+record(longout, "SIM:Udt:Int") {
+    field(DTYP, "OPCUA")
+    field(OUT,  "@SIM:Udt element=udtInt")
+    field(SCAN, "I/O Intr")
+}
+record(longout, "SIM:Udt:Year") {
+    field(DTYP, "OPCUA")
+    field(OUT,  "@SIM:Udt element=udtTime.YEAR")
+    field(SCAN, "I/O Intr")
+}
+
+# Array myArrayInt and its element 3
+record(waveform, "SIM:Array:Int") {
+    field(DTYP, "OPCUA")
+    field(INP,  "@SUB1 ns=3;s=\"DataStatic\".\"myArrayInt\"")
+    field(SCAN, "I/O Intr")
+    field(FTVL, "SHORT")
+    field(NELM, "38")
+}
+record(longout, "SIM:Array:Elem3") {
+    field(DTYP, "OPCUA")
+    field(OUT,  "@SUB1 ns=3;s=\"DataStatic\".\"myArrayInt\"[3]")
+    field(SCAN, "I/O Intr")
+}
+
+# Simulated values
+record(longin, "SIM:Clock:Byte") {
+    field(DTYP, "OPCUA")
+    field(INP,  "@SUB1 ns=3;s=\"Clock_Byte\"")
+    field(SCAN, "I/O Intr")
+}
+record(longin, "SIM:Sim:Int") {
+    field(DTYP, "OPCUA")
+    field(INP,  "@SUB1 ns=3;s=\"DataSimulation\".\"myInt\"")
+    field(SCAN, "I/O Intr")
+}
+
+# CPU RUN and STOP switch and the operating mode
+record(bo, "SIM:Run") {
+    field(DTYP, "OPCUA")
+    field(OUT,  "@SUB1 ns=4;s=Simulator.Run")
+    field(ZNAM, "stop")
+    field(ONAM, "run")
+}
+record(longin, "SIM:Mode") {
+    field(DTYP, "OPCUA")
+    field(INP,  "@SUB1 ns=3;s=OperatingMode")
+    field(SCAN, "I/O Intr")
+}
+
+# Secured session OPC2
+record(longin, "SIM:Secure:Byte") {
+    field(DTYP, "OPCUA")
+    field(INP,  "@SUB2 ns=3;s=\"DataStatic\".\"myByte\"")
+    field(SCAN, "I/O Intr")
+}
