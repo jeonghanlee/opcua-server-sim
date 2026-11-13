@@ -7,7 +7,7 @@ Canonical branch or ref: master
 Git upstream: origin/master
 Remote tracker: jeonghanlee/opcua-server-sim (no GitHub milestone)
 
-Next session entry point: M2 is Complete. M1, M3, and M8 are Ready; each needs plan review, plan acceptance, and implementation authorization first.
+Next session entry point: M2 is Complete. M1 is In progress: implemented and T1 to T6 observed on 2026-11-13; it needs review acceptance and landing evidence before it is Complete. M3 and M8 are Ready; each needs plan review, plan acceptance, and implementation authorization first.
 
 ## Milestone
 
@@ -15,7 +15,7 @@ Next session entry point: M2 is Complete. M1, M3, and M8 are Ready; each needs p
 
 | Group | ID | Work unit | Type | Status | Ready | Deps | Done when / Evidence |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| Verify | M1 | IOC verification | Milestone | Not started | Yes | | An EPICS IOC reads and writes the tags of the composite model and the checks T1 to T6 pass; [detail](#m1---ioc-verification) |
+| Verify | M1 | IOC verification | Milestone | In progress | No | D7 | An EPICS IOC reads and writes the tags of the composite model and the checks T1 to T6 pass; [detail](#m1---ioc-verification) |
 | Build | M2 | Simulator completeness | Milestone | Complete | No | D5 | The small and medium items of the owner's selection are built and tested by T1 to T9; [detail](#m2---simulator-completeness) |
 | Build | M8 | Alarm associated values | Milestone | Not started | Yes | M2 | Events carry `AssociatedValue_01` to `AssociatedValue_10` as the union type, shown by T1; [detail](#m8---alarm-associated-values) |
 | Build | M9 | GoodOverload and registered nodes | Milestone | Blocked | No | M8, G4 | Each item is built and shown by T1 and T2, or retired by the decision of G4; [detail](#m9---goodoverload-and-registered-nodes) |
@@ -36,6 +36,7 @@ Next session entry point: M2 is Complete. M1, M3, and M8 are Ready; each needs p
 | D4 | The application URI and application name keep the SIMATIC form of the imitated device | 2026-11-12 |
 | D5 | Every candidate item of the simulator completeness work is selected, in the order small, medium, hard: M2 builds the small and medium items, M8 and M9 hold the hard ones | 2026-11-12 |
 | D6 | The documentation is an mdBook book and has a tutorial | 2026-11-12 |
+| D7 | The IOC startup and databases for the composite model live in `ioc/` of this repository and run through `iocsh.bash` of the site EPICS distribution; the distribution tree comes from one variable and the test is skipped when it is absent | 2026-11-13 |
 
 ### Milestone Details
 
@@ -44,66 +45,78 @@ Next session entry point: M2 is Complete. M1, M3, and M8 are Ready; each needs p
 Origin: ef67f5e / M1
 Identity History: none
 GitHub Issue: #1 https://github.com/jeonghanlee/opcua-server-sim/issues/1
-Status: Not started
+Status: In progress
 
 ##### Summary
 
-The server was built to serve an EPICS IOC that uses the opcua module. The composite model has not been exercised with such an IOC. This work connects an IOC to the running server and checks what the module reads and writes.
+The server was built to serve an EPICS IOC that uses the `opcua` device support module. The composite model has not been exercised with such an IOC. This work keeps an IOC startup and databases for the model in this repository and checks what the module reads and writes, with the module version of the site EPICS distribution (`opcua` 0.11.2 in release 1.5.0).
+
+Premise checks, observed 2026-11-13 (recheck with the commands named):
+
+- The loader `<tree>/base/bin/linux-x86_64/iocsh.bash -e <tree> -n <startup>` (`caget` and `caput` are in the same directory; none of the three is on `PATH`) resolves `module opcua` to `opcua 0.11.2` and `pvxs 1.5.3` in `~/epics/1.5.0/debian-13/7.0.10`. The startup file needs no application executable or DBD.
+- With the module's own `opcuaIoc` against the simulator, `element=udtInt` and the nested `element=udtTime.YEAR` read 42 and 1970, the array `myArrayInt` and the element `myArrayInt[3]` read, and a write to `udtInt` reached the server and left `YEAR` unchanged. The module documents one pattern for a structure: a root record of type `opcuaItem` (`DEFACTN "read"`, `WOC "immediate"`) on the structure node and one element record per leaf with `@<root record> element=<path>`. Two records on one leaf fail at start (`can't add leaf to existing leaf udtInt`), so each member that is read and written has one bidirectional record. The checks below use this pattern; a write of the whole structure through the root record is not checked.
+- The module help (`help opcua*`) has no method call command, so a method call cannot be checked with this version.
+- A secured session opened 2026-11-13 with `opcuaSetupPKI <dir>` (the server certificate as `trusted/certs/server-cert.der`), `opcuaClientCertificate <cert> <key>`, and `opcuaSession ... sec-mode=SignAndEncrypt sec-policy=Basic256Sha256 sec-id=<file>` where the file holds `user=` and `pass=`: the IOC logged `connected as 'simulator' (username token)` and the server logged the user `simulator`. The client certificate must carry the URI `urn:ioc@<hostname>:EPICS:IOC` as its subject alternative name, otherwise the server refuses with `The client certificate's ApplicationUri could not be verified`. The option `ident-file=` is accepted without error and has no effect (the session connected as `Anonymous`).
+- `iocsh.bash -S` ends only by a signal; without `-S` and with stdin at end of file the IOC exits at once. A test feeds the IOC through a fifo, waits for the prompt text `7.0.10 > ` in the log, runs its checks, and writes `exit` to the fifo; reproduced 2026-11-13 with the startup `module opcua` and `iocInit()` on dedicated ports: the prompt appeared, `iocRun: All initialization complete` was printed once, and the IOC ended after the write with no process left.
 
 ##### Scope
 
-- An IOC database and startup script for the composite model, kept where M1 step 1 decides.
-- Reads and writes of scalar tags, one structure with a nested structure, and arrays.
+- `ioc/st.cmd` with `module opcua`, the session and subscription settings, and the databases for the composite model, kept in this repository. Runtime files and logs stay outside the repository and outside the distribution tree.
+- Reads and writes of scalar tags, structure members including a nested member (`element=`), arrays, and one array element.
 - Subscription updates of simulated values, the CPU RUN and STOP switch, and one secured session with a user account.
-- A method call, when the opcua module version in use supports method calls.
+- `t/ioc.t`: starts the server and the IOC with dedicated Channel Access and PVAccess ports, skips when the variable for the distribution tree is empty or `iocsh.bash` is not found in it, and runs in `make test` and in `tools/mutation-check.pl`.
 
-Out of scope: Alarms and Conditions (the module does not subscribe to events), changes to the server behavior, and the IOC repository of any site.
+Out of scope: Alarms and Conditions (the module does not subscribe to events), a method call (the module version has no method support), changes to the server behavior (a defect becomes its own issue), and the IOC repository of any site.
+
+Recorded 2026-11-13: the member nodes of `udtTime` (`YEAR`, `MONTH`, `DAY`, `WEEKDAY`, `HOUR`, `MINUTE`, `SECOND`, `NANOSECOND`) have `AccessLevel` 1 (read only) in the model NodeSet, so a client write to one returns `BadNotWritable`; the server-to-IOC direction of these members is not checked, and the IOC-to-server direction through the structure is checked by T2.
 
 ##### Completion Criteria
 
 - Checks T1 to T6 have observed results recorded in Verification Results.
-- A defect the IOC reveals is recorded as a new row or fixed under M2 before this work completes.
+- A defect the IOC reveals is fixed in the server or recorded as its own issue before this work completes.
 
 ##### Dependencies And Decisions
 
-- none
+- D7 (location of the IOC files and the way the test runs the IOC)
 
 ##### Implementation Plan
 
-Plan Status: draft
-Plan Acceptance: none
-Implementation Authorization: none
+Plan Status: accepted
+Plan Acceptance: 2026-11-13, with the variable names `EPICS_TREE` and `SIM_EPICS_TREE` accepted by the owner
+Implementation Authorization: 2026-11-13 for the plan as accepted (the owner authorized the implementation; commit, push, and the edit of issue #1 are separate)
 Superseded Plan Artifacts: none
 
-1. Choose the IOC directory and write the startup script for the opcua module and the session settings.
-2. Write the database for scalar tags of `DataStatic` and `DataSimulation`.
-3. Add the structure `myUdt`, the arrays, and the switch `ns=4;s=Simulator.Run`.
-4. Add the secured session settings with the account of `simulation.conf`.
-5. Run T1 to T6 and record the observed results.
+1. `ioc/st.cmd` and the databases of the composite model; the make variable `EPICS_TREE` (the distribution tree) in `configure/CONFIG_SITE` with an empty default, given for example as `make test EPICS_TREE=~/epics/1.5.0/debian-13/7.0.10`, which `make test` passes to the test as `SIM_EPICS_TREE`; the test is skipped when the variable is empty or `<tree>/base/bin/*/iocsh.bash` does not exist. Closed by T1.
+2. `t/ioc.t`: find `iocsh.bash`, `caget`, and `caput` in `<tree>/base/bin/*/`, start the server on a free port with a copy of the configuration, start the IOC through `iocsh.bash` fed by a fifo, wait for the prompt in the log (the line `7.0.10 > ` in this tree; the number is the EPICS base version of the tree), run the checks with `caget` and `caput`, stop the IOC with `exit` and the server with a signal. Closed by T1 to T5.
+3. Records: a root `opcuaItem` record for `myUdt` with one bidirectional record per member, the arrays and one array element, the subscriptions, and the switch `ns=4;s=Simulator.Run`. Closed by T2 to T5.
+4. Secured session: the test creates a client certificate with `openssl` whose subject alternative name is `urn:ioc@<hostname>:EPICS:IOC`, a PKI directory that trusts the server certificate, and an identity file with the account of `simulation.conf`; the startup file passes them with `opcuaSetupPKI`, `opcuaClientCertificate`, and `sec-id=`. Closed by T6.
+5. Fault rows for each check in `t/mutations/server.json`, run with `tools/mutation-check.pl --make-var EPICS_TREE=<absolute path of the tree>`. Closed by the rule below the Test Plan.
 
 ##### Test Plan
 
 | Label | Layer | Method | Environment | Expected Result |
 | --- | --- | --- | --- | --- |
-| T1 | Integration | Start `make run`; start the IOC; read the start values of `DataStatic` scalar tags | server and IOC on one host | the IOC reports the start values of the model; a copy of the tree with `myInt` start value 43 must fail this check |
-| T2 | Integration | Read and write the whole structure `myUdt` and its member `udtTime` | server and IOC on one host | values read and written match in both directions; a copy with member-to-structure propagation off must fail this check |
-| T3 | Integration | Read and write `myArrayInt` and one element | server and IOC on one host | the array and its element agree after a write; the same copy must fail this check |
-| T4 | Integration | Watch `Clock_Byte` and `DataSimulation` values through subscriptions | server and IOC on one host | the IOC records value changes without polling; a copy whose `pack` writes nothing must fail this check |
-| T5 | Integration | Write the switch `Simulator.Run` false and true | server and IOC on one host | the operating mode record shows 4 and then 8 and values return to their start values; a copy that does not restore start values must fail this check |
-| T6 | Integration | Connect with a secured session and the account of the simulation file | server and IOC on one host | the session opens and a read succeeds; a copy with a wrong password for the account must fail this check |
+| T1 | Integration | `t/ioc.t` starts the server and the IOC and reads the start values of the `DataStatic` scalar tags with `caget` | the shipped server and the site distribution on one host | the IOC reports the start values of the model; a copy of the tree with `myInt` start value 43 must fail this check |
+| T2 | Integration | Read and write `myUdt` members `udtInt` and `udtTime.YEAR` through a root `opcuaItem` record and one record per member with `element=`; the member nodes on the server side are read and written with `opcua-probe` | the shipped server and the site distribution on one host | values read and written match in both directions and a write of one member leaves the others unchanged; a copy with member-to-structure propagation off must fail this check |
+| T3 | Integration | Read and write `myArrayInt` and one element; the array and element nodes on the server side are read and written with `opcua-probe` | the shipped server and the site distribution on one host | the array and its element agree after a write; the same copy must fail this check |
+| T4 | Integration | Watch `Clock_Byte` and `DataSimulation` values through records that scan on I/O interrupt | the shipped server and the site distribution on one host | the IOC records value changes without polling; a copy whose `pack` writes nothing must fail this check |
+| T5 | Integration | Write the switch `Simulator.Run` false and true | the shipped server and the site distribution on one host | a record on `ns=3;s=OperatingMode` shows 4 and then 8 and values return to their start values; a copy that does not restore start values must fail this check |
+| T6 | Integration | Open a secured session (`SignAndEncrypt`, `Basic256Sha256`) with the account of the simulation file and read a value | the shipped server and the site distribution on one host; `openssl` creates the client certificate | the IOC log names the user `simulator` and the read value matches the server; a copy with a wrong password for the account must fail this check |
 
-Proving rule for M1 to M4, M8, and M9: before a check is relied on, the fault named in its row is applied to a scratch copy of the tree (`~/.claude/skills/test-framework/scripts/build-mutants.py`), the unchanged tree is run through the same entry point first and must pass every check, and the check must fail for the named reason. A check without a run of its fault row is unproven.
+Proving rule for M1 to M4, M8, and M9: before a check is relied on, the fault named in its row is applied to a scratch copy of the tree (`tools/mutation-check.pl` with a row in `t/mutations`), the unchanged tree is run through the same entry point first and must pass every check, and the check must fail for the named reason. A check without a run of its fault row is unproven.
 
 ##### Verification Results
 
 | Label | Observed At | Environment | Result | Evidence |
 | --- | --- | --- | --- | --- |
-| T1 | Not run | server and IOC on one host | Pending | none |
-| T2 | Not run | server and IOC on one host | Pending | none |
-| T3 | Not run | server and IOC on one host | Pending | none |
-| T4 | Not run | server and IOC on one host | Pending | none |
-| T5 | Not run | server and IOC on one host | Pending | none |
-| T6 | Not run | server and IOC on one host | Pending | none |
+| T1 | 2026-11-13T11:51Z | server and IOC on one host (opcua 0.11.2, EPICS 7.0.10) | Pass | `make test EPICS_TREE=~/epics/1.5.0/debian-13/7.0.10` passed 300 checks (28 in `t/ioc.t`); row `m-start-myint` KILLED by `T1 myInt start value`, `m-start-mybyte` and `m-start-myword` by their T1 checks |
+| T2 | 2026-11-13T11:51Z | server and IOC on one host (opcua 0.11.2, EPICS 7.0.10) | Pass | `make test EPICS_TREE=~/epics/1.5.0/debian-13/7.0.10` passed 300 checks (28 in `t/ioc.t`); rows `c-propagate-up-off` and `c-propagate-down-off` KILLED by the T2 checks named in `intended`, `m-udtint-readonly` by `T2 server write of udtInt reaches the IOC`. The member nodes of `udtTime` are not writable by a client (`opcua-probe write` returns `BadNotWritable`), so `YEAR` is checked in one direction: the IOC writes it through the structure and the probe reads it |
+| T3 | 2026-11-13T11:51Z | server and IOC on one host (opcua 0.11.2, EPICS 7.0.10) | Pass | `make test EPICS_TREE=~/epics/1.5.0/debian-13/7.0.10` passed 300 checks (28 in `t/ioc.t`); row `c-propagate-up-off` KILLED by the two T3 checks named in `intended` |
+| T4 | 2026-11-13T11:51Z | server and IOC on one host (opcua 0.11.2, EPICS 7.0.10) | Pass | `make test EPICS_TREE=~/epics/1.5.0/debian-13/7.0.10` passed 300 checks (28 in `t/ioc.t`); rows `c-pack-off` and `c-random-const` KILLED by the T4 checks named in `intended` |
+| T5 | 2026-11-13T11:51Z | server and IOC on one host (opcua 0.11.2, EPICS 7.0.10) | Pass | `make test EPICS_TREE=~/epics/1.5.0/debian-13/7.0.10` passed 300 checks (28 in `t/ioc.t`); rows `c-restore-off`, `c-mode-swapped`, and `s-run-value` KILLED by the T5 checks named in `intended`; T5 waits for the mode to change before it judges, because the value of the step before can equal the expected value under `c-mode-swapped` |
+| T6 | 2026-11-13T11:51Z | server and IOC on one host (opcua 0.11.2, EPICS 7.0.10) | Pass | `make test EPICS_TREE=~/epics/1.5.0/debian-13/7.0.10` passed 300 checks (28 in `t/ioc.t`); rows `c-password-wrong` and `m-start-mybyte` KILLED by the T6 checks named in `intended`, `s-user-password` KILLED by `t/server.t` |
+
+Full table: `perl tools/mutation-check.pl --tree . --table t/mutations/server.json --work <directory outside the tree> --jobs 10 --make-var UA_NODESET_PATH=<UA-Nodeset directory> --make-var EPICS_TREE=<tree>` from 2026-11-13T11:18Z to 11:51Z: control run passed all 300 checks, 128 rows KILLED, 5 EQUIVALENT, none CHECK or SURVIVED. The rows of `t/mutations/server.json` whose intended checks include a `t/ioc.t` check are KILLED only when `EPICS_TREE` is given. `make test` without `EPICS_TREE` passed 272 checks and skipped `t/ioc.t`.
 
 ##### Closure Evidence
 
