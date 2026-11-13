@@ -7,7 +7,7 @@ Canonical branch or ref: master
 Git upstream: origin/master
 Remote tracker: jeonghanlee/opcua-server-sim (no GitHub milestone)
 
-Next session entry point: M2 is Complete. M1 is In progress: implemented and T1 to T6 observed on 2026-11-13; it needs review acceptance and landing evidence before it is Complete. M3 and M8 are Ready; each needs plan review, plan acceptance, and implementation authorization first.
+Next session entry point: M1 and M2 are Complete. M3 and M8 are Ready; each needs plan review, plan acceptance, and implementation authorization first.
 
 ## Milestone
 
@@ -15,7 +15,7 @@ Next session entry point: M2 is Complete. M1 is In progress: implemented and T1 
 
 | Group | ID | Work unit | Type | Status | Ready | Deps | Done when / Evidence |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| Verify | M1 | IOC verification | Milestone | In progress | No | D7 | An EPICS IOC reads and writes the tags of the composite model and the checks T1 to T6 pass; [detail](#m1---ioc-verification) |
+| Verify | M1 | IOC verification | Milestone | Complete | No | D7 | An EPICS IOC reads and writes the tags of the composite model and the checks T1 to T6 pass; [detail](#m1---ioc-verification) |
 | Build | M2 | Simulator completeness | Milestone | Complete | No | D5 | The small and medium items of the owner's selection are built and tested by T1 to T9; [detail](#m2---simulator-completeness) |
 | Build | M8 | Alarm associated values | Milestone | Not started | Yes | M2 | Events carry `AssociatedValue_01` to `AssociatedValue_10` as the union type, shown by T1; [detail](#m8---alarm-associated-values) |
 | Build | M9 | GoodOverload and registered nodes | Milestone | Blocked | No | M8, G4 | Each item is built and shown by T1 and T2, or retired by the decision of G4; [detail](#m9---goodoverload-and-registered-nodes) |
@@ -45,7 +45,7 @@ Next session entry point: M2 is Complete. M1 is In progress: implemented and T1 
 Origin: ef67f5e / M1
 Identity History: none
 GitHub Issue: #1 https://github.com/jeonghanlee/opcua-server-sim/issues/1
-Status: In progress
+Status: Complete
 
 ##### Summary
 
@@ -120,7 +120,8 @@ Full table: `perl tools/mutation-check.pl --tree . --table t/mutations/server.js
 
 ##### Closure Evidence
 
-- none
+- Landed: commits `f377c90c5482094055665bb880403be1de8c4ca7` and `328b4b928ab94e13e42b69a9b049dd20bbf60980` pushed to `origin/master`. After `git fetch`, `git rev-parse HEAD origin/master` printed `328b4b928ab94e13e42b69a9b049dd20bbf60980` twice, observed 2026-11-13T16:39Z.
+- Linked issue #1: the body was edited to the shipped state, a closing comment was posted, and the issue was closed with reason `completed`. `gh issue view 1 --repo jeonghanlee/opcua-server-sim` printed state `CLOSED`, state reason `COMPLETED`, closed at 2026-11-13T16:45:39Z.
 
 #### M2 - Simulator completeness
 
