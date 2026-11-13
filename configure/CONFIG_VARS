@@ -1,0 +1,57 @@
+SRC_PATH   := $(TOP)/src
+BUILD_PATH := $(TOP)/build
+SERVER_BIN := $(BUILD_PATH)/$(APPNAME)
+SERVER_SRC := $(SRC_PATH)/opcua_server_sim.c
+
+# Client that checks a running server, used by the tests.
+PROBE_SRC := $(TOP)/tools/opcua-probe.c
+PROBE_BIN := $(BUILD_PATH)/opcua-probe
+
+# Records the commit and version a binary was built for, so that a new commit
+# or tag rebuilds it; the file changes only when the recorded text changes.
+BUILD_STAMP := $(BUILD_PATH)/identity
+
+# Identity of a build, shown in the BuildInfo of the Server object. Each value
+# is marked "-dirty" when the tree holds anything that the commit does not.
+#   BUILD_NUMBER      the commit the tree is at
+#   SOFTWARE_VERSION  the nearest tag with the commits since it and the commit,
+#                     or the commit alone when the repository has no tag
+#   BUILD_TIME        the time of the compilation in seconds since 1970 (UTC)
+BUILD_DIRTY      := $(if $(shell git -C $(TOP) status --porcelain 2>/dev/null),-dirty)
+BUILD_NUMBER     := $(shell git -C $(TOP) rev-parse --short HEAD 2>/dev/null || printf "%s" unknown)$(BUILD_DIRTY)
+SOFTWARE_VERSION := $(shell git -C $(TOP) describe --tags --always 2>/dev/null || printf "%s" unknown)$(BUILD_DIRTY)
+BUILD_TIME       := $(shell date -u +%s)
+
+CC       ?= cc
+CFLAGS   := -std=c99 -O2 -g -Wall -Wextra -Werror
+CPPFLAGS := -D_POSIX_C_SOURCE=200809L -isystem $(OPEN62541_PATH)/include
+CPPFLAGS += -DSIM_BUILD_NUMBER='"$(BUILD_NUMBER)"' -DSIM_SOFTWARE_VERSION='"$(SOFTWARE_VERSION)"'
+CPPFLAGS += -DSIM_BUILD_TIME=$(BUILD_TIME)
+LDFLAGS  := -L$(OPEN62541_PATH)/lib -Wl,-rpath,$(OPEN62541_PATH)/lib
+LDLIBS   := -lopen62541 -lm
+
+OPEN62541_ENV_ARGS := SRC_TAG=$(OPEN62541_TAG) SRC_VERSION=$(OPEN62541_VERSION)
+OPEN62541_ENV_ARGS += INSTALL_LOCATION=$(OPEN62541_PATH)
+OPEN62541_ENV_ARGS += CMAKE_EXTRA_OPTIONS="$(OPEN62541_CMAKE_OPTIONS)"
+
+# Certificate files of the model. The request file pki.cnf marks a model
+# whose server configuration names them.
+MODEL_PKI_CONFIG = $(wildcard $(MODEL_PATH)/pki.cnf)
+MODEL_PKI_PATH   = $(MODEL_PATH)/pki
+MODEL_CERT       = $(MODEL_PKI_PATH)/server-cert.der
+MODEL_KEY        = $(MODEL_PKI_PATH)/server-key.der
+
+# Commands the targets run, and the packages that provide them, for the hint
+# of a missing command.
+TOOL_APT.perl    := perl
+TOOL_RPM.perl    := perl-interpreter
+TOOL_APT.prove   := perl
+TOOL_RPM.prove   := perl-Test-Harness
+TOOL_APT.openssl := openssl
+TOOL_RPM.openssl := openssl
+
+# NodeSet generator and the description of a model that is generated: the
+# file plc.json marks such a model.
+NODESET_TOOL      := $(TOP)/tools/simatic-nodeset.pl
+MODEL_DESCRIPTION  = $(wildcard $(MODEL_PATH)/plc.json)
+MODEL_NODESET      = $(MODEL_PATH)/$(MODEL).NodeSet2.xml

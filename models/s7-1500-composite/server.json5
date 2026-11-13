@@ -1,0 +1,111 @@
+// Server configuration modeled on a Siemens S7-1500 OPC UA server, with the
+// secured endpoints and the user authentication of the device.
+//
+// The certificate paths are relative to this directory; "make run" starts the
+// server here and "make certificate" creates the files from pki.cnf.
+//
+// The limits follow the published system limits of a CPU 1515 or 1516 with
+// firmware V3.1 (Siemens entry 109755846). Other CPU classes differ:
+//
+//   CPU               sessions   sampling min   publishing min
+//   1511, 1512, 1513     32         100 ms          200 ms
+//   1515, 1516           48         100 ms          100 ms
+//   1517, 1518           64          10 ms           10 ms
+//
+// The application name and URI follow the default of STEP 7 up to V20,
+// "SIMATIC.S7-1500.OPC-UA.Application:" + CPU name. As of STEP 7 V21 with
+// CPU firmware V4.1 the default application name is the CPU name alone and
+// the URI is "urn:SIMATIC:" + CPU name. The URI is namespace index 1.
+{
+  applicationDescription: {
+    applicationUri: "urn:SIMATIC.S7-1500.OPC-UA.Application:PLC_1",
+    // Product URI of this simulator. A CPU reports
+    // "https://www.siemens.com/s7-1500" here.
+    productUri: "https://github.com/jeonghanlee/opcua-server-sim",
+    applicationName: {
+      locale: "en-US",
+      text: "SIMATIC.S7-1500.OPC-UA.Application:PLC_1"
+    },
+    applicationType: 0,
+  },
+
+  // BuildInfo of the Server object. The values name this simulator, not the
+  // device it imitates; the manufacturer agrees with the Manufacturer
+  // property of the PLC object in the model. The build system sets the
+  // software version and the build number and date.
+  buildInfo: {
+    productUri: "https://github.com/jeonghanlee/opcua-server-sim",
+    manufacturerName: "opcua-server-sim",
+    productName: "S7-1500 composite simulator",
+  },
+
+  serverUrls: [
+    "opc.tcp://:4840",
+  ],
+
+  maxSessions: 48,
+
+  // The S7-1500 accepts at most 1000 items per service call.
+  maxNodesPerRead: 1000,
+  maxNodesPerWrite: 1000,
+  maxNodesPerRegisterNodes: 1000,
+  maxMonitoredItemsPerCall: 1000,
+  maxNodesPerBrowse: 1000,
+  maxNodesPerTranslateBrowsePathsToNodeIds: 1000,
+  // A server method call carries one method.
+  maxNodesPerMethodCall: 1,
+
+  subscriptionsEnabled: true,
+  subscriptions: {
+    // At most 20 subscriptions of up to 1000 items and 10 of more items over
+    // all sessions; the library takes one value, so this is their sum.
+    maxSubscriptions: 30,
+    maxSubscriptionsPerSession: 50,
+    // A subscription holds at most 10000 monitored items on every CPU class.
+    maxMonitoredItemsPerSubscription: 10000,
+    publishingIntervalLimits: {
+      min: 100.0,
+      max: 3600000.0,
+    },
+    samplingIntervalLimits: {
+      min: 100.0,
+      max: 86400000.0
+    },
+  },
+
+  // Security policies of the S7-1500 server. Each policy other than None is
+  // offered with the message security modes Sign and SignAndEncrypt, which
+  // gives the eleven endpoint settings of the device. The documents of the
+  // device differ on which policies a new project enables, so this file offers
+  // all of them; remove an entry to disable that policy. The policy None is always
+  // present. Without a "pkiFolder" entry the server accepts every client
+  // certificate, as a CPU does with "Automatically accept client certificates
+  // during runtime".
+  securityPolicies: [
+    {
+      policy: "http://opcfoundation.org/UA/SecurityPolicy#Basic128Rsa15",
+      certificate: "pki/server-cert.der",
+      privateKey: "pki/server-key.der",
+    },
+    {
+      policy: "http://opcfoundation.org/UA/SecurityPolicy#Basic256",
+      certificate: "pki/server-cert.der",
+      privateKey: "pki/server-key.der",
+    },
+    {
+      policy: "http://opcfoundation.org/UA/SecurityPolicy#Basic256Sha256",
+      certificate: "pki/server-cert.der",
+      privateKey: "pki/server-key.der",
+    },
+    {
+      policy: "http://opcfoundation.org/UA/SecurityPolicy#Aes128_Sha256_RsaOaep",
+      certificate: "pki/server-cert.der",
+      privateKey: "pki/server-key.der",
+    },
+    {
+      policy: "http://opcfoundation.org/UA/SecurityPolicy#Aes256_Sha256_RsaPss",
+      certificate: "pki/server-cert.der",
+      privateKey: "pki/server-key.der",
+    },
+  ],
+}

@@ -1,0 +1,24 @@
+# Request for the self-signed application certificate of the server.
+# The URI of subjectAltName must equal applicationUri in server.json5; a
+# client compares the two. Add the DNS names and IP addresses under which
+# clients reach the server.
+[req]
+distinguished_name = subject
+x509_extensions    = extensions
+prompt             = no
+
+[subject]
+O  = opcua-server-sim
+CN = PLC_1/OPCUA
+
+[extensions]
+basicConstraints     = critical, CA:FALSE
+keyUsage             = critical, digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment, keyCertSign
+extendedKeyUsage     = serverAuth, clientAuth
+subjectKeyIdentifier = hash
+subjectAltName       = @names
+
+[names]
+URI.1 = urn:SIMATIC.S7-1500.OPC-UA.Application:PLC_1
+DNS.1 = localhost
+IP.1  = 127.0.0.1

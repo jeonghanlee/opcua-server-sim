@@ -1,0 +1,540 @@
+
+  <!-- Alarms and Conditions: the union of an associated value, the event type of
+       alarms without a state, and the condition type of alarms with a state -->
+  <UADataType NodeId="ns=1;i=1809" BrowseName="1:SimaticAssociatedAlarmValue">
+    <DisplayName>SimaticAssociatedAlarmValue</DisplayName>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=12756</Reference>
+      <Reference ReferenceType="HasEncoding">ns=1;i=1810</Reference>
+    </References>
+    <Definition Name="1:SimaticAssociatedAlarmValue" IsUnion="true">
+      <Field Name="Invalid" DataType="Boolean"/>
+      <Field Name="Boolean" DataType="Boolean"/>
+      <Field Name="Int16" DataType="Int16"/>
+      <Field Name="Int32" DataType="Int32"/>
+      <Field Name="Int64" DataType="Int64"/>
+      <Field Name="SByte" DataType="SByte"/>
+      <Field Name="Byte" DataType="Byte"/>
+      <Field Name="UInt16" DataType="UInt16"/>
+      <Field Name="UInt32" DataType="UInt32"/>
+      <Field Name="UInt64" DataType="UInt64"/>
+      <Field Name="Float" DataType="Float"/>
+      <Field Name="Double" DataType="Double"/>
+      <Field Name="String" DataType="String"/>
+    </Definition>
+  </UADataType>
+  <UAObject NodeId="ns=1;i=1810" BrowseName="Default Binary">
+    <DisplayName>Default Binary</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+      <Reference ReferenceType="HasEncoding" IsForward="false">ns=1;i=1809</Reference>
+    </References>
+  </UAObject>
+  <UAObjectType NodeId="ns=1;i=1804" BrowseName="1:SimaticEventType">
+    <DisplayName>SimaticEventType</DisplayName>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=2041</Reference>
+    </References>
+  </UAObjectType>
+  <UAVariable NodeId="ns=1;s=SimaticEventType.AdditionalText_01" BrowseName="1:AdditionalText_01" ParentNodeId="ns=1;i=1804" DataType="LocalizedText">
+    <DisplayName>AdditionalText_01</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1804</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticEventType.AdditionalText_02" BrowseName="1:AdditionalText_02" ParentNodeId="ns=1;i=1804" DataType="LocalizedText">
+    <DisplayName>AdditionalText_02</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1804</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticEventType.AdditionalText_03" BrowseName="1:AdditionalText_03" ParentNodeId="ns=1;i=1804" DataType="LocalizedText">
+    <DisplayName>AdditionalText_03</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1804</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticEventType.AdditionalText_04" BrowseName="1:AdditionalText_04" ParentNodeId="ns=1;i=1804" DataType="LocalizedText">
+    <DisplayName>AdditionalText_04</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1804</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticEventType.AdditionalText_05" BrowseName="1:AdditionalText_05" ParentNodeId="ns=1;i=1804" DataType="LocalizedText">
+    <DisplayName>AdditionalText_05</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1804</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticEventType.AdditionalText_06" BrowseName="1:AdditionalText_06" ParentNodeId="ns=1;i=1804" DataType="LocalizedText">
+    <DisplayName>AdditionalText_06</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1804</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticEventType.AdditionalText_07" BrowseName="1:AdditionalText_07" ParentNodeId="ns=1;i=1804" DataType="LocalizedText">
+    <DisplayName>AdditionalText_07</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1804</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticEventType.AdditionalText_08" BrowseName="1:AdditionalText_08" ParentNodeId="ns=1;i=1804" DataType="LocalizedText">
+    <DisplayName>AdditionalText_08</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1804</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticEventType.AdditionalText_09" BrowseName="1:AdditionalText_09" ParentNodeId="ns=1;i=1804" DataType="LocalizedText">
+    <DisplayName>AdditionalText_09</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1804</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticEventType.AssociatedValue_01" BrowseName="1:AssociatedValue_01" ParentNodeId="ns=1;i=1804" DataType="ns=1;i=1809">
+    <DisplayName>AssociatedValue_01</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1804</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticEventType.AssociatedValue_02" BrowseName="1:AssociatedValue_02" ParentNodeId="ns=1;i=1804" DataType="ns=1;i=1809">
+    <DisplayName>AssociatedValue_02</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1804</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticEventType.AssociatedValue_03" BrowseName="1:AssociatedValue_03" ParentNodeId="ns=1;i=1804" DataType="ns=1;i=1809">
+    <DisplayName>AssociatedValue_03</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1804</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticEventType.AssociatedValue_04" BrowseName="1:AssociatedValue_04" ParentNodeId="ns=1;i=1804" DataType="ns=1;i=1809">
+    <DisplayName>AssociatedValue_04</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1804</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticEventType.AssociatedValue_05" BrowseName="1:AssociatedValue_05" ParentNodeId="ns=1;i=1804" DataType="ns=1;i=1809">
+    <DisplayName>AssociatedValue_05</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1804</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticEventType.AssociatedValue_06" BrowseName="1:AssociatedValue_06" ParentNodeId="ns=1;i=1804" DataType="ns=1;i=1809">
+    <DisplayName>AssociatedValue_06</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1804</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticEventType.AssociatedValue_07" BrowseName="1:AssociatedValue_07" ParentNodeId="ns=1;i=1804" DataType="ns=1;i=1809">
+    <DisplayName>AssociatedValue_07</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1804</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticEventType.AssociatedValue_08" BrowseName="1:AssociatedValue_08" ParentNodeId="ns=1;i=1804" DataType="ns=1;i=1809">
+    <DisplayName>AssociatedValue_08</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1804</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticEventType.AssociatedValue_09" BrowseName="1:AssociatedValue_09" ParentNodeId="ns=1;i=1804" DataType="ns=1;i=1809">
+    <DisplayName>AssociatedValue_09</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1804</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticEventType.AssociatedValue_10" BrowseName="1:AssociatedValue_10" ParentNodeId="ns=1;i=1804" DataType="ns=1;i=1809">
+    <DisplayName>AssociatedValue_10</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1804</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticEventType.InfoText" BrowseName="1:InfoText" ParentNodeId="ns=1;i=1804" DataType="LocalizedText">
+    <DisplayName>InfoText</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1804</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticEventType.ID" BrowseName="1:ID" ParentNodeId="ns=1;i=1804" DataType="UInt16">
+    <DisplayName>ID</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1804</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticEventType.DisplayClass" BrowseName="1:DisplayClass" ParentNodeId="ns=1;i=1804" DataType="UInt16">
+    <DisplayName>DisplayClass</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1804</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticEventType.GroupID" BrowseName="1:GroupID" ParentNodeId="ns=1;i=1804" DataType="Byte">
+    <DisplayName>GroupID</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1804</Reference>
+    </References>
+  </UAVariable>
+  <UAObjectType NodeId="ns=1;i=1805" BrowseName="1:SimaticAlarmConditionType">
+    <DisplayName>SimaticAlarmConditionType</DisplayName>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=2915</Reference>
+    </References>
+  </UAObjectType>
+  <UAVariable NodeId="ns=1;s=SimaticAlarmConditionType.AdditionalText_01" BrowseName="1:AdditionalText_01" ParentNodeId="ns=1;i=1805" DataType="LocalizedText">
+    <DisplayName>AdditionalText_01</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1805</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticAlarmConditionType.AdditionalText_02" BrowseName="1:AdditionalText_02" ParentNodeId="ns=1;i=1805" DataType="LocalizedText">
+    <DisplayName>AdditionalText_02</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1805</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticAlarmConditionType.AdditionalText_03" BrowseName="1:AdditionalText_03" ParentNodeId="ns=1;i=1805" DataType="LocalizedText">
+    <DisplayName>AdditionalText_03</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1805</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticAlarmConditionType.AdditionalText_04" BrowseName="1:AdditionalText_04" ParentNodeId="ns=1;i=1805" DataType="LocalizedText">
+    <DisplayName>AdditionalText_04</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1805</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticAlarmConditionType.AdditionalText_05" BrowseName="1:AdditionalText_05" ParentNodeId="ns=1;i=1805" DataType="LocalizedText">
+    <DisplayName>AdditionalText_05</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1805</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticAlarmConditionType.AdditionalText_06" BrowseName="1:AdditionalText_06" ParentNodeId="ns=1;i=1805" DataType="LocalizedText">
+    <DisplayName>AdditionalText_06</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1805</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticAlarmConditionType.AdditionalText_07" BrowseName="1:AdditionalText_07" ParentNodeId="ns=1;i=1805" DataType="LocalizedText">
+    <DisplayName>AdditionalText_07</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1805</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticAlarmConditionType.AdditionalText_08" BrowseName="1:AdditionalText_08" ParentNodeId="ns=1;i=1805" DataType="LocalizedText">
+    <DisplayName>AdditionalText_08</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1805</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticAlarmConditionType.AdditionalText_09" BrowseName="1:AdditionalText_09" ParentNodeId="ns=1;i=1805" DataType="LocalizedText">
+    <DisplayName>AdditionalText_09</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1805</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticAlarmConditionType.AssociatedValue_01" BrowseName="1:AssociatedValue_01" ParentNodeId="ns=1;i=1805" DataType="ns=1;i=1809">
+    <DisplayName>AssociatedValue_01</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1805</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticAlarmConditionType.AssociatedValue_02" BrowseName="1:AssociatedValue_02" ParentNodeId="ns=1;i=1805" DataType="ns=1;i=1809">
+    <DisplayName>AssociatedValue_02</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1805</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticAlarmConditionType.AssociatedValue_03" BrowseName="1:AssociatedValue_03" ParentNodeId="ns=1;i=1805" DataType="ns=1;i=1809">
+    <DisplayName>AssociatedValue_03</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1805</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticAlarmConditionType.AssociatedValue_04" BrowseName="1:AssociatedValue_04" ParentNodeId="ns=1;i=1805" DataType="ns=1;i=1809">
+    <DisplayName>AssociatedValue_04</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1805</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticAlarmConditionType.AssociatedValue_05" BrowseName="1:AssociatedValue_05" ParentNodeId="ns=1;i=1805" DataType="ns=1;i=1809">
+    <DisplayName>AssociatedValue_05</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1805</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticAlarmConditionType.AssociatedValue_06" BrowseName="1:AssociatedValue_06" ParentNodeId="ns=1;i=1805" DataType="ns=1;i=1809">
+    <DisplayName>AssociatedValue_06</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1805</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticAlarmConditionType.AssociatedValue_07" BrowseName="1:AssociatedValue_07" ParentNodeId="ns=1;i=1805" DataType="ns=1;i=1809">
+    <DisplayName>AssociatedValue_07</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1805</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticAlarmConditionType.AssociatedValue_08" BrowseName="1:AssociatedValue_08" ParentNodeId="ns=1;i=1805" DataType="ns=1;i=1809">
+    <DisplayName>AssociatedValue_08</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1805</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticAlarmConditionType.AssociatedValue_09" BrowseName="1:AssociatedValue_09" ParentNodeId="ns=1;i=1805" DataType="ns=1;i=1809">
+    <DisplayName>AssociatedValue_09</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1805</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticAlarmConditionType.AssociatedValue_10" BrowseName="1:AssociatedValue_10" ParentNodeId="ns=1;i=1805" DataType="ns=1;i=1809">
+    <DisplayName>AssociatedValue_10</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1805</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticAlarmConditionType.InfoText" BrowseName="1:InfoText" ParentNodeId="ns=1;i=1805" DataType="LocalizedText">
+    <DisplayName>InfoText</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1805</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticAlarmConditionType.ID" BrowseName="1:ID" ParentNodeId="ns=1;i=1805" DataType="UInt16">
+    <DisplayName>ID</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1805</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticAlarmConditionType.DisplayClass" BrowseName="1:DisplayClass" ParentNodeId="ns=1;i=1805" DataType="UInt16">
+    <DisplayName>DisplayClass</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1805</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticAlarmConditionType.GroupID" BrowseName="1:GroupID" ParentNodeId="ns=1;i=1805" DataType="Byte">
+    <DisplayName>GroupID</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1805</Reference>
+    </References>
+  </UAVariable>
+
+  <!-- Alarm objects below the Server object. Clients subscribe to events on
+       the Server object or on one of these objects. -->
+  <UAObject NodeId="ns=1;s=SimaticAlarmsAndConditions" BrowseName="1:SimaticAlarmsAndConditions" ParentNodeId="i=2253" EventNotifier="1">
+    <DisplayName>SimaticAlarmsAndConditions</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=58</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">i=2253</Reference>
+      <Reference ReferenceType="HasNotifier" IsForward="false">i=2253</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;s=SimaticAlarmsAndConditions.Overloads" BrowseName="1:Overloads" ParentNodeId="ns=1;s=SimaticAlarmsAndConditions">
+    <DisplayName>Overloads</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=58</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=SimaticAlarmsAndConditions</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;s=SimaticAlarmsAndConditions.Overloads.OutstandingProgramAlarms" BrowseName="1:OutstandingProgramAlarms" ParentNodeId="ns=1;s=SimaticAlarmsAndConditions.Overloads" DataType="UInt32">
+    <DisplayName>OutstandingProgramAlarms</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=SimaticAlarmsAndConditions.Overloads</Reference>
+    </References>
+    <Value>
+      <uax:UInt32>0</uax:UInt32>
+    </Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticAlarmsAndConditions.Overloads.OutstandingSystemDiagnostics" BrowseName="1:OutstandingSystemDiagnostics" ParentNodeId="ns=1;s=SimaticAlarmsAndConditions.Overloads" DataType="UInt32">
+    <DisplayName>OutstandingSystemDiagnostics</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=SimaticAlarmsAndConditions.Overloads</Reference>
+    </References>
+    <Value>
+      <uax:UInt32>0</uax:UInt32>
+    </Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticAlarmsAndConditions.Overloads.OverloadHysteresis" BrowseName="1:OverloadHysteresis" ParentNodeId="ns=1;s=SimaticAlarmsAndConditions.Overloads" DataType="UInt32">
+    <DisplayName>OverloadHysteresis</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=SimaticAlarmsAndConditions.Overloads</Reference>
+    </References>
+    <Value>
+      <uax:UInt32>3</uax:UInt32>
+    </Value>
+  </UAVariable>
+  <UAObject NodeId="ns=1;s=SimaticAlarmsAndConditions.ProgramAlarms" BrowseName="1:ProgramAlarms" ParentNodeId="ns=1;s=SimaticAlarmsAndConditions" EventNotifier="1">
+    <DisplayName>ProgramAlarms</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=58</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=SimaticAlarmsAndConditions</Reference>
+      <Reference ReferenceType="HasNotifier" IsForward="false">ns=1;s=SimaticAlarmsAndConditions</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;s=SimaticAlarmsAndConditions.ProgramAlarms.CurrentAlarmsInQueue" BrowseName="1:CurrentAlarmsInQueue" ParentNodeId="ns=1;s=SimaticAlarmsAndConditions.ProgramAlarms" DataType="UInt32">
+    <DisplayName>CurrentAlarmsInQueue</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=SimaticAlarmsAndConditions.ProgramAlarms</Reference>
+    </References>
+    <Value>
+      <uax:UInt32>0</uax:UInt32>
+    </Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticAlarmsAndConditions.ProgramAlarms.MaxAlarmsInQueue" BrowseName="1:MaxAlarmsInQueue" ParentNodeId="ns=1;s=SimaticAlarmsAndConditions.ProgramAlarms" DataType="UInt32">
+    <DisplayName>MaxAlarmsInQueue</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=SimaticAlarmsAndConditions.ProgramAlarms</Reference>
+    </References>
+    <Value>
+      <uax:UInt32>200</uax:UInt32>
+    </Value>
+  </UAVariable>
+  <UAObject NodeId="ns=1;s=SimaticAlarmsAndConditions.ProgramAlarms.Graph" BrowseName="1:Graph" ParentNodeId="ns=1;s=SimaticAlarmsAndConditions.ProgramAlarms" EventNotifier="1">
+    <DisplayName>Graph</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=58</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=SimaticAlarmsAndConditions.ProgramAlarms</Reference>
+      <Reference ReferenceType="HasNotifier" IsForward="false">ns=1;s=SimaticAlarmsAndConditions.ProgramAlarms</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;s=SimaticAlarmsAndConditions.ProgramAlarms.ProcessDiagnostics" BrowseName="1:ProcessDiagnostics" ParentNodeId="ns=1;s=SimaticAlarmsAndConditions.ProgramAlarms" EventNotifier="1">
+    <DisplayName>ProcessDiagnostics</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=58</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=SimaticAlarmsAndConditions.ProgramAlarms</Reference>
+      <Reference ReferenceType="HasNotifier" IsForward="false">ns=1;s=SimaticAlarmsAndConditions.ProgramAlarms</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;s=SimaticAlarmsAndConditions.ProgramAlarms.UserProgram" BrowseName="1:UserProgram" ParentNodeId="ns=1;s=SimaticAlarmsAndConditions.ProgramAlarms" EventNotifier="1">
+    <DisplayName>UserProgram</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=58</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=SimaticAlarmsAndConditions.ProgramAlarms</Reference>
+      <Reference ReferenceType="HasNotifier" IsForward="false">ns=1;s=SimaticAlarmsAndConditions.ProgramAlarms</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;s=SimaticAlarmsAndConditions.SystemDiagnostics" BrowseName="1:SystemDiagnostics" ParentNodeId="ns=1;s=SimaticAlarmsAndConditions" EventNotifier="1">
+    <DisplayName>SystemDiagnostics</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=58</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=SimaticAlarmsAndConditions</Reference>
+      <Reference ReferenceType="HasNotifier" IsForward="false">ns=1;s=SimaticAlarmsAndConditions</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;s=SimaticAlarmsAndConditions.SystemDiagnostics.CurrentAlarmsInQueue" BrowseName="1:CurrentAlarmsInQueue" ParentNodeId="ns=1;s=SimaticAlarmsAndConditions.SystemDiagnostics" DataType="UInt32">
+    <DisplayName>CurrentAlarmsInQueue</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=SimaticAlarmsAndConditions.SystemDiagnostics</Reference>
+    </References>
+    <Value>
+      <uax:UInt32>0</uax:UInt32>
+    </Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SimaticAlarmsAndConditions.SystemDiagnostics.MaxAlarmsInQueue" BrowseName="1:MaxAlarmsInQueue" ParentNodeId="ns=1;s=SimaticAlarmsAndConditions.SystemDiagnostics" DataType="UInt32">
+    <DisplayName>MaxAlarmsInQueue</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=SimaticAlarmsAndConditions.SystemDiagnostics</Reference>
+    </References>
+    <Value>
+      <uax:UInt32>100</uax:UInt32>
+    </Value>
+  </UAVariable>

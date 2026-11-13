@@ -1,0 +1,8 @@
+APPNAME := opcua-server-sim
+
+# open62541 release the server is built against.
+OPEN62541_VERSION := 1.5.10
+OPEN62541_TAG     := tags/v$(OPEN62541_VERSION)
+
+-include $(TOP)/../RELEASE.local
+-include $(TOP)/configure/RELEASE.local

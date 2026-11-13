@@ -1,0 +1,1512 @@
+{
+ "mutations": [
+  {
+   "id": "c-sum-sign",
+   "file": "src/opcua_server_sim.c",
+   "old": "            sum += number;",
+   "new": "            sum -= number;",
+   "intended": [
+    "method: 1 + 5 is 6"
+   ],
+   "also": [
+    "method: the output of the last call is in the static data"
+   ]
+  },
+  {
+   "id": "c-sort-order",
+   "file": "src/opcua_server_sim.c",
+   "old": "if(UA_order(left, right, array->type) != UA_ORDER_MORE)",
+   "new": "if(UA_order(left, right, array->type) == UA_ORDER_MORE)",
+   "intended": [
+    "method: sorted ascending"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-length-check-off",
+   "file": "src/opcua_server_sim.c",
+   "old": "                status = UA_STATUSCODE_BADINVALIDARGUMENT;",
+   "new": "                status = UA_STATUSCODE_GOOD;",
+   "intended": [
+    "method: an array of the wrong length"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-busy-off",
+   "file": "src/opcua_server_sim.c",
+   "old": "    if(now < method->busy_until)",
+   "new": "    if(now < 0)",
+   "intended": [
+    "method: a call while the sequence runs"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-stop-check-off",
+   "file": "src/opcua_server_sim.c",
+   "old": "    if(!cpu_running)\n        return UA_STATUSCODE_BADINVALIDSTATE;\n\n    for(size_t i = 0; !method",
+   "new": "    for(size_t i = 0; !method",
+   "intended": [
+    "STOP: a method call is rejected"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-restore-off",
+   "file": "src/opcua_server_sim.c",
+   "old": "        restore_start_values(server);",
+   "new": "        (void)0;",
+   "intended": [
+    "RUN: a member is back at its start value",
+    "RUN: an array element is back at its start value"
+   ],
+   "also": [
+    "value:"
+   ]
+  },
+  {
+   "id": "c-methods-free-off",
+   "file": "src/opcua_server_sim.c",
+   "old": "            sim_methods[i].busy_until = 0;",
+   "new": "            sim_methods[i].busy_until += 0;",
+   "intended": [
+    "RUN: the method instance is free again"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-on-delay-immediate",
+   "file": "src/opcua_server_sim.c",
+   "old": "(input >= 0.5 && element->elapsed_ms >= element->delay_ms) ? 1.0 : 0.0",
+   "new": "(input >= 0.5) ? 1.0 : 0.0",
+   "intended": [
+    "IEC timer: the output is false at first"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-on-delay-never",
+   "file": "src/opcua_server_sim.c",
+   "old": "            element->elapsed_ms += sim_cycle_ms;",
+   "new": "            element->elapsed_ms += 0.0;",
+   "intended": [
+    "IEC timer: the output is true after the preset time"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-pack-off",
+   "file": "src/opcua_server_sim.c",
+   "old": "        write_number(server, &sim_packs[i].target, packed);",
+   "new": "        (void)packed;",
+   "intended": [
+    "clock memory: the byte changes"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-random-const",
+   "file": "src/opcua_server_sim.c",
+   "old": "    return min + (max - min) * ((double)rand() / (double)RAND_MAX);",
+   "new": "    return min;",
+   "intended": [
+    "simulation: the random array changes"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-mode-swapped",
+   "file": "src/opcua_server_sim.c",
+   "old": "UA_Int32 mode = cpu_running ? cpu_run_value : cpu_stop_value;",
+   "new": "UA_Int32 mode = cpu_running ? cpu_stop_value : cpu_run_value;",
+   "intended": [
+    "start: the CPU is in RUN",
+    "STOP: operating state",
+    "RUN: operating state"
+   ],
+   "also": [
+    "user: the account logs in",
+    "security:"
+   ]
+  },
+  {
+   "id": "c-retain-false",
+   "file": "src/opcua_server_sim.c",
+   "old": "UA_QUALIFIEDNAME(0, \"Retain\"), &active,",
+   "new": "UA_QUALIFIEDNAME(0, \"Retain\"), &(UA_Boolean){false},",
+   "intended": [
+    "alarm: the first event is active and unacknowledged"
+   ],
+   "also": [
+    "alarm:",
+    "field:",
+    "queue of one:",
+    "queue:",
+    "system diagnostics:"
+   ]
+  },
+  {
+   "id": "c-end-event-off",
+   "file": "src/opcua_server_sim.c",
+   "old": "    if(!active)\n        status |= UA_Server_triggerConditionEvent(",
+   "new": "    if(active && !active)\n        status |= UA_Server_triggerConditionEvent(",
+   "intended": [
+    "alarm: the end of the alarm is reported"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-severity-wrong",
+   "file": "src/opcua_server_sim.c",
+   "old": "                   &alarm.severity, &UA_TYPES[UA_TYPES_UINT16]) == UA_STATUSCODE_GOOD &&",
+   "new": "                   &(UA_UInt16){500}, &UA_TYPES[UA_TYPES_UINT16]) == UA_STATUSCODE_GOOD &&",
+   "intended": [
+    "alarm: the first event is active and unacknowledged"
+   ],
+   "also": [
+    "queue:"
+   ]
+  },
+  {
+   "id": "c-password-wrong",
+   "file": "src/opcua_server_sim.c",
+   "old": "    sim_logins[sim_logins_size].password = UA_BYTESTRING_ALLOC(password);",
+   "new": "    sim_logins[sim_logins_size].password = UA_BYTESTRING_ALLOC(\"other\");",
+   "intended": [
+    "user: the account logs in"
+   ],
+   "also": [
+    "anonymous no: the account still logs in"
+   ]
+  },
+  {
+   "id": "c-anonymous-ignored",
+   "file": "src/opcua_server_sim.c",
+   "old": "        sim_anonymous = false;",
+   "new": "        sim_anonymous = true;",
+   "intended": [
+    "anonymous no: an anonymous session is refused"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-line-number",
+   "file": "src/opcua_server_sim.c",
+   "old": "        line_number++;",
+   "new": "        line_number += 2;",
+   "intended": [
+    "unknown keyword: names line 3"
+   ],
+   "also": [
+    ": names line",
+    "include of a broken file:"
+   ]
+  },
+  {
+   "id": "c-load-failure-exit-success",
+   "file": "src/opcua_server_sim.c",
+   "old": "            UA_Server_delete(server);\n            return EXIT_FAILURE;\n        }\n    }\n\n    status = UA_Server_runUntilInterrupt(server);",
+   "new": "            UA_Server_delete(server);\n            return EXIT_SUCCESS;\n        }\n    }\n\n    status = UA_Server_runUntilInterrupt(server);",
+   "intended": [
+    "unknown keyword: exit status"
+   ],
+   "also": [
+    ": exit status"
+   ]
+  },
+  {
+   "id": "c-stop-exit-failure",
+   "file": "src/opcua_server_sim.c",
+   "old": "    return status == UA_STATUSCODE_GOOD ? EXIT_SUCCESS : EXIT_FAILURE;",
+   "new": "    return EXIT_FAILURE;",
+   "intended": [
+    "stop: the server exits with status 0"
+   ],
+   "also": [
+    "anonymous no: the server exits with status 0",
+    "class 1511 to 1513:",
+    "class 1515 and 1516:",
+    "class 1517 and 1518:",
+    "keywords:",
+    "queue of one:",
+    "queue:"
+   ]
+  },
+  {
+   "id": "c-event-type-class-off",
+   "file": "src/opcua_server_sim.c",
+   "old": "           node_has_class(server, &alarm.type, UA_NODECLASS_OBJECTTYPE) &&\n",
+   "new": "",
+   "intended": [
+    "unknown event type: exit status",
+    "unknown event type: names line 1"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-event-source-class-off",
+   "file": "src/opcua_server_sim.c",
+   "old": "           node_has_class(server, &alarm.source, UA_NODECLASS_OBJECT) &&\n",
+   "new": "",
+   "intended": [
+    "unknown event source: exit status",
+    "unknown event source: names line 1"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-severity-bound",
+   "file": "src/opcua_server_sim.c",
+   "old": "level < 1 || level > 1000 || !save",
+   "new": "level < 1 || level > 1001 || !save",
+   "intended": [
+    "severity above 1000: exit status",
+    "severity above 1000: names line 1"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-signal-kind-off",
+   "file": "src/opcua_server_sim.c",
+   "old": "    if(!known_kind)\n        return false;\n",
+   "new": "",
+   "intended": [
+    "unknown kind of a signal: exit status",
+    "unknown kind of a signal: names line 1"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-second-mode-allowed",
+   "file": "src/opcua_server_sim.c",
+   "old": "    if(!node || cpu_mode_node_set)",
+   "new": "    if(!node)",
+   "intended": [
+    "second operating mode: exit status"
+   ],
+   "also": [],
+   "equivalent": "the second add_mode_switch fails on the existing node, so the repeat guard changes no observable"
+  },
+  {
+   "id": "c-cycle-zero",
+   "file": "src/opcua_server_sim.c",
+   "old": "*end == '\\0' && cycle > 0.0;",
+   "new": "*end == '\\0' && cycle >= 0.0;",
+   "intended": [
+    "cycle of zero: names line 1"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-in-store-off",
+   "file": "src/opcua_server_sim.c",
+   "old": "    if(method->has_in)\n        store_arguments(",
+   "new": "    if(false && method->has_in)\n        store_arguments(",
+   "intended": [
+    "method: the input of the last call is in the static data"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-out-store-off",
+   "file": "src/opcua_server_sim.c",
+   "old": "    if(method->has_out)\n        store_arguments(",
+   "new": "    if(false && method->has_out)\n        store_arguments(",
+   "intended": [
+    "method: the output of the last call is in the static data"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-propagate-up-off",
+   "file": "src/opcua_server_sim.c",
+   "old": "    propagate_down(server, node_id);\n    propagate_up(server, node_id);\n    propagating = false;",
+   "new": "    propagate_down(server, node_id);\n    propagating = false;",
+   "intended": [
+    "array: the element is in the array"
+   ],
+   "also": [
+    "RUN:"
+   ]
+  },
+  {
+   "id": "c-propagate-down-off",
+   "file": "src/opcua_server_sim.c",
+   "old": "    propagate_down(server, node_id);\n    propagate_up(server, node_id);\n    propagating = false;",
+   "new": "    propagate_up(server, node_id);\n    propagating = false;",
+   "intended": [
+    "array: an element follows a write of the whole array"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-method-in-class-off",
+   "file": "src/opcua_server_sim.c",
+   "old": "       (method.has_in && !node_has_class(server, &method.in_node, UA_NODECLASS_VARIABLE)) ||\n",
+   "new": "",
+   "intended": [
+    "unknown structure of a method: exit status",
+    "unknown structure of a method: names line 1"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-signal-node-off",
+   "file": "src/opcua_server_sim.c",
+   "old": "    if(!write_signal(server, &signal)) {",
+   "new": "    if(false) {",
+   "intended": [
+    "unknown node of a signal: exit status",
+    "unknown node of a signal: names line 2"
+   ],
+   "also": []
+  },
+  {
+   "id": "m-et-writable",
+   "file": "models/s7-1500-composite/s7-1500-composite.NodeSet2.xml",
+   "old": "NodeId=\"ns=1;s=&quot;IEC_Timer_0_DB&quot;.ET\" BrowseName=\"1:ET\" ParentNodeId=\"ns=1;s=&quot;IEC_Timer_0_DB&quot;\" DataType=\"TIME\" AccessLevel=\"1\" UserAccessLevel=\"1\">",
+   "new": "NodeId=\"ns=1;s=&quot;IEC_Timer_0_DB&quot;.ET\" BrowseName=\"1:ET\" ParentNodeId=\"ns=1;s=&quot;IEC_Timer_0_DB&quot;\" DataType=\"TIME\" AccessLevel=\"3\" UserAccessLevel=\"3\">",
+   "intended": [
+    "access: the elapsed time of the IEC timer"
+   ],
+   "also": [
+    "model: output equals the shipped NodeSet",
+    "stdout: output equals the shipped NodeSet"
+   ]
+  },
+  {
+   "id": "m-newproduct-writable",
+   "file": "models/s7-1500-composite/s7-1500-composite.NodeSet2.xml",
+   "old": "NodeId=\"ns=1;s=&quot;Data_for_OPC_UA_Clients&quot;.&quot;NewProduct&quot;\" BrowseName=\"1:NewProduct\" ParentNodeId=\"ns=1;s=&quot;Data_for_OPC_UA_Clients&quot;\" DataType=\"Boolean\" AccessLevel=\"1\" UserAccessLevel=\"1\">",
+   "new": "NodeId=\"ns=1;s=&quot;Data_for_OPC_UA_Clients&quot;.&quot;NewProduct&quot;\" BrowseName=\"1:NewProduct\" ParentNodeId=\"ns=1;s=&quot;Data_for_OPC_UA_Clients&quot;\" DataType=\"Boolean\" AccessLevel=\"3\" UserAccessLevel=\"3\">",
+   "intended": [
+    "access: a read-only tag"
+   ],
+   "also": [
+    "model: output equals the shipped NodeSet",
+    "stdout: output equals the shipped NodeSet"
+   ]
+  },
+  {
+   "id": "m-manufacturer",
+   "file": "models/s7-1500-composite/server.json5",
+   "old": "manufacturerName: \"opcua-server-sim\",",
+   "new": "manufacturerName: \"other\",",
+   "intended": [
+    "BuildInfo: manufacturer"
+   ],
+   "also": []
+  },
+  {
+   "id": "m-product",
+   "file": "models/s7-1500-composite/server.json5",
+   "old": "productName: \"S7-1500 composite simulator\",",
+   "new": "productName: \"other\",",
+   "intended": [
+    "BuildInfo: product"
+   ],
+   "also": []
+  },
+  {
+   "id": "m-method-call-limit",
+   "file": "models/s7-1500-composite/server.json5",
+   "old": "maxNodesPerMethodCall: 1,",
+   "new": "maxNodesPerMethodCall: 2,",
+   "intended": [
+    "ServerCapabilities: nodes per method call"
+   ],
+   "also": []
+  },
+  {
+   "id": "m-max-array-length",
+   "file": "models/s7-1500-composite/s7-1500-composite.NodeSet2.xml",
+   "old": "BrowseName=\"MaxArrayLength\" ParentNodeId=\"i=2268\" DataType=\"UInt32\">\n    <DisplayName>MaxArrayLength</DisplayName>\n    <References>\n      <Reference ReferenceType=\"HasTypeDefinition\">i=68</Reference>\n      <Reference ReferenceType=\"HasProperty\" IsForward=\"false\">i=2268</Reference>\n    </References>\n    <Value>\n      <uax:UInt32>131072</uax:UInt32>",
+   "new": "BrowseName=\"MaxArrayLength\" ParentNodeId=\"i=2268\" DataType=\"UInt32\">\n    <DisplayName>MaxArrayLength</DisplayName>\n    <References>\n      <Reference ReferenceType=\"HasTypeDefinition\">i=68</Reference>\n      <Reference ReferenceType=\"HasProperty\" IsForward=\"false\">i=2268</Reference>\n    </References>\n    <Value>\n      <uax:UInt32>131073</uax:UInt32>",
+   "intended": [
+    "ServerCapabilities: array length"
+   ],
+   "also": [
+    "model: output equals the shipped NodeSet",
+    "stdout: output equals the shipped NodeSet"
+   ]
+  },
+  {
+   "id": "m-start-myint",
+   "file": "models/s7-1500-composite/s7-1500-composite.NodeSet2.xml",
+   "old": "NodeId=\"ns=1;s=&quot;DataStatic&quot;.&quot;myInt&quot;\" BrowseName=\"1:myInt\" ParentNodeId=\"ns=1;s=&quot;DataStatic&quot;\" DataType=\"Int16\" AccessLevel=\"3\" UserAccessLevel=\"3\">\n    <DisplayName>myInt</DisplayName>\n    <References>\n      <Reference ReferenceType=\"HasTypeDefinition\">i=63</Reference>\n      <Reference ReferenceType=\"HasComponent\" IsForward=\"false\">ns=1;s=&quot;DataStatic&quot;</Reference>\n    </References>\n    <Value>\n      <uax:Int16>42</uax:Int16>",
+   "new": "NodeId=\"ns=1;s=&quot;DataStatic&quot;.&quot;myInt&quot;\" BrowseName=\"1:myInt\" ParentNodeId=\"ns=1;s=&quot;DataStatic&quot;\" DataType=\"Int16\" AccessLevel=\"3\" UserAccessLevel=\"3\">\n    <DisplayName>myInt</DisplayName>\n    <References>\n      <Reference ReferenceType=\"HasTypeDefinition\">i=63</Reference>\n      <Reference ReferenceType=\"HasComponent\" IsForward=\"false\">ns=1;s=&quot;DataStatic&quot;</Reference>\n    </References>\n    <Value>\n      <uax:Int16>43</uax:Int16>",
+   "intended": [
+    "start value: myInt",
+    "anonymous no: the account still logs in"
+   ],
+   "also": [
+    "model: output equals the shipped NodeSet",
+    "stdout: output equals the shipped NodeSet"
+   ]
+  },
+  {
+   "id": "m-start-mybyte",
+   "file": "models/s7-1500-composite/s7-1500-composite.NodeSet2.xml",
+   "old": "NodeId=\"ns=1;s=&quot;DataStatic&quot;.&quot;myByte&quot;\" BrowseName=\"1:myByte\" ParentNodeId=\"ns=1;s=&quot;DataStatic&quot;\" DataType=\"BYTE\" AccessLevel=\"3\" UserAccessLevel=\"3\">\n    <DisplayName>myByte</DisplayName>\n    <References>\n      <Reference ReferenceType=\"HasTypeDefinition\">i=63</Reference>\n      <Reference ReferenceType=\"HasComponent\" IsForward=\"false\">ns=1;s=&quot;DataStatic&quot;</Reference>\n    </References>\n    <Value>\n      <uax:Byte>171</uax:Byte>",
+   "new": "NodeId=\"ns=1;s=&quot;DataStatic&quot;.&quot;myByte&quot;\" BrowseName=\"1:myByte\" ParentNodeId=\"ns=1;s=&quot;DataStatic&quot;\" DataType=\"BYTE\" AccessLevel=\"3\" UserAccessLevel=\"3\">\n    <DisplayName>myByte</DisplayName>\n    <References>\n      <Reference ReferenceType=\"HasTypeDefinition\">i=63</Reference>\n      <Reference ReferenceType=\"HasComponent\" IsForward=\"false\">ns=1;s=&quot;DataStatic&quot;</Reference>\n    </References>\n    <Value>\n      <uax:Byte>172</uax:Byte>",
+   "intended": [
+    "start value: myByte"
+   ],
+   "also": [
+    "model: output equals the shipped NodeSet",
+    "stdout: output equals the shipped NodeSet"
+   ]
+  },
+  {
+   "id": "m-start-myword",
+   "file": "models/s7-1500-composite/s7-1500-composite.NodeSet2.xml",
+   "old": "NodeId=\"ns=1;s=&quot;DataStatic&quot;.&quot;myWord&quot;\" BrowseName=\"1:myWord\" ParentNodeId=\"ns=1;s=&quot;DataStatic&quot;\" DataType=\"WORD\" AccessLevel=\"3\" UserAccessLevel=\"3\">\n    <DisplayName>myWord</DisplayName>\n    <References>\n      <Reference ReferenceType=\"HasTypeDefinition\">i=63</Reference>\n      <Reference ReferenceType=\"HasComponent\" IsForward=\"false\">ns=1;s=&quot;DataStatic&quot;</Reference>\n    </References>\n    <Value>\n      <uax:UInt16>52719</uax:UInt16>",
+   "new": "NodeId=\"ns=1;s=&quot;DataStatic&quot;.&quot;myWord&quot;\" BrowseName=\"1:myWord\" ParentNodeId=\"ns=1;s=&quot;DataStatic&quot;\" DataType=\"WORD\" AccessLevel=\"3\" UserAccessLevel=\"3\">\n    <DisplayName>myWord</DisplayName>\n    <References>\n      <Reference ReferenceType=\"HasTypeDefinition\">i=63</Reference>\n      <Reference ReferenceType=\"HasComponent\" IsForward=\"false\">ns=1;s=&quot;DataStatic&quot;</Reference>\n    </References>\n    <Value>\n      <uax:UInt16>52718</uax:UInt16>",
+   "intended": [
+    "start value: myWord"
+   ],
+   "also": [
+    "model: output equals the shipped NodeSet",
+    "stdout: output equals the shipped NodeSet"
+   ]
+  },
+  {
+   "id": "m-start-udtstring",
+   "file": "models/s7-1500-composite/s7-1500-composite.NodeSet2.xml",
+   "old": "NodeId=\"ns=1;s=&quot;DataStatic&quot;.&quot;myUdt&quot;.&quot;udtString&quot;\" BrowseName=\"1:udtString\" ParentNodeId=\"ns=1;s=&quot;DataStatic&quot;.&quot;myUdt&quot;\" DataType=\"STRING\" AccessLevel=\"3\" UserAccessLevel=\"3\">\n    <DisplayName>udtString</DisplayName>\n    <References>\n      <Reference ReferenceType=\"HasTypeDefinition\">i=63</Reference>\n      <Reference ReferenceType=\"HasComponent\" IsForward=\"false\">ns=1;s=&quot;DataStatic&quot;.&quot;myUdt&quot;</Reference>\n    </References>\n    <Value>\n      <uax:String>CompositePLC</uax:String>",
+   "new": "NodeId=\"ns=1;s=&quot;DataStatic&quot;.&quot;myUdt&quot;.&quot;udtString&quot;\" BrowseName=\"1:udtString\" ParentNodeId=\"ns=1;s=&quot;DataStatic&quot;.&quot;myUdt&quot;\" DataType=\"STRING\" AccessLevel=\"3\" UserAccessLevel=\"3\">\n    <DisplayName>udtString</DisplayName>\n    <References>\n      <Reference ReferenceType=\"HasTypeDefinition\">i=63</Reference>\n      <Reference ReferenceType=\"HasComponent\" IsForward=\"false\">ns=1;s=&quot;DataStatic&quot;.&quot;myUdt&quot;</Reference>\n    </References>\n    <Value>\n      <uax:String>OtherPLC</uax:String>",
+   "intended": [
+    "start value: member of the structure"
+   ],
+   "also": [
+    "model: output equals the shipped NodeSet",
+    "stdout: output equals the shipped NodeSet"
+   ]
+  },
+  {
+   "id": "m-drop-aes256",
+   "file": "models/s7-1500-composite/server.json5",
+   "old": "    {\n      policy: \"http://opcfoundation.org/UA/SecurityPolicy#Aes256_Sha256_RsaPss\",\n      certificate: \"pki/server-cert.der\",\n      privateKey: \"pki/server-key.der\",\n    },\n",
+   "new": "",
+   "intended": [
+    "endpoints: Aes256_Sha256_RsaPss with encryption",
+    "endpoints: eleven"
+   ],
+   "also": [
+    "security: Aes256_Sha256_RsaPss"
+   ]
+  },
+  {
+   "id": "s-on-delay-line-removed",
+   "file": "models/s7-1500-composite/simulation.conf",
+   "old": "on-delay ns=3;s=\"IEC_Timer_0_DB\".IN ns=3;s=\"IEC_Timer_0_DB\".Q delay=ns=3;s=\"IEC_Timer_0_DB\".PT elapsed=ns=3;s=\"IEC_Timer_0_DB\".ET\n",
+   "new": "",
+   "intended": [
+    "IEC timer: the output is true after the preset time"
+   ],
+   "also": []
+  },
+  {
+   "id": "s-sort-line-removed",
+   "file": "models/s7-1500-composite/simulation.conf",
+   "old": "method ns=3;s=\"InstMethodSort\".Method sort in=ns=3;s=\"InstMethodSort\".\"UAMethod_InParameters\" out=ns=3;s=\"InstMethodSort\".\"UAMethod_OutParameters\"\n",
+   "new": "",
+   "intended": [
+    "method: sort"
+   ],
+   "also": [
+    "method:"
+   ]
+  },
+  {
+   "id": "s-user-password",
+   "file": "models/s7-1500-composite/simulation.conf",
+   "old": "user simulator composite",
+   "new": "user simulator other",
+   "intended": [
+    "user: the account logs in"
+   ],
+   "also": []
+  },
+  {
+   "id": "s-severity",
+   "file": "models/s7-1500-composite/simulation.conf",
+   "old": "ns=3;s=\"AlarmTriggers\".\"Program_Alarm_2\" 720 Program alarm with a state",
+   "new": "ns=3;s=\"AlarmTriggers\".\"Program_Alarm_2\" 710 Program alarm with a state",
+   "intended": [
+    "alarm: the first event is active and unacknowledged"
+   ],
+   "also": []
+  },
+  {
+   "id": "s-run-value",
+   "file": "models/s7-1500-composite/simulation.conf",
+   "old": "operating-mode ns=3;s=OperatingMode run=8 stop=4",
+   "new": "operating-mode ns=3;s=OperatingMode run=9 stop=4",
+   "intended": [
+    "start: the CPU is in RUN",
+    "RUN: operating state"
+   ],
+   "also": [
+    "user: the account logs in",
+    "security:"
+   ]
+  },
+  {
+   "id": "s-busy-zero",
+   "file": "models/s7-1500-composite/simulation.conf",
+   "old": "method ns=3;s=\"InstMethodSequence\".Method accept busy=3000",
+   "new": "method ns=3;s=\"InstMethodSequence\".Method accept busy=0",
+   "intended": [
+    "method: a call while the sequence runs"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-usage-exit",
+   "file": "src/opcua_server_sim.c",
+   "old": "#define EXIT_USAGE 2",
+   "new": "#define EXIT_USAGE 3",
+   "intended": [
+    "usage: exit status"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-usage-message",
+   "file": "src/opcua_server_sim.c",
+   "old": "\"usage: %s [-s",
+   "new": "\"use: %s [-s",
+   "intended": [
+    "usage: the message names the arguments"
+   ],
+   "also": []
+  },
+  {
+   "id": "m-udtint-readonly",
+   "file": "models/s7-1500-composite/s7-1500-composite.NodeSet2.xml",
+   "old": "NodeId=\"ns=1;s=&quot;DataStatic&quot;.&quot;myUdt&quot;.&quot;udtInt&quot;\" BrowseName=\"1:udtInt\" ParentNodeId=\"ns=1;s=&quot;DataStatic&quot;.&quot;myUdt&quot;\" DataType=\"Int16\" AccessLevel=\"3\" UserAccessLevel=\"3\">",
+   "new": "NodeId=\"ns=1;s=&quot;DataStatic&quot;.&quot;myUdt&quot;.&quot;udtInt&quot;\" BrowseName=\"1:udtInt\" ParentNodeId=\"ns=1;s=&quot;DataStatic&quot;.&quot;myUdt&quot;\" DataType=\"Int16\" AccessLevel=\"1\" UserAccessLevel=\"1\">",
+   "intended": [
+    "STOP: a write is accepted"
+   ],
+   "also": [
+    "model: output equals the shipped NodeSet",
+    "stdout: output equals the shipped NodeSet"
+   ]
+  },
+  {
+   "id": "c-include-ignored",
+   "file": "src/opcua_server_sim.c",
+   "old": "resolve_include(path, name, resolved, sizeof(resolved)) &&\n                   read_simulation_file(server, resolved, depth + 1);",
+   "new": "resolve_include(path, name, resolved, sizeof(resolved)) &&\n                   true;",
+   "intended": [
+    "value: sets a Variable from an included file"
+   ],
+   "also": [
+    "limit:",
+    "value:",
+    "include of ",
+    "class 1511 to 1513:",
+    "class 1517 and 1518:",
+    "queue of one:",
+    "queue:"
+   ]
+  },
+  {
+   "id": "c-include-relative-off",
+   "file": "src/opcua_server_sim.c",
+   "old": "        written = snprintf(out, size, \"%.*s/%s\", (int)(slash - including), including, name);",
+   "new": "        written = snprintf(out, size, \"%s\", name);",
+   "intended": [
+    "value: sets a Variable from an included file"
+   ],
+   "also": [
+    "limit:",
+    "value:",
+    "keywords:",
+    "include of a broken file"
+   ]
+  },
+  {
+   "id": "c-include-depth-off",
+   "file": "src/opcua_server_sim.c",
+   "old": "                   depth < SIM_MAX_INCLUDE_DEPTH &&\n",
+   "new": "",
+   "intended": [
+    "include of the file itself: exit status",
+    "include of the file itself: names line 1"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-include-extra-word-off",
+   "file": "src/opcua_server_sim.c",
+   "old": "good = name && !strtok_r(NULL, \" \\t\", &save) &&\n                   depth",
+   "new": "good = name &&\n                   depth",
+   "intended": [
+    "include with an extra word: exit status",
+    "include with an extra word: names line 1"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-limit-sessions-ignored",
+   "file": "src/opcua_server_sim.c",
+   "old": "        config->maxSessions = (UA_UInt16)number;",
+   "new": "        (void)config;",
+   "intended": [
+    "limit: the session count"
+   ],
+   "also": [
+    "class 1511 to 1513:",
+    "class 1517 and 1518:"
+   ]
+  },
+  {
+   "id": "c-limit-publishing-wrong-field",
+   "file": "src/opcua_server_sim.c",
+   "old": "        config->publishingIntervalLimits.min = number;",
+   "new": "        config->samplingIntervalLimits.min = number;",
+   "intended": [
+    "limit: the minimum intervals"
+   ],
+   "also": [
+    "class 1511 to 1513:",
+    "class 1517 and 1518:"
+   ]
+  },
+  {
+   "id": "c-limit-sampling-ignored",
+   "file": "src/opcua_server_sim.c",
+   "old": "        config->samplingIntervalLimits.min = number;",
+   "new": "        (void)config;",
+   "intended": [
+    "limit: the minimum intervals"
+   ],
+   "also": [
+    "class 1517 and 1518:"
+   ]
+  },
+  {
+   "id": "c-limit-continuation-swapped",
+   "file": "src/opcua_server_sim.c",
+   "old": "    {\"max-query-continuation-points\", LIMIT_CONTINUATION,\n     UA_NS0ID_SERVER_SERVERCAPABILITIES_MAXQUERYCONTINUATIONPOINTS},",
+   "new": "    {\"max-query-continuation-points\", LIMIT_CONTINUATION,\n     UA_NS0ID_SERVER_SERVERCAPABILITIES_MAXHISTORYCONTINUATIONPOINTS},",
+   "intended": [
+    "limit: the query continuation point count"
+   ],
+   "also": [
+    "limit: the history continuation point count",
+    "continuation points:"
+   ]
+  },
+  {
+   "id": "c-limit-fraction-check-off",
+   "file": "src/opcua_server_sim.c",
+   "old": "        if(number < 1.0 || number > 65535.0 || number != (double)(UA_UInt16)number)\n            return false;\n        config->maxSessions",
+   "new": "        if(number < 1.0 || number > 65535.0)\n            return false;\n        config->maxSessions",
+   "intended": [
+    "limit with a fraction as session count: exit status",
+    "limit with a fraction as session count: names line 1"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-limit-interval-floor-off",
+   "file": "src/opcua_server_sim.c",
+   "old": "        if(number < SIM_MIN_INTERVAL_MS || number > config->publishingIntervalLimits.max)",
+   "new": "        if(number > config->publishingIntervalLimits.max)",
+   "intended": [
+    "limit with an interval below the smallest: exit status",
+    "limit with an interval below the smallest: names line 1"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-value-ignored",
+   "file": "src/opcua_server_sim.c",
+   "old": "           write_number(server, &node, number);",
+   "new": "           true;",
+   "intended": [
+    "value: sets a Variable from an included file"
+   ],
+   "also": [
+    "value:",
+    "class 1511 to 1513:",
+    "class 1517 and 1518:",
+    "queue of one:",
+    "queue:"
+   ]
+  },
+  {
+   "id": "c-value-refresh-off",
+   "file": "src/opcua_server_sim.c",
+   "old": "    if(good)\n        refresh_start_values(server);\n    return good;",
+   "new": "    return good;",
+   "intended": [
+    "value: the number is the start value after a restart"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-value-class-check-off",
+   "file": "src/opcua_server_sim.c",
+   "old": "    good = node_has_class(server, &node, UA_NODECLASS_VARIABLE) &&\n           write_number(server, &node, number);",
+   "new": "    good = write_number(server, &node, number);",
+   "intended": [
+    "value of a node that is no Variable: exit status"
+   ],
+   "also": [],
+   "equivalent": "write_number fails on a node that is no Variable, so the class check changes no observable"
+  },
+  {
+   "id": "p-sessions-count",
+   "file": "tools/opcua-probe.c",
+   "old": "(unsigned long)accepted,\n           UA_StatusCode_name(refused)",
+   "new": "(unsigned long)accepted + 1,\n           UA_StatusCode_name(refused)",
+   "intended": [
+    "limit: the session count"
+   ],
+   "also": [
+    "class 1511 to 1513:",
+    "class 1515 and 1516:",
+    "class 1517 and 1518:",
+    "diagnostics:"
+   ]
+  },
+  {
+   "id": "p-sessions-current",
+   "file": "tools/opcua-probe.c",
+   "old": "        current = *(const UA_UInt32 *)value.data;",
+   "new": "        current = 0;",
+   "intended": [
+    "limit: the session count"
+   ],
+   "also": [
+    "class 1511 to 1513:",
+    "class 1515 and 1516:",
+    "class 1517 and 1518:",
+    "diagnostics:"
+   ]
+  },
+  {
+   "id": "p-intervals-sampling-field",
+   "file": "tools/opcua-probe.c",
+   "old": "created.revisedSamplingInterval);",
+   "new": "subscription.revisedPublishingInterval);",
+   "intended": [
+    "limit: the minimum intervals"
+   ],
+   "also": [
+    "class 1511 to 1513:"
+   ]
+  },
+  {
+   "id": "p-intervals-sampling-request",
+   "file": "tools/opcua-probe.c",
+   "old": "    item.requestedParameters.samplingInterval = 1.0;\n    created = UA_Client_MonitoredItems_createDataChange(",
+   "new": "    item.requestedParameters.samplingInterval = 100000.0;\n    created = UA_Client_MonitoredItems_createDataChange(",
+   "intended": [
+    "limit: the minimum intervals"
+   ],
+   "also": [
+    "class 1511 to 1513:",
+    "class 1515 and 1516:",
+    "class 1517 and 1518:"
+   ]
+  },
+  {
+   "id": "p-intervals-publishing-request",
+   "file": "tools/opcua-probe.c",
+   "old": "    request.requestedPublishingInterval = 1.0;\n    subscription = UA_Client_Subscriptions_create(client, request, NULL, NULL, NULL);\n    if(subscription.responseHeader.serviceResult != UA_STATUSCODE_GOOD) {\n        printf(\"%s\\n\", UA_StatusCode_name(subscription.responseHeader.serviceResult));\n        return 0;\n    }\n    item",
+   "new": "    request.requestedPublishingInterval = 100000.0;\n    subscription = UA_Client_Subscriptions_create(client, request, NULL, NULL, NULL);\n    if(subscription.responseHeader.serviceResult != UA_STATUSCODE_GOOD) {\n        printf(\"%s\\n\", UA_StatusCode_name(subscription.responseHeader.serviceResult));\n        return 0;\n    }\n    item",
+   "intended": [
+    "limit: the minimum intervals"
+   ],
+   "also": [
+    "class 1511 to 1513:",
+    "class 1515 and 1516:",
+    "class 1517 and 1518:"
+   ]
+  },
+  {
+   "id": "s-profile-1511-sessions",
+   "file": "models/s7-1500-composite/simulation-1511-1513.conf",
+   "old": "limit max-sessions 32\n",
+   "new": "limit max-sessions 48\n",
+   "intended": [
+    "class 1511 to 1513: sessions"
+   ],
+   "also": []
+  },
+  {
+   "id": "s-profile-1511-publishing",
+   "file": "models/s7-1500-composite/simulation-1511-1513.conf",
+   "old": "limit publishing-interval-min 200\n",
+   "new": "limit publishing-interval-min 150\n",
+   "intended": [
+    "class 1511 to 1513: intervals"
+   ],
+   "also": []
+  },
+  {
+   "id": "s-profile-1511-sampling",
+   "file": "models/s7-1500-composite/simulation-1511-1513.conf",
+   "old": "limit sampling-interval-min 100\n",
+   "new": "limit sampling-interval-min 50\n",
+   "intended": [
+    "class 1511 to 1513: intervals"
+   ],
+   "also": []
+  },
+  {
+   "id": "s-profile-1511-program-queue",
+   "file": "models/s7-1500-composite/simulation-1511-1513.conf",
+   "old": "ProgramAlarms.MaxAlarmsInQueue 100\n",
+   "new": "ProgramAlarms.MaxAlarmsInQueue 150\n",
+   "intended": [
+    "class 1511 to 1513: program alarm queue"
+   ],
+   "also": []
+  },
+  {
+   "id": "s-profile-1511-diagnostics-queue",
+   "file": "models/s7-1500-composite/simulation-1511-1513.conf",
+   "old": "SystemDiagnostics.MaxAlarmsInQueue 50\n",
+   "new": "SystemDiagnostics.MaxAlarmsInQueue 150\n",
+   "intended": [
+    "class 1511 to 1513: system diagnostics alarm queue"
+   ],
+   "also": []
+  },
+  {
+   "id": "s-profile-1511-include-removed",
+   "file": "models/s7-1500-composite/simulation-1511-1513.conf",
+   "old": "include simulation.conf\n\n",
+   "new": "",
+   "intended": [
+    "class 1511 to 1513: the shipped simulation is included"
+   ],
+   "also": []
+  },
+  {
+   "id": "s-profile-1517-sessions",
+   "file": "models/s7-1500-composite/simulation-1517-1518.conf",
+   "old": "limit max-sessions 64\n",
+   "new": "limit max-sessions 48\n",
+   "intended": [
+    "class 1517 and 1518: sessions"
+   ],
+   "also": []
+  },
+  {
+   "id": "s-profile-1517-publishing",
+   "file": "models/s7-1500-composite/simulation-1517-1518.conf",
+   "old": "limit publishing-interval-min 10\n",
+   "new": "limit publishing-interval-min 150\n",
+   "intended": [
+    "class 1517 and 1518: intervals"
+   ],
+   "also": []
+  },
+  {
+   "id": "s-profile-1517-sampling",
+   "file": "models/s7-1500-composite/simulation-1517-1518.conf",
+   "old": "limit sampling-interval-min 10\n",
+   "new": "limit sampling-interval-min 50\n",
+   "intended": [
+    "class 1517 and 1518: intervals"
+   ],
+   "also": []
+  },
+  {
+   "id": "s-profile-1517-program-queue",
+   "file": "models/s7-1500-composite/simulation-1517-1518.conf",
+   "old": "ProgramAlarms.MaxAlarmsInQueue 400\n",
+   "new": "ProgramAlarms.MaxAlarmsInQueue 150\n",
+   "intended": [
+    "class 1517 and 1518: program alarm queue"
+   ],
+   "also": []
+  },
+  {
+   "id": "s-profile-1517-diagnostics-queue",
+   "file": "models/s7-1500-composite/simulation-1517-1518.conf",
+   "old": "SystemDiagnostics.MaxAlarmsInQueue 200\n",
+   "new": "SystemDiagnostics.MaxAlarmsInQueue 150\n",
+   "intended": [
+    "class 1517 and 1518: system diagnostics alarm queue"
+   ],
+   "also": []
+  },
+  {
+   "id": "s-profile-1517-include-removed",
+   "file": "models/s7-1500-composite/simulation-1517-1518.conf",
+   "old": "include simulation.conf\n\n",
+   "new": "",
+   "intended": [
+    "class 1517 and 1518: the shipped simulation is included"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-field-event-fields-off",
+   "file": "src/opcua_server_sim.c",
+   "old": "alarm->fields_size ? &fields : NULL, NULL, NULL);",
+   "new": "NULL, NULL, NULL);",
+   "intended": [
+    "field: an event carries its fields"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-field-key-slash-off",
+   "file": "src/opcua_server_sim.c",
+   "old": "alarm->stateful ? \"\" : \"/\", name)",
+   "new": "\"\", name)",
+   "intended": [
+    "field: an event carries its fields"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-field-stateful-write-off",
+   "file": "src/opcua_server_sim.c",
+   "old": "    if(good && alarm->stateful)\n        good = UA_Server_writeObjectProperty(",
+   "new": "    if(false && alarm->stateful)\n        good = UA_Server_writeObjectProperty(",
+   "intended": [
+    "field: an alarm with a state carries its fields"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-field-value-first-word",
+   "file": "src/opcua_server_sim.c",
+   "old": "    value_text = save + strspn(save, \" \\t\");",
+   "new": "    value_text = save + strspn(save, \" \\t\");\n    value_text[strcspn(value_text, \" \\t\")] = '\\0';",
+   "intended": [
+    "field: an event carries its fields"
+   ],
+   "also": [
+    "field:"
+   ]
+  },
+  {
+   "id": "c-field-group-range-off",
+   "file": "src/opcua_server_sim.c",
+   "old": "number <= (kind == FIELD_BYTE ? 255 : 65535)) {",
+   "new": "number <= 65535) {",
+   "intended": [
+    "field with a group above 255: exit status",
+    "field with a group above 255: names line 2"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-field-id-range-off",
+   "file": "src/opcua_server_sim.c",
+   "old": "number <= (kind == FIELD_BYTE ? 255 : 65535)) {",
+   "new": "number <= (kind == FIELD_BYTE ? 255 : 70000)) {",
+   "intended": [
+    "field with an ID above 65535: exit status",
+    "field with an ID above 65535: names line 2"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-field-duplicate-off",
+   "file": "src/opcua_server_sim.c",
+   "old": "    for(size_t i = 0; i < alarm->fields_size; i++) {\n        if(strlen(key_name) == alarm->fields[i].key.name.length &&\n           memcmp(key_name, alarm->fields[i].key.name.data, strlen(key_name)) == 0)\n            return false;\n    }\n",
+   "new": "",
+   "intended": [
+    "field set twice: exit status",
+    "field set twice: names line 3"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-field-missing-value-off",
+   "file": "src/opcua_server_sim.c",
+   "old": "    if(*value_text == '\\0' || kind == FIELD_UNKNOWN ||",
+   "new": "    if(kind == FIELD_UNKNOWN ||",
+   "intended": [
+    "field without a value: exit status",
+    "field without a value: names line 2"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-field-unknown-name-off",
+   "file": "src/opcua_server_sim.c",
+   "old": "kind == FIELD_UNKNOWN ||\n       UA_NodeId_parse(&trigger",
+   "new": "UA_NodeId_parse(&trigger",
+   "intended": [
+    "field with an unknown name: exit status",
+    "field with an unknown name: names line 2"
+   ],
+   "also": []
+  },
+  {
+   "id": "p-events-fields-off",
+   "file": "tools/opcua-probe.c",
+   "old": "    for(int i = 0; i < extra_field_count; i++) {\n        for(int k = 0; k < 2; k++) {",
+   "new": "    for(int i = 0; i < 0; i++) {\n        for(int k = 0; k < 2; k++) {",
+   "intended": [
+    "field: an event carries its fields",
+    "field: an alarm with a state carries its fields"
+   ],
+   "also": []
+  },
+  {
+   "id": "p-events-one-type",
+   "file": "tools/opcua-probe.c",
+   "old": "    for(int i = 0; i < extra_field_count; i++) {\n        for(int k = 0; k < 2; k++) {",
+   "new": "    for(int i = 0; i < extra_field_count; i++) {\n        for(int k = 0; k < 1; k++) {",
+   "intended": [
+    "field: an alarm with a state carries its fields"
+   ],
+   "also": [],
+   "equivalent": "the server resolves the field path on the event instance without checking the declaring type, so the clause of the alarm type changes no observable of this server"
+  },
+  {
+   "id": "p-events-alarm-clause-off",
+   "file": "tools/opcua-probe.c",
+   "old": "                k == 0 ? SIMATIC_EVENT_TYPE : SIMATIC_ALARM_TYPE);",
+   "new": "                SIMATIC_EVENT_TYPE);",
+   "intended": [
+    "field: an alarm with a state carries its fields"
+   ],
+   "also": [],
+   "equivalent": "the server resolves the field path on the event instance without checking the declaring type, so the clause of the alarm type changes no observable of this server"
+  },
+  {
+   "id": "s-field-info-text",
+   "file": "models/s7-1500-composite/simulation.conf",
+   "old": "InfoText Information text of the program alarm",
+   "new": "InfoText Other text of the program alarm",
+   "intended": [
+    "field: an event carries its fields"
+   ],
+   "also": []
+  },
+  {
+   "id": "s-field-additional-moved",
+   "file": "models/s7-1500-composite/simulation.conf",
+   "old": "AdditionalText_01 First additional text of the program alarm",
+   "new": "AdditionalText_02 First additional text of the program alarm",
+   "intended": [
+    "field: an event carries its fields"
+   ],
+   "also": []
+  },
+  {
+   "id": "s-field-id",
+   "file": "models/s7-1500-composite/simulation.conf",
+   "old": "Program_Alarm_2\" ID 2\n",
+   "new": "Program_Alarm_2\" ID 3\n",
+   "intended": [
+    "field: an alarm with a state carries its fields"
+   ],
+   "also": []
+  },
+  {
+   "id": "s-field-display-class",
+   "file": "models/s7-1500-composite/simulation.conf",
+   "old": "DisplayClass 1\n",
+   "new": "DisplayClass 2\n",
+   "intended": [
+    "field: an alarm with a state carries its fields"
+   ],
+   "also": []
+  },
+  {
+   "id": "s-field-group",
+   "file": "models/s7-1500-composite/simulation.conf",
+   "old": "GroupID 4\n",
+   "new": "GroupID 5\n",
+   "intended": [
+    "field: an alarm with a state carries its fields"
+   ],
+   "also": []
+  },
+  {
+   "id": "s-field-alarm-line-removed",
+   "file": "models/s7-1500-composite/simulation.conf",
+   "old": "field ns=3;s=\"AlarmTriggers\".\"Program_Alarm_2\" AdditionalText_01 First additional text of the alarm with a state\n",
+   "new": "",
+   "intended": [
+    "field: an alarm with a state carries its fields"
+   ],
+   "also": []
+  },
+  {
+   "id": "s-limit-browse-removed",
+   "file": "models/s7-1500-composite/simulation.conf",
+   "old": "limit max-browse-continuation-points 5\n",
+   "new": "",
+   "intended": [
+    "continuation points: browse"
+   ],
+   "also": []
+  },
+  {
+   "id": "s-limit-query-removed",
+   "file": "models/s7-1500-composite/simulation.conf",
+   "old": "limit max-query-continuation-points 5\n",
+   "new": "",
+   "intended": [
+    "continuation points: query"
+   ],
+   "also": []
+  },
+  {
+   "id": "s-limit-history-removed",
+   "file": "models/s7-1500-composite/simulation.conf",
+   "old": "limit max-history-continuation-points 5\n",
+   "new": "",
+   "intended": [
+    "continuation points: history"
+   ],
+   "also": []
+  },
+  {
+   "id": "s-limit-browse-value",
+   "file": "models/s7-1500-composite/simulation.conf",
+   "old": "limit max-browse-continuation-points 5\n",
+   "new": "limit max-browse-continuation-points 6\n",
+   "intended": [
+    "continuation points: browse"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-diagnostics-security-rejected-removed",
+   "file": "src/opcua_server_sim.c",
+   "old": "    set_build_identity(server);",
+   "new": "    UA_Server_deleteNode(server, UA_NODEID_NUMERIC(0, UA_NS0ID_SERVER_SERVERDIAGNOSTICS_SERVERDIAGNOSTICSSUMMARY_SECURITYREJECTEDSESSIONCOUNT), true);\n    set_build_identity(server);",
+   "intended": [
+    "diagnostics: twelve members of ServerDiagnosticsSummary",
+    "diagnostics: SecurityRejectedSessionCount"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-diagnostics-current-session-removed",
+   "file": "src/opcua_server_sim.c",
+   "old": "    set_build_identity(server);",
+   "new": "    UA_Server_deleteNode(server, UA_NODEID_NUMERIC(0, UA_NS0ID_SERVER_SERVERDIAGNOSTICS_SERVERDIAGNOSTICSSUMMARY_CURRENTSESSIONCOUNT), true);\n    set_build_identity(server);",
+   "intended": [
+    "diagnostics: twelve members of ServerDiagnosticsSummary",
+    "diagnostics: CurrentSessionCount"
+   ],
+   "also": [
+    "limit: the session count",
+    "class ",
+    "diagnostics: CurrentSessionCount equals the open sessions"
+   ]
+  },
+  {
+   "id": "c-diagnostics-session-array-removed",
+   "file": "src/opcua_server_sim.c",
+   "old": "    set_build_identity(server);",
+   "new": "    UA_Server_deleteNode(server, UA_NODEID_NUMERIC(0, UA_NS0ID_SERVER_SERVERDIAGNOSTICS_SESSIONSDIAGNOSTICSSUMMARY_SESSIONDIAGNOSTICSARRAY), true);\n    set_build_identity(server);",
+   "intended": [
+    "diagnostics: SessionDiagnosticsArray",
+    "diagnostics: ActualSessionTimeout in the session array"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-diagnostics-subscription-array-removed",
+   "file": "src/opcua_server_sim.c",
+   "old": "    set_build_identity(server);",
+   "new": "    UA_Server_deleteNode(server, UA_NODEID_NUMERIC(0, UA_NS0ID_SERVER_SERVERDIAGNOSTICS_SUBSCRIPTIONDIAGNOSTICSARRAY), true);\n    set_build_identity(server);",
+   "intended": [
+    "diagnostics: SubscriptionDiagnosticsArray"
+   ],
+   "also": []
+  },
+  {
+   "id": "m-max-subscriptions-removed",
+   "file": "models/s7-1500-composite/server.json5",
+   "old": "    maxSubscriptions: 30,\n",
+   "new": "",
+   "intended": [
+    "subscriptions: the 31st is refused"
+   ],
+   "also": []
+  },
+  {
+   "id": "m-max-subscriptions-value",
+   "file": "models/s7-1500-composite/server.json5",
+   "old": "    maxSubscriptions: 30,\n",
+   "new": "    maxSubscriptions: 31,\n",
+   "intended": [
+    "subscriptions: the 31st is refused"
+   ],
+   "also": []
+  },
+  {
+   "id": "m-max-items-per-subscription",
+   "file": "models/s7-1500-composite/server.json5",
+   "old": "    maxMonitoredItemsPerSubscription: 10000,\n",
+   "new": "    maxMonitoredItemsPerSubscription: 10001,\n",
+   "intended": [
+    "items: the 10001st is refused"
+   ],
+   "also": []
+  },
+  {
+   "id": "p-subscriptions-count",
+   "file": "tools/opcua-probe.c",
+   "old": "        if(refused == UA_STATUSCODE_GOOD)\n            created++;",
+   "new": "        if(refused == UA_STATUSCODE_GOOD)\n            created += 2;",
+   "intended": [
+    "subscriptions: the 31st is refused"
+   ],
+   "also": []
+  },
+  {
+   "id": "p-items-count",
+   "file": "tools/opcua-probe.c",
+   "old": "            if(response.results[i].statusCode == UA_STATUSCODE_GOOD)\n                created++;",
+   "new": "            if(response.results[i].statusCode == UA_STATUSCODE_GOOD)\n                created += 2;",
+   "intended": [
+    "items: the 10001st is refused"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-queue-no-limit",
+   "file": "src/opcua_server_sim.c",
+   "old": "        if(active_count < max) {\n            alarm->active = true;",
+   "new": "        if(true) {\n            alarm->active = true;",
+   "intended": [
+    "queue: the third alarm is outstanding"
+   ],
+   "also": [
+    "queue"
+   ]
+  },
+  {
+   "id": "c-queue-promote-off",
+   "file": "src/opcua_server_sim.c",
+   "old": "        if(!oldest || active_count >= max)\n            break;",
+   "new": "        break;",
+   "intended": [
+    "queue: the outstanding alarm becomes active"
+   ],
+   "also": [
+    "queue"
+   ]
+  },
+  {
+   "id": "c-queue-promote-newest",
+   "file": "src/opcua_server_sim.c",
+   "old": "(!oldest || alarm->order < oldest->order)",
+   "new": "(!oldest || alarm->order > oldest->order)",
+   "intended": [
+    "queue of one: the oldest outstanding alarm becomes active"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-queue-outstanding-drop-off",
+   "file": "src/opcua_server_sim.c",
+   "old": "    } else if(!wanted && alarm->outstanding) {\n        alarm->outstanding = false;\n    } else if",
+   "new": "    } else if(false) {\n        alarm->outstanding = false;\n    } else if",
+   "intended": [
+    "queue of one: an outstanding alarm that goes out is dropped"
+   ],
+   "also": [
+    "queue"
+   ]
+  },
+  {
+   "id": "c-queue-hysteresis-off",
+   "file": "src/opcua_server_sim.c",
+   "old": "active_count < max - hysteresis)",
+   "new": "active_count < max)",
+   "intended": [
+    "queue: the overload continues within the hysteresis"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-queue-overload-late",
+   "file": "src/opcua_server_sim.c",
+   "old": "if(!queue->overload && active_count >= max)",
+   "new": "if(!queue->overload && active_count > max)",
+   "intended": [
+    "queue: the overload starts at the limit"
+   ],
+   "also": [
+    "queue"
+   ]
+  },
+  {
+   "id": "c-queue-outstanding-release-off",
+   "file": "src/opcua_server_sim.c",
+   "old": "queue->overload && outstanding_count == 0.0 && active_count",
+   "new": "queue->overload && active_count",
+   "intended": [
+    "queue: the overload ends below the limit minus the hysteresis"
+   ],
+   "also": [],
+   "equivalent": "an outstanding alarm exists only while the active alarms are at the maximum, so the test of the outstanding count adds nothing to the test below the maximum minus the hysteresis"
+  },
+  {
+   "id": "c-queue-current-not-written",
+   "file": "src/opcua_server_sim.c",
+   "old": "    write_number(server, &queue->current_node, active_count);\n",
+   "new": "",
+   "intended": [
+    "queue: two active alarms"
+   ],
+   "also": [
+    "queue"
+   ]
+  },
+  {
+   "id": "c-queue-outstanding-not-written",
+   "file": "src/opcua_server_sim.c",
+   "old": "    write_number(server, &queue->outstanding_node, outstanding_count);\n",
+   "new": "",
+   "intended": [
+    "queue: the third alarm is outstanding"
+   ],
+   "also": [
+    "queue"
+   ]
+  },
+  {
+   "id": "c-queue-trigger-not-written",
+   "file": "src/opcua_server_sim.c",
+   "old": "    write_number(server, &queue->overload_trigger, queue->overload ? 1.0 : 0.0);\n",
+   "new": "",
+   "intended": [
+    "queue: the overload starts at the limit"
+   ],
+   "also": [
+    "queue"
+   ]
+  },
+  {
+   "id": "c-queue-bind-off",
+   "file": "src/opcua_server_sim.c",
+   "old": "if(sim_alarms[i].queue < 0 && UA_NodeId_equal(&sim_alarms[i].source, &sim_queues[q].source))",
+   "new": "if(false)",
+   "intended": [
+    "queue: two active alarms"
+   ],
+   "also": [
+    "queue"
+   ]
+  },
+  {
+   "id": "s-queue-program-line-removed",
+   "file": "models/s7-1500-composite/simulation.conf",
+   "old": "queue ns=3;s=SimaticAlarmsAndConditions.ProgramAlarms.MaxAlarmsInQueue ns=3;s=SimaticAlarmsAndConditions.Overloads.OverloadHysteresis ns=3;s=SimaticAlarmsAndConditions.ProgramAlarms.CurrentAlarmsInQueue ns=3;s=SimaticAlarmsAndConditions.Overloads.OutstandingProgramAlarms ns=3;s=SimaticAlarmsAndConditions.ProgramAlarms.UserProgram ns=3;s=\"AlarmTriggers\".\"Overload_Program\"\n",
+   "new": "",
+   "intended": [
+    "queue: two active alarms"
+   ],
+   "also": [
+    "queue"
+   ]
+  },
+  {
+   "id": "s-queue-system-line-removed",
+   "file": "models/s7-1500-composite/simulation.conf",
+   "old": "queue ns=3;s=SimaticAlarmsAndConditions.SystemDiagnostics.MaxAlarmsInQueue ns=3;s=SimaticAlarmsAndConditions.Overloads.OverloadHysteresis ns=3;s=SimaticAlarmsAndConditions.SystemDiagnostics.CurrentAlarmsInQueue ns=3;s=SimaticAlarmsAndConditions.Overloads.OutstandingSystemDiagnostics ns=3;s=SimaticAlarmsAndConditions.SystemDiagnostics ns=3;s=\"AlarmTriggers\".\"Overload_System\"\n",
+   "new": "",
+   "intended": [
+    "queue of one: the system diagnostics queue overloads at its limit"
+   ],
+   "also": [
+    "queue of one"
+   ]
+  },
+  {
+   "id": "s-overload-program-alarm-removed",
+   "file": "models/s7-1500-composite/simulation.conf",
+   "old": "alarm ns=3;i=1805 ns=3;s=SimaticAlarmsAndConditions.ProgramAlarms ns=3;s=\"AlarmTriggers\".\"Overload_Program\" 900 Overload of the program alarms\n",
+   "new": "",
+   "intended": [
+    "queue: the overload alarm is reported"
+   ],
+   "also": []
+  },
+  {
+   "id": "s-overload-program-severity",
+   "file": "models/s7-1500-composite/simulation.conf",
+   "old": "Overload_Program\" 900 Overload",
+   "new": "Overload_Program\" 800 Overload",
+   "intended": [
+    "queue: the overload alarm is reported"
+   ],
+   "also": []
+  },
+  {
+   "id": "s-system-alarm-removed",
+   "file": "models/s7-1500-composite/simulation.conf",
+   "old": "alarm ns=3;i=1805 ns=3;s=SimaticAlarmsAndConditions.SystemDiagnostics ns=3;s=\"AlarmTriggers\".\"System_Alarm\" 500 System diagnostics alarm\n",
+   "new": "",
+   "intended": [
+    "system diagnostics: the notifier reports the alarm"
+   ],
+   "also": [
+    "system diagnostics:",
+    "queue of one"
+   ]
+  },
+  {
+   "id": "s-system-alarm-severity",
+   "file": "models/s7-1500-composite/simulation.conf",
+   "old": "System_Alarm\" 500 System",
+   "new": "System_Alarm\" 400 System",
+   "intended": [
+    "system diagnostics: the notifier reports the alarm"
+   ],
+   "also": []
+  },
+  {
+   "id": "s-program-alarm-3-removed",
+   "file": "models/s7-1500-composite/simulation.conf",
+   "old": "alarm ns=3;i=1805 ns=3;s=SimaticAlarmsAndConditions.ProgramAlarms.UserProgram ns=3;s=\"AlarmTriggers\".\"Program_Alarm_3\" 600 Third program alarm with a state\n",
+   "new": "",
+   "intended": [
+    "queue: the third alarm is outstanding"
+   ],
+   "also": [
+    "queue"
+   ]
+  },
+  {
+   "id": "m-plc-tag-removed",
+   "file": "models/s7-1500-composite/plc.json",
+   "old": "        {\n          \"name\": \"Program_Alarm_3\",\n          \"type\": \"Bool\"\n        },\n",
+   "new": "",
+   "intended": [
+    "model: output equals the shipped NodeSet",
+    "stdout: output equals the shipped NodeSet"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-read-error-ignored",
+   "file": "src/opcua_server_sim.c",
+   "old": "    if(good && ferror(fp)) {",
+   "new": "    if(false && ferror(fp)) {",
+   "intended": [
+    "include of a directory: exit status",
+    "include of a directory: names line 1",
+    "simulation file that is a directory: exit status",
+    "simulation file that is a directory: message"
+   ],
+   "also": []
+  }
+ ]
+}

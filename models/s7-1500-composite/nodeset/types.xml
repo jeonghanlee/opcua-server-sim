@@ -1,0 +1,514 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Information model that imitates the OPC UA server of a Siemens S7-1500 with
+  the standard SIMATIC server interface; it is not a Siemens file. Loaded after
+  the DI NodeSet, the namespaces below
+  map to server namespace index 3 (SIMATIC) and 2 (DI).
+
+  The address space collects what the published Siemens documents, a STEP 7
+  export of the standard interface, and client reports show: the PLC object
+  below Objects and DeviceSet, its device properties and area folders, the
+  SIMATIC data types, the CPU operating states, the data blocks and tags of
+  the Siemens example programs, memory tags with the clock memory, and the
+  method instances with their Static data. docs/references.md lists the
+  source of every item and names the items that are choices of this model,
+  because no source shows them: array lengths that a screenshot cuts off, the
+  name of the structure of "myUdt", the tags of "DataTypes", argument names
+  of two methods, and NodeIds of nodes below a method instance.
+
+  This file is written by tools/simatic-nodeset.pl from plc.json and the XML
+  files below nodeset/. Edit those and run "make nodeset", not this file.
+-->
+<UANodeSet xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd"
+           xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">
+  <NamespaceUris>
+    <Uri>http://www.siemens.com/simatic-s7-opcua</Uri>
+    <Uri>http://opcfoundation.org/UA/DI/</Uri>
+  </NamespaceUris>
+  <Models>
+    <Model ModelUri="http://www.siemens.com/simatic-s7-opcua" Version="1.0.0" PublicationDate="2026-11-11T00:00:00Z">
+      <RequiredModel ModelUri="http://opcfoundation.org/UA/DI/"/>
+    </Model>
+  </Models>
+  <Aliases>
+    <Alias Alias="Boolean">i=1</Alias>
+    <Alias Alias="SByte">i=2</Alias>
+    <Alias Alias="Byte">i=3</Alias>
+    <Alias Alias="Int16">i=4</Alias>
+    <Alias Alias="UInt16">i=5</Alias>
+    <Alias Alias="Int32">i=6</Alias>
+    <Alias Alias="UInt32">i=7</Alias>
+    <Alias Alias="Int64">i=8</Alias>
+    <Alias Alias="UInt64">i=9</Alias>
+    <Alias Alias="Float">i=10</Alias>
+    <Alias Alias="Double">i=11</Alias>
+    <Alias Alias="String">i=12</Alias>
+    <Alias Alias="DateTime">i=13</Alias>
+    <Alias Alias="LocalizedText">i=21</Alias>
+    <Alias Alias="BYTE">ns=1;i=3001</Alias>
+    <Alias Alias="WORD">ns=1;i=3002</Alias>
+    <Alias Alias="DWORD">ns=1;i=3003</Alias>
+    <Alias Alias="LWORD">ns=1;i=3004</Alias>
+    <Alias Alias="S5TIME">ns=1;i=3005</Alias>
+    <Alias Alias="TIME">ns=1;i=3006</Alias>
+    <Alias Alias="LTIME">ns=1;i=3007</Alias>
+    <Alias Alias="DATE">ns=1;i=3008</Alias>
+    <Alias Alias="TOD">ns=1;i=3009</Alias>
+    <Alias Alias="LTOD">ns=1;i=3010</Alias>
+    <Alias Alias="DT">ns=1;i=3011</Alias>
+    <Alias Alias="CHAR">ns=1;i=3012</Alias>
+    <Alias Alias="WCHAR">ns=1;i=3013</Alias>
+    <Alias Alias="STRING">ns=1;i=3014</Alias>
+    <Alias Alias="TIMER">ns=1;i=3015</Alias>
+    <Alias Alias="COUNTER">ns=1;i=3016</Alias>
+    <Alias Alias="DTL">ns=1;s=DT_DTL</Alias>
+    <Alias Alias="Organizes">i=35</Alias>
+    <Alias Alias="ByteString">i=15</Alias>
+    <Alias Alias="HasEncoding">i=38</Alias>
+    <Alias Alias="HasDescription">i=39</Alias>
+    <Alias Alias="HasTypeDefinition">i=40</Alias>
+    <Alias Alias="HasSubtype">i=45</Alias>
+    <Alias Alias="HasProperty">i=46</Alias>
+    <Alias Alias="HasComponent">i=47</Alias>
+    <Alias Alias="HasModellingRule">i=37</Alias>
+    <Alias Alias="HasNotifier">i=48</Alias>
+  </Aliases>
+
+  <!-- SIMATIC data types published as subtypes of an OPC UA data type -->
+  <UADataType NodeId="ns=1;i=3001" BrowseName="1:BYTE">
+    <DisplayName>BYTE</DisplayName>
+    <Description>Bit string of 8 bits.</Description>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=3</Reference>
+    </References>
+  </UADataType>
+  <UADataType NodeId="ns=1;i=3002" BrowseName="1:WORD">
+    <DisplayName>WORD</DisplayName>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=5</Reference>
+    </References>
+  </UADataType>
+  <UADataType NodeId="ns=1;i=3003" BrowseName="1:DWORD">
+    <DisplayName>DWORD</DisplayName>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=7</Reference>
+    </References>
+  </UADataType>
+  <UADataType NodeId="ns=1;i=3004" BrowseName="1:LWORD">
+    <DisplayName>LWORD</DisplayName>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=9</Reference>
+    </References>
+  </UADataType>
+  <UADataType NodeId="ns=1;i=3005" BrowseName="1:S5TIME">
+    <DisplayName>S5TIME</DisplayName>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=5</Reference>
+    </References>
+  </UADataType>
+  <UADataType NodeId="ns=1;i=3006" BrowseName="1:TIME">
+    <DisplayName>TIME</DisplayName>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=6</Reference>
+    </References>
+  </UADataType>
+  <UADataType NodeId="ns=1;i=3007" BrowseName="1:LTIME">
+    <DisplayName>LTIME</DisplayName>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=8</Reference>
+    </References>
+  </UADataType>
+  <UADataType NodeId="ns=1;i=3008" BrowseName="1:DATE">
+    <DisplayName>DATE</DisplayName>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=5</Reference>
+    </References>
+  </UADataType>
+  <UADataType NodeId="ns=1;i=3009" BrowseName="1:TOD">
+    <DisplayName>TOD</DisplayName>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=7</Reference>
+    </References>
+  </UADataType>
+  <UADataType NodeId="ns=1;i=3010" BrowseName="1:LTOD">
+    <DisplayName>LTOD</DisplayName>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=9</Reference>
+    </References>
+  </UADataType>
+  <UADataType NodeId="ns=1;i=3011" BrowseName="1:DT">
+    <DisplayName>DT</DisplayName>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=3</Reference>
+    </References>
+  </UADataType>
+  <UADataType NodeId="ns=1;i=3012" BrowseName="1:CHAR">
+    <DisplayName>CHAR</DisplayName>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=3</Reference>
+    </References>
+  </UADataType>
+  <UADataType NodeId="ns=1;i=3013" BrowseName="1:WCHAR">
+    <DisplayName>WCHAR</DisplayName>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=5</Reference>
+    </References>
+  </UADataType>
+  <UADataType NodeId="ns=1;i=3014" BrowseName="1:STRING">
+    <DisplayName>STRING</DisplayName>
+    <Description>Character string of up to 254 characters.</Description>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=12</Reference>
+    </References>
+  </UADataType>
+  <UADataType NodeId="ns=1;i=3015" BrowseName="1:TIMER">
+    <DisplayName>TIMER</DisplayName>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=5</Reference>
+    </References>
+  </UADataType>
+  <UADataType NodeId="ns=1;i=3016" BrowseName="1:COUNTER">
+    <DisplayName>COUNTER</DisplayName>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=5</Reference>
+    </References>
+  </UADataType>
+
+  <!-- CPU operating states, the data type of the OperatingMode property -->
+  <UADataType NodeId="ns=1;i=3063" BrowseName="1:SimaticOperatingState">
+    <DisplayName>SimaticOperatingState</DisplayName>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
+    </References>
+    <Definition Name="1:SimaticOperatingState">
+      <Field Name="NotSupported" Value="0"/>
+      <Field Name="StopFwUpdate" Value="1"/>
+      <Field Name="StopInitialization" Value="3"/>
+      <Field Name="Stop" Value="4"/>
+      <Field Name="Startup" Value="6"/>
+      <Field Name="Run" Value="8"/>
+      <Field Name="RunRedundant" Value="9"/>
+      <Field Name="Hold" Value="10"/>
+      <Field Name="LinkUp" Value="11"/>
+      <Field Name="Update" Value="12"/>
+      <Field Name="Defective" Value="13"/>
+      <Field Name="Troubleshooting" Value="14"/>
+      <Field Name="NoPower" Value="15"/>
+      <Field Name="CiR" Value="16"/>
+      <Field Name="StopOutputsNotDeenergized" Value="17"/>
+      <Field Name="RunOutputsDeenergized" Value="18"/>
+      <Field Name="ProgramTest" Value="19"/>
+      <Field Name="RunProgramTest" Value="20"/>
+      <Field Name="RunSyncup" Value="21"/>
+      <Field Name="Syncup" Value="22"/>
+      <Field Name="RemoteUnknown" Value="31"/>
+    </Definition>
+  </UADataType>
+  <UAVariable NodeId="ns=1;i=6083" BrowseName="EnumValues" ParentNodeId="ns=1;i=3063" DataType="i=7594" ValueRank="1" ArrayDimensions="21">
+    <DisplayName>EnumValues</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=3063</Reference>
+    </References>
+    <Value>
+      <uax:ListOfExtensionObject>
+        <uax:ExtensionObject>
+          <uax:TypeId><uax:Identifier>i=7616</uax:Identifier></uax:TypeId>
+          <uax:Body>
+            <uax:EnumValueType>
+              <uax:Value>0</uax:Value>
+              <uax:DisplayName><uax:Text>NotSupported</uax:Text></uax:DisplayName>
+              <uax:Description/>
+            </uax:EnumValueType>
+          </uax:Body>
+        </uax:ExtensionObject>
+        <uax:ExtensionObject>
+          <uax:TypeId><uax:Identifier>i=7616</uax:Identifier></uax:TypeId>
+          <uax:Body>
+            <uax:EnumValueType>
+              <uax:Value>1</uax:Value>
+              <uax:DisplayName><uax:Text>STOP - FW update</uax:Text></uax:DisplayName>
+              <uax:Description/>
+            </uax:EnumValueType>
+          </uax:Body>
+        </uax:ExtensionObject>
+        <uax:ExtensionObject>
+          <uax:TypeId><uax:Identifier>i=7616</uax:Identifier></uax:TypeId>
+          <uax:Body>
+            <uax:EnumValueType>
+              <uax:Value>3</uax:Value>
+              <uax:DisplayName><uax:Text>STOP - Initialization</uax:Text></uax:DisplayName>
+              <uax:Description/>
+            </uax:EnumValueType>
+          </uax:Body>
+        </uax:ExtensionObject>
+        <uax:ExtensionObject>
+          <uax:TypeId><uax:Identifier>i=7616</uax:Identifier></uax:TypeId>
+          <uax:Body>
+            <uax:EnumValueType>
+              <uax:Value>4</uax:Value>
+              <uax:DisplayName><uax:Text>STOP</uax:Text></uax:DisplayName>
+              <uax:Description/>
+            </uax:EnumValueType>
+          </uax:Body>
+        </uax:ExtensionObject>
+        <uax:ExtensionObject>
+          <uax:TypeId><uax:Identifier>i=7616</uax:Identifier></uax:TypeId>
+          <uax:Body>
+            <uax:EnumValueType>
+              <uax:Value>6</uax:Value>
+              <uax:DisplayName><uax:Text>Startup</uax:Text></uax:DisplayName>
+              <uax:Description/>
+            </uax:EnumValueType>
+          </uax:Body>
+        </uax:ExtensionObject>
+        <uax:ExtensionObject>
+          <uax:TypeId><uax:Identifier>i=7616</uax:Identifier></uax:TypeId>
+          <uax:Body>
+            <uax:EnumValueType>
+              <uax:Value>8</uax:Value>
+              <uax:DisplayName><uax:Text>RUN</uax:Text></uax:DisplayName>
+              <uax:Description/>
+            </uax:EnumValueType>
+          </uax:Body>
+        </uax:ExtensionObject>
+        <uax:ExtensionObject>
+          <uax:TypeId><uax:Identifier>i=7616</uax:Identifier></uax:TypeId>
+          <uax:Body>
+            <uax:EnumValueType>
+              <uax:Value>9</uax:Value>
+              <uax:DisplayName><uax:Text>RUN-Redundant</uax:Text></uax:DisplayName>
+              <uax:Description/>
+            </uax:EnumValueType>
+          </uax:Body>
+        </uax:ExtensionObject>
+        <uax:ExtensionObject>
+          <uax:TypeId><uax:Identifier>i=7616</uax:Identifier></uax:TypeId>
+          <uax:Body>
+            <uax:EnumValueType>
+              <uax:Value>10</uax:Value>
+              <uax:DisplayName><uax:Text>HOLD</uax:Text></uax:DisplayName>
+              <uax:Description/>
+            </uax:EnumValueType>
+          </uax:Body>
+        </uax:ExtensionObject>
+        <uax:ExtensionObject>
+          <uax:TypeId><uax:Identifier>i=7616</uax:Identifier></uax:TypeId>
+          <uax:Body>
+            <uax:EnumValueType>
+              <uax:Value>11</uax:Value>
+              <uax:DisplayName><uax:Text>LinkUp</uax:Text></uax:DisplayName>
+              <uax:Description/>
+            </uax:EnumValueType>
+          </uax:Body>
+        </uax:ExtensionObject>
+        <uax:ExtensionObject>
+          <uax:TypeId><uax:Identifier>i=7616</uax:Identifier></uax:TypeId>
+          <uax:Body>
+            <uax:EnumValueType>
+              <uax:Value>12</uax:Value>
+              <uax:DisplayName><uax:Text>Update</uax:Text></uax:DisplayName>
+              <uax:Description/>
+            </uax:EnumValueType>
+          </uax:Body>
+        </uax:ExtensionObject>
+        <uax:ExtensionObject>
+          <uax:TypeId><uax:Identifier>i=7616</uax:Identifier></uax:TypeId>
+          <uax:Body>
+            <uax:EnumValueType>
+              <uax:Value>13</uax:Value>
+              <uax:DisplayName><uax:Text>Defective</uax:Text></uax:DisplayName>
+              <uax:Description/>
+            </uax:EnumValueType>
+          </uax:Body>
+        </uax:ExtensionObject>
+        <uax:ExtensionObject>
+          <uax:TypeId><uax:Identifier>i=7616</uax:Identifier></uax:TypeId>
+          <uax:Body>
+            <uax:EnumValueType>
+              <uax:Value>14</uax:Value>
+              <uax:DisplayName><uax:Text>Troubleshooting</uax:Text></uax:DisplayName>
+              <uax:Description/>
+            </uax:EnumValueType>
+          </uax:Body>
+        </uax:ExtensionObject>
+        <uax:ExtensionObject>
+          <uax:TypeId><uax:Identifier>i=7616</uax:Identifier></uax:TypeId>
+          <uax:Body>
+            <uax:EnumValueType>
+              <uax:Value>15</uax:Value>
+              <uax:DisplayName><uax:Text>No power</uax:Text></uax:DisplayName>
+              <uax:Description/>
+            </uax:EnumValueType>
+          </uax:Body>
+        </uax:ExtensionObject>
+        <uax:ExtensionObject>
+          <uax:TypeId><uax:Identifier>i=7616</uax:Identifier></uax:TypeId>
+          <uax:Body>
+            <uax:EnumValueType>
+              <uax:Value>16</uax:Value>
+              <uax:DisplayName><uax:Text>CiR</uax:Text></uax:DisplayName>
+              <uax:Description/>
+            </uax:EnumValueType>
+          </uax:Body>
+        </uax:ExtensionObject>
+        <uax:ExtensionObject>
+          <uax:TypeId><uax:Identifier>i=7616</uax:Identifier></uax:TypeId>
+          <uax:Body>
+            <uax:EnumValueType>
+              <uax:Value>17</uax:Value>
+              <uax:DisplayName><uax:Text>STOP - no de-energized/substitute value switch for outputs</uax:Text></uax:DisplayName>
+              <uax:Description/>
+            </uax:EnumValueType>
+          </uax:Body>
+        </uax:ExtensionObject>
+        <uax:ExtensionObject>
+          <uax:TypeId><uax:Identifier>i=7616</uax:Identifier></uax:TypeId>
+          <uax:Body>
+            <uax:EnumValueType>
+              <uax:Value>18</uax:Value>
+              <uax:DisplayName><uax:Text>RUN - de-energized/substitute value switch for outputs</uax:Text></uax:DisplayName>
+              <uax:Description/>
+            </uax:EnumValueType>
+          </uax:Body>
+        </uax:ExtensionObject>
+        <uax:ExtensionObject>
+          <uax:TypeId><uax:Identifier>i=7616</uax:Identifier></uax:TypeId>
+          <uax:Body>
+            <uax:EnumValueType>
+              <uax:Value>19</uax:Value>
+              <uax:DisplayName><uax:Text>Program test</uax:Text></uax:DisplayName>
+              <uax:Description/>
+            </uax:EnumValueType>
+          </uax:Body>
+        </uax:ExtensionObject>
+        <uax:ExtensionObject>
+          <uax:TypeId><uax:Identifier>i=7616</uax:Identifier></uax:TypeId>
+          <uax:Body>
+            <uax:EnumValueType>
+              <uax:Value>20</uax:Value>
+              <uax:DisplayName><uax:Text>Run program test</uax:Text></uax:DisplayName>
+              <uax:Description/>
+            </uax:EnumValueType>
+          </uax:Body>
+        </uax:ExtensionObject>
+        <uax:ExtensionObject>
+          <uax:TypeId><uax:Identifier>i=7616</uax:Identifier></uax:TypeId>
+          <uax:Body>
+            <uax:EnumValueType>
+              <uax:Value>21</uax:Value>
+              <uax:DisplayName><uax:Text>RUN Syncup</uax:Text></uax:DisplayName>
+              <uax:Description/>
+            </uax:EnumValueType>
+          </uax:Body>
+        </uax:ExtensionObject>
+        <uax:ExtensionObject>
+          <uax:TypeId><uax:Identifier>i=7616</uax:Identifier></uax:TypeId>
+          <uax:Body>
+            <uax:EnumValueType>
+              <uax:Value>22</uax:Value>
+              <uax:DisplayName><uax:Text>Syncup</uax:Text></uax:DisplayName>
+              <uax:Description/>
+            </uax:EnumValueType>
+          </uax:Body>
+        </uax:ExtensionObject>
+        <uax:ExtensionObject>
+          <uax:TypeId><uax:Identifier>i=7616</uax:Identifier></uax:TypeId>
+          <uax:Body>
+            <uax:EnumValueType>
+              <uax:Value>31</uax:Value>
+              <uax:DisplayName><uax:Text>Remote unknown</uax:Text></uax:DisplayName>
+              <uax:Description/>
+            </uax:EnumValueType>
+          </uax:Body>
+        </uax:ExtensionObject>
+      </uax:ListOfExtensionObject>
+    </Value>
+  </UAVariable>
+
+  <!-- Base types of structures: user program types below SimaticStructures,
+       system data types below SimaticSystemStructures -->
+  <UADataType NodeId="ns=1;i=3400" BrowseName="1:SimaticStructures" IsAbstract="true">
+    <DisplayName>SimaticStructures</DisplayName>
+    <Description>Data types that the user program defines.</Description>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=22</Reference>
+    </References>
+  </UADataType>
+  <UADataType NodeId="ns=1;i=3500" BrowseName="1:SimaticSystemStructures" IsAbstract="true">
+    <DisplayName>SimaticSystemStructures</DisplayName>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=22</Reference>
+    </References>
+  </UADataType>
+  <UAVariableType NodeId="ns=1;i=2400" BrowseName="1:SimaticStructuresType" IsAbstract="true" DataType="ns=1;i=3400">
+    <DisplayName>SimaticStructuresType</DisplayName>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=63</Reference>
+    </References>
+  </UAVariableType>
+
+  <!-- SIMATIC data type DTL, published as a structure -->
+  <UADataType NodeId="ns=1;s=DT_DTL" BrowseName="1:DTL">
+    <DisplayName>DTL</DisplayName>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=3500</Reference>
+      <Reference ReferenceType="HasEncoding">ns=1;s=TE_DTL</Reference>
+    </References>
+    <Definition Name="1:DTL">
+      <Field Name="YEAR" DataType="UInt16"/>
+      <Field Name="MONTH" DataType="Byte"/>
+      <Field Name="DAY" DataType="Byte"/>
+      <Field Name="WEEKDAY" DataType="Byte"/>
+      <Field Name="HOUR" DataType="Byte"/>
+      <Field Name="MINUTE" DataType="Byte"/>
+      <Field Name="SECOND" DataType="Byte"/>
+      <Field Name="NANOSECOND" DataType="UInt32"/>
+    </Definition>
+  </UADataType>
+  <UAObject NodeId="ns=1;s=TE_DTL" BrowseName="Default Binary">
+    <DisplayName>Default Binary</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+      <Reference ReferenceType="HasEncoding" IsForward="false">ns=1;s=DT_DTL</Reference>
+      <Reference ReferenceType="HasDescription">ns=1;s=TD_DTL</Reference>
+    </References>
+  </UAObject>
+
+  <!-- Binary type dictionary of the structures, for clients that decode
+       structures from the DataTypeDictionary instead of the
+       DataTypeDefinition attribute. The value is the base64 form of an OPC
+       Binary schema that lists the fields in the order of the Definition
+       elements above. -->
+  <UAVariable NodeId="ns=1;i=6001" BrowseName="1:SimaticStructures" ParentNodeId="i=93" DataType="ByteString">
+    <DisplayName>SimaticStructures</DisplayName>
+    <Description>Collects the structure type descriptions of the model.</Description>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=72</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">i=93</Reference>
+    </References>
+    <Value>
+      <uax:ByteString>@TYPE_DICTIONARY@</uax:ByteString>
+    </Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6002" BrowseName="NamespaceUri" ParentNodeId="ns=1;i=6001" DataType="String">
+    <DisplayName>NamespaceUri</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=6001</Reference>
+    </References>
+    <Value>
+      <uax:String>http://www.siemens.com/simatic-s7-opcua</uax:String>
+    </Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=TD_DTL" BrowseName="1:DTL" ParentNodeId="ns=1;i=6001" DataType="String">
+    <DisplayName>DTL</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=69</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=6001</Reference>
+    </References>
+    <Value>
+      <uax:String>DTL</uax:String>
+    </Value>
+  </UAVariable>
+

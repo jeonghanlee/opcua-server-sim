@@ -1,0 +1,100 @@
+.DEFAULT_GOAL := help
+
+.PHONY: help build probe clean run certificate nodeset test check-open62541
+
+help:
+	$(info Usage: make <target> [VAR=value])
+	$(info )
+	$(info Target            Action)
+	$(info ---------------   ------------------------------------------------------)
+	$(info open62541         Build and install open62541 through open62541-env)
+	$(info build             Build the server)
+	$(info probe             Build the client that checks a running server)
+	$(info nodeset           Write the NodeSet of a model from its plc.json)
+	$(info test              Run the tests: the tools, and the server with the model MODEL)
+	$(info certificate       Create the server certificate of a model that carries pki.cnf)
+	$(info run               Run the server with the model MODEL (default: $(MODEL)))
+	$(info clean             Remove the build directory)
+	$(info vars              Print the active configuration variables)
+	$(QUIET) :
+
+## Verify that the open62541 installation provides the NodeSet loader and the
+## Alarms and Conditions support that the server uses
+check-open62541:
+	$(QUIET) if [ ! -f "$(OPEN62541_PATH)/include/open62541/plugin/nodesetloader.h" ]; then \
+	    printf "%s\n" "error: open62541 with the NodeSet loader not found in $(OPEN62541_PATH)"; \
+	    printf "%s\n" "set OPEN62541_PATH in configure/CONFIG_SITE.local, or run: make open62541"; \
+	    exit 1; \
+	fi
+	$(QUIET) if ! grep -q "UA_ENABLE_SUBSCRIPTIONS_ALARMS_CONDITIONS" "$(OPEN62541_PATH)/include/open62541/config.h"; then \
+	    printf "%s\n" "error: open62541 in $(OPEN62541_PATH) is built without Alarms and Conditions"; \
+	    printf "%s\n" "make open62541 builds it through open62541-env, which needs CMAKE_EXTRA_OPTIONS"; \
+	    printf "%s\n" "support and the nodesetLoader patch (see OPEN62541_ENV_PATH in CONFIG_SITE)"; \
+	    exit 1; \
+	fi
+
+## Verify that a command is in PATH
+check-tool.%:
+	$(QUIET) if ! command -v "$*" >/dev/null; then \
+	    printf "%s\n" "error: $* not found in PATH"; \
+	    printf "%s\n" "install on Debian with: apt install $(TOOL_APT.$*)"; \
+	    printf "%s\n" "install on Rocky with: dnf install $(TOOL_RPM.$*)"; \
+	    exit 1; \
+	fi
+
+## Build the server
+build: check-open62541 $(SERVER_BIN)
+
+$(SERVER_BIN): $(SERVER_SRC) $(BUILD_STAMP)
+	$(QUIET) mkdir -p $(BUILD_PATH)
+	$(QUIET) $(CC) $(CPPFLAGS) $(CFLAGS) -o $@ $< $(LDFLAGS) $(LDLIBS)
+
+## Build the client that checks a running server
+probe: check-open62541 $(PROBE_BIN)
+
+$(PROBE_BIN): $(PROBE_SRC)
+	$(QUIET) mkdir -p $(BUILD_PATH)
+	$(QUIET) $(CC) $(CPPFLAGS) $(CFLAGS) -o $@ $< $(LDFLAGS) $(LDLIBS)
+
+## Write the NodeSet of a model that carries plc.json, when the description,
+## the XML sections, or the tool are newer than the NodeSet
+ifneq ($(MODEL_DESCRIPTION),)
+nodeset: $(MODEL_NODESET)
+	$(QUIET) :
+
+$(MODEL_NODESET): $(MODEL_DESCRIPTION) $(wildcard $(MODEL_PATH)/nodeset/*.xml) $(NODESET_TOOL) | check-tool.perl
+	$(QUIET) perl $(NODESET_TOOL) --output $@ $(MODEL_DESCRIPTION)
+else
+nodeset:
+	$(QUIET) printf "%s\n" "error: $(MODEL_PATH)/plc.json not found"; exit 1
+endif
+
+## Run the tests of the tools, and of the server with the composite model
+test: check-tool.perl check-tool.prove build probe certificate
+	$(QUIET) SIM_SERVER=$(SERVER_BIN) SIM_PROBE=$(PROBE_BIN) SIM_DI=$(UA_NODESET_PATH)/DI/Opc.Ua.Di.NodeSet2.xml prove $(TOP)/t
+
+## Create the self-signed server certificate of a model that carries pki.cnf
+certificate: $(if $(MODEL_PKI_CONFIG),$(MODEL_CERT))
+	$(QUIET) :
+
+$(MODEL_KEY): | check-tool.openssl
+	$(QUIET) mkdir -p $(MODEL_PKI_PATH)
+	$(QUIET) openssl genpkey -quiet -algorithm RSA -pkeyopt rsa_keygen_bits:$(CERT_KEY_BITS) -outform DER -out $@
+	$(QUIET) chmod 600 $@
+
+$(MODEL_CERT): $(MODEL_PKI_CONFIG) $(MODEL_KEY) | check-tool.openssl
+	$(QUIET) openssl req -x509 -new -sha256 -days $(CERT_DAYS) -config $< -key $(MODEL_KEY) -keyform DER -outform DER -out $@
+
+$(BUILD_STAMP): FORCE
+	$(QUIET) mkdir -p $(BUILD_PATH)
+	$(QUIET) printf "%s %s\n" "$(BUILD_NUMBER)" "$(SOFTWARE_VERSION)" > $@.new
+	$(QUIET) if cmp -s $@.new $@; then rm -f $@.new; else mv $@.new $@; fi
+
+## Run the server from the model directory, so that the server configuration
+## can name its certificate files relative to that directory
+run: build certificate $(if $(MODEL_DESCRIPTION),nodeset)
+	$(QUIET) cd "$(MODEL_PATH)" && $(SERVER_BIN) $(if $(MODEL_SIMULATION),-s $(MODEL_SIMULATION)) $(MODEL_CONFIG) $(MODEL_NODESETS)
+
+## Remove the build directory
+clean:
+	$(QUIET) rm -rf $(BUILD_PATH)

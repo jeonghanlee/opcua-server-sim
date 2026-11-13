@@ -1,0 +1,338 @@
+
+  <!-- Device type of the PLC object, a subtype of the DI DeviceType, with the
+       area folders and properties every PLC object carries -->
+  <UAObjectType NodeId="ns=1;i=1002" BrowseName="1:SimaticDeviceType">
+    <DisplayName>SimaticDeviceType</DisplayName>
+    <Description>Type of the simulated PLC device object.</Description>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">ns=2;i=1002</Reference>
+    </References>
+  </UAObjectType>
+  <UAObject NodeId="ns=1;i=5059" BrowseName="1:Inputs" ParentNodeId="ns=1;i=1002">
+    <DisplayName>Inputs</DisplayName>
+    <Description>Folder of the input tags.</Description>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">ns=2;i=1005</Reference>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1002</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;i=5060" BrowseName="1:Outputs" ParentNodeId="ns=1;i=1002">
+    <DisplayName>Outputs</DisplayName>
+    <Description>Folder of the output tags.</Description>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">ns=2;i=1005</Reference>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1002</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;i=5061" BrowseName="1:Timers" ParentNodeId="ns=1;i=1002">
+    <DisplayName>Timers</DisplayName>
+    <Description>Folder of the timer tags.</Description>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">ns=2;i=1005</Reference>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1002</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;i=5062" BrowseName="1:Counters" ParentNodeId="ns=1;i=1002">
+    <DisplayName>Counters</DisplayName>
+    <Description>Folder of the counter tags.</Description>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">ns=2;i=1005</Reference>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1002</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;i=5063" BrowseName="1:DataBlocksGlobal" ParentNodeId="ns=1;i=1002">
+    <DisplayName>DataBlocksGlobal</DisplayName>
+    <Description>Folder of the global data blocks.</Description>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">ns=2;i=1005</Reference>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1002</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;i=5064" BrowseName="1:DataBlocksInstance" ParentNodeId="ns=1;i=1002">
+    <DisplayName>DataBlocksInstance</DisplayName>
+    <Description>Folder of the instance data blocks.</Description>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">ns=2;i=1005</Reference>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1002</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;i=5065" BrowseName="1:Memory" ParentNodeId="ns=1;i=1002">
+    <DisplayName>Memory</DisplayName>
+    <Description>Folder of the memory tags.</Description>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">ns=2;i=1005</Reference>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1002</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=6070" BrowseName="1:EngineeringRevision" ParentNodeId="ns=1;i=1002" DataType="String">
+    <DisplayName>EngineeringRevision</DisplayName>
+    <Description>Version of the engineering tool.</Description>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1002</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6071" BrowseName="1:OperatingMode" ParentNodeId="ns=1;i=1002" DataType="ns=1;i=3063">
+    <DisplayName>OperatingMode</DisplayName>
+    <Description>Operating state of the simulated CPU.</Description>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1002</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6072" BrowseName="1:OrderNumber" ParentNodeId="ns=1;i=1002" DataType="String">
+    <DisplayName>OrderNumber</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1002</Reference>
+    </References>
+  </UAVariable>
+
+  <!-- PLC object -->
+  <UAObject NodeId="ns=1;s=PLC" BrowseName="1:PLC_1" ParentNodeId="ns=2;i=5001">
+    <DisplayName>PLC_1</DisplayName>
+    <Description>The simulated PLC.</Description>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">ns=1;i=1002</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=2;i=5001</Reference>
+      <Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+    </References>
+  </UAObject>
+
+  <!-- Device properties of the PLC object. The properties that the DI
+       specification defines carry a browse name in the DI namespace. -->
+  <UAVariable NodeId="ns=1;s=DeviceManual" BrowseName="2:DeviceManual" ParentNodeId="ns=1;s=PLC" DataType="String">
+    <DisplayName>DeviceManual</DisplayName>
+    <Description>Location of the manual of the device.</Description>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=PLC</Reference>
+    </References>
+    <Value>
+      <uax:String>https://github.com/jeonghanlee/opcua-server-sim</uax:String>
+    </Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=DeviceRevision" BrowseName="2:DeviceRevision" ParentNodeId="ns=1;s=PLC" DataType="String">
+    <DisplayName>DeviceRevision</DisplayName>
+    <Description>Revision of the device as a whole.</Description>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=PLC</Reference>
+    </References>
+    <Value>
+      <uax:String>1</uax:String>
+    </Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=EngineeringRevision" BrowseName="1:EngineeringRevision" ParentNodeId="ns=1;s=PLC" DataType="String">
+    <DisplayName>EngineeringRevision</DisplayName>
+    <Description>Version of the engineering tool.</Description>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=PLC</Reference>
+    </References>
+    <Value>
+      <uax:String>plc.json</uax:String>
+    </Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=HardwareRevision" BrowseName="2:HardwareRevision" ParentNodeId="ns=1;s=PLC" DataType="String">
+    <DisplayName>HardwareRevision</DisplayName>
+    <Description>Revision of the device hardware.</Description>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=PLC</Reference>
+    </References>
+    <Value>
+      <uax:String>1</uax:String>
+    </Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=Manufacturer" BrowseName="2:Manufacturer" ParentNodeId="ns=1;s=PLC" DataType="LocalizedText">
+    <DisplayName>Manufacturer</DisplayName>
+    <Description>Name of the device model.</Description>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=PLC</Reference>
+    </References>
+    <Value>
+      <uax:LocalizedText><uax:Text>opcua-server-sim</uax:Text></uax:LocalizedText>
+    </Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=Model" BrowseName="2:Model" ParentNodeId="ns=1;s=PLC" DataType="LocalizedText">
+    <DisplayName>Model</DisplayName>
+    <Description>Name of the device manufacturer.</Description>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=PLC</Reference>
+    </References>
+    <Value>
+      <uax:LocalizedText><uax:Text>S7-1500 simulator</uax:Text></uax:LocalizedText>
+    </Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=OrderNumber" BrowseName="1:OrderNumber" ParentNodeId="ns=1;s=PLC" DataType="String">
+    <DisplayName>OrderNumber</DisplayName>
+    <Description>Order number of the device.</Description>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=PLC</Reference>
+    </References>
+    <Value>
+      <uax:String>OPCUA-SERVER-SIM-S7-1500</uax:String>
+    </Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SerialNumber" BrowseName="2:SerialNumber" ParentNodeId="ns=1;s=PLC" DataType="String">
+    <DisplayName>SerialNumber</DisplayName>
+    <Description>Serial number of the device.</Description>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=PLC</Reference>
+    </References>
+    <Value>
+      <uax:String>COMPOSITE-0001</uax:String>
+    </Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=SoftwareRevision" BrowseName="2:SoftwareRevision" ParentNodeId="ns=1;s=PLC" DataType="String">
+    <DisplayName>SoftwareRevision</DisplayName>
+    <Description>Revision of the device firmware.</Description>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=PLC</Reference>
+    </References>
+    <Value>
+      <uax:String>0.1</uax:String>
+    </Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=RevisionCounter" BrowseName="2:RevisionCounter" ParentNodeId="ns=1;s=PLC" DataType="Int32">
+    <DisplayName>RevisionCounter</DisplayName>
+    <Description>Counts the changes of the static data of the device.</Description>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=PLC</Reference>
+    </References>
+    <Value>
+      <uax:Int32>0</uax:Int32>
+    </Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;s=OperatingMode" BrowseName="1:OperatingMode" ParentNodeId="ns=1;s=PLC" DataType="ns=1;i=3063">
+    <DisplayName>OperatingMode</DisplayName>
+    <Description>Current state of the simulated CPU.</Description>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=PLC</Reference>
+    </References>
+    <Value>
+      <uax:Int32>8</uax:Int32>
+    </Value>
+  </UAVariable>
+
+  <!-- Area folders of the PLC object -->
+  <UAObject NodeId="ns=1;s=Counters" BrowseName="1:Counters" ParentNodeId="ns=1;s=PLC">
+    <DisplayName>Counters</DisplayName>
+    <Description>Folder of the counter tags.</Description>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">ns=2;i=1005</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=PLC</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;s=DataBlocksGlobal" BrowseName="1:DataBlocksGlobal" ParentNodeId="ns=1;s=PLC">
+    <DisplayName>DataBlocksGlobal</DisplayName>
+    <Description>Folder of the global data blocks.</Description>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">ns=2;i=1005</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=PLC</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;s=DataBlocksInstance" BrowseName="1:DataBlocksInstance" ParentNodeId="ns=1;s=PLC">
+    <DisplayName>DataBlocksInstance</DisplayName>
+    <Description>Folder of the instance data blocks.</Description>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">ns=2;i=1005</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=PLC</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;s=Inputs" BrowseName="1:Inputs" ParentNodeId="ns=1;s=PLC">
+    <DisplayName>Inputs</DisplayName>
+    <Description>Folder of the input tags.</Description>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">ns=2;i=1005</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=PLC</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;s=Memory" BrowseName="1:Memory" ParentNodeId="ns=1;s=PLC">
+    <DisplayName>Memory</DisplayName>
+    <Description>Folder of the memory tags.</Description>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">ns=2;i=1005</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=PLC</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;s=Outputs" BrowseName="1:Outputs" ParentNodeId="ns=1;s=PLC">
+    <DisplayName>Outputs</DisplayName>
+    <Description>Folder of the output tags.</Description>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">ns=2;i=1005</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=PLC</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;s=Timers" BrowseName="1:Timers" ParentNodeId="ns=1;s=PLC">
+    <DisplayName>Timers</DisplayName>
+    <Description>Folder of the timer tags.</Description>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">ns=2;i=1005</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;s=PLC</Reference>
+    </References>
+  </UAObject>
+
+  <!-- Icon properties. One node serves the areas that share an icon. -->
+  <UAVariable NodeId="ns=1;i=5201" BrowseName="Icon" ParentNodeId="ns=1;s=PLC" DataType="i=2003">
+    <DisplayName>Icon</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=PLC</Reference>
+    </References>
+    <Value>
+      <uax:ByteString></uax:ByteString>
+    </Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5202" BrowseName="Icon" ParentNodeId="ns=1;s=DataBlocksGlobal" DataType="i=2003">
+    <DisplayName>Icon</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=DataBlocksGlobal</Reference>
+    </References>
+    <Value>
+      <uax:ByteString></uax:ByteString>
+    </Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5203" BrowseName="Icon" ParentNodeId="ns=1;s=DataBlocksInstance" DataType="i=2003">
+    <DisplayName>Icon</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=DataBlocksInstance</Reference>
+    </References>
+    <Value>
+      <uax:ByteString></uax:ByteString>
+    </Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5204" BrowseName="Icon" ParentNodeId="ns=1;s=Counters" DataType="i=2003">
+    <DisplayName>Icon</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=Counters</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=Inputs</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=Memory</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=Outputs</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;s=Timers</Reference>
+    </References>
+    <Value>
+      <uax:ByteString></uax:ByteString>
+    </Value>
+  </UAVariable>

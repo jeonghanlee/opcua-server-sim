@@ -1,0 +1,28 @@
+opcua-server-sim
+Copyright 2026 Jeong Han Lee
+
+Licensed under the Apache License, Version 2.0 (see LICENSE).
+
+This project is an independent simulator. It is not affiliated with, endorsed
+by, or sponsored by Siemens AG or the OPC Foundation.
+
+SIMATIC and S7-1500 are trademarks of Siemens AG. OPC and OPC UA are
+trademarks of the OPC Foundation. All other product and company names are the
+trademarks of their respective owners. The names appear only to identify the
+device and the protocol that the simulator imitates and stays compatible with;
+they do not imply any relationship.
+
+The model files describe the behavior and the interface of a device that is
+documented in public sources, which docs/references.md lists. The descriptions
+and comments in the model files were written for this project. The identifiers
+(browse names, node ids, namespace URIs, and the application URI) follow the
+documented interface of the imitated device so that existing OPC UA clients
+recognize the simulator; a URI that names a Siemens domain identifies that
+interface and is not a claim of origin.
+
+The server links against these libraries, which this repository does not
+contain:
+
+  open62541           MPL-2.0   https://github.com/open62541/open62541
+  nodesetLoader       MPL-2.0   https://github.com/open62541/nodesetLoader
+  UA-Nodeset (DI)     OPC Foundation MIT License 1.00  https://github.com/OPCFoundation/UA-Nodeset

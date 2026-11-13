@@ -1,0 +1,186 @@
+{
+ "mutations": [
+  {
+   "id": "p-mode",
+   "file": "tools/simatic-nodeset.pl",
+   "old": "atomic_write($output, $text, 0644);",
+   "new": "atomic_write($output, $text, 0600);",
+   "intended": [
+    "model: mode of the output file"
+   ],
+   "also": []
+  },
+  {
+   "id": "p-exit-usage",
+   "file": "tools/simatic-nodeset.pl",
+   "old": "my $EXIT_USAGE = 2;",
+   "new": "my $EXIT_USAGE = 3;",
+   "intended": [
+    "no arguments: exit status",
+    "unknown option: exit status"
+   ],
+   "also": []
+  },
+  {
+   "id": "p-exit-error",
+   "file": "tools/simatic-nodeset.pl",
+   "old": "my $EXIT_ERROR = 1;",
+   "new": "my $EXIT_ERROR = 0;",
+   "intended": [
+    "missing description: exit status"
+   ],
+   "also": [
+    ": exit status"
+   ]
+  },
+  {
+   "id": "p-unknown-type-no-die",
+   "file": "tools/simatic-nodeset.pl",
+   "old": "exists $types{$type} or die \"unknown data type \\\"$type\\\"\\n\";",
+   "new": "exists $types{$type} or 1;",
+   "intended": [
+    "unknown data type: message"
+   ],
+   "also": [
+    "unknown data type:"
+   ]
+  },
+  {
+   "id": "p-relaxed-off",
+   "file": "tools/simatic-nodeset.pl",
+   "old": "JSON::PP->new->utf8->relaxed->decode($text)",
+   "new": "JSON::PP->new->utf8->decode($text)",
+   "intended": [
+    "small: exit status"
+   ],
+   "also": [
+    "small:"
+   ]
+  },
+  {
+   "id": "p-content-amp",
+   "file": "tools/simatic-nodeset.pl",
+   "old": "sub q_content {\n    my ($text) = @_;\n    $text =~ s/&/&amp;/g;\n",
+   "new": "sub q_content {\n    my ($text) = @_;\n",
+   "intended": [
+    "small: start value is escaped"
+   ],
+   "also": []
+  },
+  {
+   "id": "p-base64-pad",
+   "file": "tools/simatic-nodeset.pl",
+   "old": "substr($text, $count + 1) = '=' x (3 - $count) if $count < 3;",
+   "new": "substr($text, $count + 1) = '=' x (2 - $count) if $count < 3;",
+   "intended": [
+    "model: output equals the shipped NodeSet",
+    "stdout: output equals the shipped NodeSet"
+   ],
+   "also": []
+  },
+  {
+   "id": "p-size-field-off",
+   "file": "tools/simatic-nodeset.pl",
+   "old": "                $text .= \"<opc:Field TypeName=\\\"opc:Int32\\\" Name=\\\"${name}_Size\\\" />\";\n",
+   "new": "",
+   "intended": [
+    "dictionary: an array field follows its length field"
+   ],
+   "also": [
+    "model: output equals the shipped NodeSet",
+    "stdout: output equals the shipped NodeSet"
+   ]
+  },
+  {
+   "id": "p-output-truncated-early",
+   "file": "tools/simatic-nodeset.pl",
+   "old": "    my $doc = load_description($args[0]);\n",
+   "new": "    if (defined $output) { open(my $t, '>', $output) or die; close($t); }\n    my $doc = load_description($args[0]);\n",
+   "intended": [
+    "missing description: output file unchanged"
+   ],
+   "also": [
+    ": output file unchanged"
+   ]
+  },
+  {
+   "id": "p-no-area-message",
+   "file": "tools/simatic-nodeset.pl",
+   "old": "defined $db->{$key} && !ref $db->{$key} or die \"a block has no $key\\n\";",
+   "new": "defined $db->{$key} && !ref $db->{$key} or die \"a block lacks $key\\n\";",
+   "intended": [
+    "block without area: message"
+   ],
+   "also": []
+  },
+  {
+   "id": "p-help-stderr",
+   "file": "tools/simatic-nodeset.pl",
+   "old": "pod2usage(-exitval => 'NOEXIT', -verbose => 1, -output => \\*STDOUT);",
+   "new": "pod2usage(-exitval => 'NOEXIT', -verbose => 1, -output => \\*STDERR);",
+   "intended": [
+    "help: names the output option",
+    "help: nothing on stderr"
+   ],
+   "also": []
+  },
+  {
+   "id": "p-usage-stdout",
+   "file": "tools/simatic-nodeset.pl",
+   "old": "pod2usage(-exitval => 'NOEXIT', -verbose => 0, -output => \\*STDERR);",
+   "new": "pod2usage(-exitval => 'NOEXIT', -verbose => 0, -output => \\*STDOUT);",
+   "intended": [
+    "no arguments: nothing on stdout",
+    "no arguments: usage on stderr"
+   ],
+   "also": []
+  },
+  {
+   "id": "p-user-access",
+   "file": "tools/simatic-nodeset.pl",
+   "old": "$attrs .= sprintf ' AccessLevel=\"%d\" UserAccessLevel=\"%d\"', $option{access},\n            $option{access};",
+   "new": "$attrs .= sprintf ' AccessLevel=\"%d\" UserAccessLevel=\"%d\"', $option{access},\n            3;",
+   "intended": [
+    "small: flat member NodeId and read-only access"
+   ],
+   "also": [
+    "model: output equals the shipped NodeSet",
+    "stdout: output equals the shipped NodeSet",
+    "access:"
+   ]
+  },
+  {
+   "id": "p-zero-start",
+   "file": "tools/simatic-nodeset.pl",
+   "old": "my $value = defined $start ? value_xml($type, $start) : undef;",
+   "new": "my $value = $start ? value_xml($type, $start) : undef;",
+   "intended": [
+    "small: start value zero is written"
+   ],
+   "also": [
+    "model: output equals the shipped NodeSet",
+    "stdout: output equals the shipped NodeSet"
+   ]
+  },
+  {
+   "id": "p-null-message",
+   "file": "tools/simatic-nodeset.pl",
+   "old": "die \"$path: $error\" if length $error;\n        die \"$path: the description is not an object\\n\";",
+   "new": "die \"$path: $error\" if length $error;\n        die \"$path: the description is not a record\\n\";",
+   "intended": [
+    "JSON null: message"
+   ],
+   "also": []
+  },
+  {
+   "id": "p-path-twice",
+   "file": "tools/simatic-nodeset.pl",
+   "old": "die \"$path: $error\" if length $error;",
+   "new": "die \"$path: $path: $error\" if length $error;",
+   "intended": [
+    "malformed JSON: the path is named once"
+   ],
+   "also": []
+  }
+ ]
+}

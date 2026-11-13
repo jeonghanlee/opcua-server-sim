@@ -1,0 +1,77 @@
+
+  <!-- Type of the objects in DataBlocksInstance, with the references and
+       folders that sort the tags of a function block by interface section -->
+  <UAReferenceType NodeId="ns=1;i=4002" BrowseName="1:HasInOutVar">
+    <DisplayName>HasInOutVar</DisplayName>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=47</Reference>
+    </References>
+    <InverseName>InOutVarOf</InverseName>
+  </UAReferenceType>
+  <UAReferenceType NodeId="ns=1;i=4003" BrowseName="1:HasInputVar">
+    <DisplayName>HasInputVar</DisplayName>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=47</Reference>
+    </References>
+    <InverseName>InputVarOf</InverseName>
+  </UAReferenceType>
+  <UAReferenceType NodeId="ns=1;i=4004" BrowseName="1:HasOutputVar">
+    <DisplayName>HasOutputVar</DisplayName>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=47</Reference>
+    </References>
+    <InverseName>OutputVarOf</InverseName>
+  </UAReferenceType>
+  <UAReferenceType NodeId="ns=1;i=4005" BrowseName="1:HasLocalVar">
+    <DisplayName>HasLocalVar</DisplayName>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=47</Reference>
+    </References>
+    <InverseName>LocalVarOf</InverseName>
+  </UAReferenceType>
+  <UAReferenceType NodeId="ns=1;i=4006" BrowseName="1:HasBaseObject">
+    <DisplayName>HasBaseObject</DisplayName>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=47</Reference>
+    </References>
+    <InverseName>BaseObjectOf</InverseName>
+  </UAReferenceType>
+  <UAObjectType NodeId="ns=1;i=1003" BrowseName="1:SimaticBlockType" IsAbstract="true">
+    <DisplayName>SimaticBlockType</DisplayName>
+    <Description>Type of the function block instances in the folder of the instance data blocks.</Description>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">ns=2;i=1003</Reference>
+    </References>
+  </UAObjectType>
+  <UAObject NodeId="ns=1;i=5067" BrowseName="1:InOuts" ParentNodeId="ns=1;i=1003">
+    <DisplayName>InOuts</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=61</Reference>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="ns=1;i=4002" IsForward="false">ns=1;i=1003</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;i=5079" BrowseName="1:Inputs" ParentNodeId="ns=1;i=1003">
+    <DisplayName>Inputs</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=61</Reference>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="ns=1;i=4003" IsForward="false">ns=1;i=1003</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;i=5026" BrowseName="1:Outputs" ParentNodeId="ns=1;i=1003">
+    <DisplayName>Outputs</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=61</Reference>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="ns=1;i=4004" IsForward="false">ns=1;i=1003</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;i=5066" BrowseName="1:Static" ParentNodeId="ns=1;i=1003">
+    <DisplayName>Static</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=61</Reference>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="ns=1;i=4005" IsForward="false">ns=1;i=1003</Reference>
+    </References>
+  </UAObject>

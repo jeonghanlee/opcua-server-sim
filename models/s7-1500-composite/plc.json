@@ -1,0 +1,1271 @@
+{
+  "sections": [
+    "nodeset/types.xml",
+    "@structures",
+    "nodeset/device.xml",
+    "nodeset/block-types.xml",
+    "@blocks",
+    "@memory",
+    "nodeset/alarms.xml",
+    "nodeset/server.xml"
+  ],
+  "types": {
+    "Bool": {
+      "alias": "Boolean",
+      "builtin": "Boolean"
+    },
+    "Byte": {
+      "alias": "BYTE",
+      "builtin": "Byte"
+    },
+    "Word": {
+      "alias": "WORD",
+      "builtin": "UInt16"
+    },
+    "DWord": {
+      "alias": "DWORD",
+      "builtin": "UInt32"
+    },
+    "LWord": {
+      "alias": "LWORD",
+      "builtin": "UInt64"
+    },
+    "SInt": {
+      "alias": "SByte",
+      "builtin": "SByte"
+    },
+    "Int": {
+      "alias": "Int16",
+      "builtin": "Int16"
+    },
+    "DInt": {
+      "alias": "Int32",
+      "builtin": "Int32"
+    },
+    "LInt": {
+      "alias": "Int64",
+      "builtin": "Int64"
+    },
+    "USInt": {
+      "alias": "Byte",
+      "builtin": "Byte"
+    },
+    "UInt": {
+      "alias": "UInt16",
+      "builtin": "UInt16"
+    },
+    "UDInt": {
+      "alias": "UInt32",
+      "builtin": "UInt32"
+    },
+    "ULInt": {
+      "alias": "UInt64",
+      "builtin": "UInt64"
+    },
+    "Real": {
+      "alias": "Float",
+      "builtin": "Float"
+    },
+    "LReal": {
+      "alias": "Double",
+      "builtin": "Double"
+    },
+    "S5Time": {
+      "alias": "S5TIME",
+      "builtin": "UInt16"
+    },
+    "Time": {
+      "alias": "TIME",
+      "builtin": "Int32"
+    },
+    "LTime": {
+      "alias": "LTIME",
+      "builtin": "Int64"
+    },
+    "Date": {
+      "alias": "DATE",
+      "builtin": "UInt16"
+    },
+    "TOD": {
+      "alias": "TOD",
+      "builtin": "UInt32"
+    },
+    "LTOD": {
+      "alias": "LTOD",
+      "builtin": "UInt64"
+    },
+    "DT": {
+      "alias": "DT",
+      "builtin": "Byte",
+      "length": 8
+    },
+    "LDT": {
+      "alias": "DateTime",
+      "builtin": "DateTime"
+    },
+    "Char": {
+      "alias": "CHAR",
+      "builtin": "Byte"
+    },
+    "WChar": {
+      "alias": "WCHAR",
+      "builtin": "UInt16"
+    },
+    "String": {
+      "alias": "STRING",
+      "builtin": "String"
+    },
+    "WString": {
+      "alias": "String",
+      "builtin": "String"
+    },
+    "Timer": {
+      "alias": "TIMER",
+      "builtin": "UInt16"
+    },
+    "Counter": {
+      "alias": "COUNTER",
+      "builtin": "UInt16"
+    }
+  },
+  "structures": [
+    {
+      "name": "DTL",
+      "existing": true,
+      "variableType": false,
+      "memberAccess": 1,
+      "fields": [
+        {
+          "name": "YEAR",
+          "type": "UInt"
+        },
+        {
+          "name": "MONTH",
+          "type": "USInt"
+        },
+        {
+          "name": "DAY",
+          "type": "USInt"
+        },
+        {
+          "name": "WEEKDAY",
+          "type": "USInt"
+        },
+        {
+          "name": "HOUR",
+          "type": "USInt"
+        },
+        {
+          "name": "MINUTE",
+          "type": "USInt"
+        },
+        {
+          "name": "SECOND",
+          "type": "USInt"
+        },
+        {
+          "name": "NANOSECOND",
+          "type": "UDInt"
+        }
+      ]
+    },
+    {
+      "name": "\"udtDemo2\"",
+      "browseName": "udtDemo2",
+      "fields": [
+        {
+          "name": "byteFirst",
+          "type": "Byte"
+        },
+        {
+          "name": "byteSecond",
+          "type": "Byte"
+        },
+        {
+          "name": "intFirst",
+          "type": "Int"
+        },
+        {
+          "name": "intSecond",
+          "type": "Int"
+        }
+      ]
+    },
+    {
+      "name": "\"udtDemo\"",
+      "browseName": "udtDemo",
+      "fields": [
+        {
+          "name": "mySingleInt",
+          "type": "Int"
+        },
+        {
+          "name": "myByteArray",
+          "type": "Byte",
+          "length": 2
+        },
+        {
+          "name": "mySingleStruct",
+          "type": "\"udtDemo2\""
+        },
+        {
+          "name": "myStructArray",
+          "type": "\"udtDemo2\"",
+          "length": 2
+        },
+        {
+          "name": "myString",
+          "type": "String"
+        }
+      ]
+    },
+    {
+      "name": "\"globalDB\".\"UntypedStruct\"",
+      "fields": [
+        {
+          "name": "structInt",
+          "type": "Int"
+        }
+      ]
+    },
+    {
+      "name": "\"udtData\"",
+      "browseName": "udtData",
+      "fields": [
+        {
+          "name": "udtInt",
+          "type": "Int",
+          "start": 42
+        },
+        {
+          "name": "udtBool",
+          "type": "Bool",
+          "start": true
+        },
+        {
+          "name": "udtReal",
+          "type": "Real",
+          "start": 38.5
+        },
+        {
+          "name": "udtString",
+          "type": "String",
+          "start": "CompositePLC"
+        },
+        {
+          "name": "udtWord",
+          "type": "Word",
+          "start": 65440
+        },
+        {
+          "name": "udtByte",
+          "type": "Byte",
+          "start": 16
+        },
+        {
+          "name": "udtChar",
+          "type": "Char",
+          "start": 32
+        },
+        {
+          "name": "udtArrayChar",
+          "type": "Char",
+          "length": 6,
+          "start": [
+            32,
+            32,
+            32,
+            32,
+            32,
+            32
+          ]
+        },
+        {
+          "name": "udtTime",
+          "type": "DTL",
+          "start": {
+            "YEAR": 1970,
+            "MONTH": 1,
+            "DAY": 1,
+            "WEEKDAY": 5
+          }
+        },
+        {
+          "name": "udtArrayByte",
+          "type": "Byte",
+          "length": 9
+        },
+        {
+          "name": "udtArrayString",
+          "type": "String",
+          "length": 10
+        }
+      ]
+    },
+    {
+      "name": "\"InstUaMethodAdding\".\"UAMethod_InParameters\"",
+      "fields": [
+        {
+          "name": "number1",
+          "type": "Real"
+        },
+        {
+          "name": "number2",
+          "type": "Real"
+        }
+      ]
+    },
+    {
+      "name": "\"InstUaMethodAdding\".\"UAMethod_OutParameters\"",
+      "fields": [
+        {
+          "name": "result",
+          "type": "Real"
+        }
+      ]
+    },
+    {
+      "name": "\"InstMethodEcho\".\"UAMethod_InParameters\"",
+      "fields": [
+        {
+          "name": "inBool",
+          "type": "Bool"
+        },
+        {
+          "name": "inSInt",
+          "type": "SInt"
+        },
+        {
+          "name": "inInt",
+          "type": "Int"
+        },
+        {
+          "name": "inDInt",
+          "type": "DInt"
+        },
+        {
+          "name": "inLInt",
+          "type": "LInt"
+        },
+        {
+          "name": "inUSInt",
+          "type": "USInt"
+        },
+        {
+          "name": "inUInt",
+          "type": "UInt"
+        },
+        {
+          "name": "inUDInt",
+          "type": "UDInt"
+        },
+        {
+          "name": "inULInt",
+          "type": "ULInt"
+        },
+        {
+          "name": "inReal",
+          "type": "Real"
+        },
+        {
+          "name": "inLReal",
+          "type": "LReal"
+        },
+        {
+          "name": "inLDT",
+          "type": "LDT"
+        },
+        {
+          "name": "inWString",
+          "type": "WString"
+        }
+      ]
+    },
+    {
+      "name": "\"InstMethodEcho\".\"UAMethod_OutParameters\"",
+      "fields": [
+        {
+          "name": "outBool",
+          "type": "Bool"
+        },
+        {
+          "name": "outSInt",
+          "type": "SInt"
+        },
+        {
+          "name": "outInt",
+          "type": "Int"
+        },
+        {
+          "name": "outDInt",
+          "type": "DInt"
+        },
+        {
+          "name": "outLInt",
+          "type": "LInt"
+        },
+        {
+          "name": "outUSInt",
+          "type": "USInt"
+        },
+        {
+          "name": "outUInt",
+          "type": "UInt"
+        },
+        {
+          "name": "outUDInt",
+          "type": "UDInt"
+        },
+        {
+          "name": "outULInt",
+          "type": "ULInt"
+        },
+        {
+          "name": "outReal",
+          "type": "Real"
+        },
+        {
+          "name": "outLReal",
+          "type": "LReal"
+        },
+        {
+          "name": "outLDT",
+          "type": "LDT"
+        },
+        {
+          "name": "outWString",
+          "type": "WString"
+        }
+      ]
+    },
+    {
+      "name": "\"InstMethodSort\".\"UAMethod_InParameters\"",
+      "fields": [
+        {
+          "name": "values",
+          "type": "Int",
+          "length": 10
+        }
+      ]
+    },
+    {
+      "name": "\"InstMethodSort\".\"UAMethod_OutParameters\"",
+      "fields": [
+        {
+          "name": "sorted",
+          "type": "Int",
+          "length": 10
+        }
+      ]
+    },
+    {
+      "name": "\"InstMethodStoreTime\".\"UAMethod_InParameters\"",
+      "fields": [
+        {
+          "name": "time",
+          "type": "LDT"
+        }
+      ]
+    },
+    {
+      "name": "\"OpenDoor_DB\".\"UAMethod_InParameters\"",
+      "fields": [
+        {
+          "name": "Number",
+          "type": "Int"
+        }
+      ]
+    },
+    {
+      "name": "\"OpenDoor_DB\".\"UAMethod_OutParameters\"",
+      "fields": [
+        {
+          "name": "Result",
+          "type": "Int"
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "name": "DataStatic",
+      "area": "DataBlocksGlobal",
+      "comment": "Global data block of the Siemens client example with predefined values",
+      "tags": [
+        {
+          "name": "myBool",
+          "type": "Bool",
+          "start": true
+        },
+        {
+          "name": "myByte",
+          "type": "Byte",
+          "start": 171
+        },
+        {
+          "name": "myWord",
+          "type": "Word",
+          "start": 52719
+        },
+        {
+          "name": "myDword",
+          "type": "DWord"
+        },
+        {
+          "name": "myInt",
+          "type": "Int",
+          "start": 42
+        },
+        {
+          "name": "myUInt",
+          "type": "UInt"
+        },
+        {
+          "name": "myReal",
+          "type": "Real"
+        },
+        {
+          "name": "myArrayBool",
+          "type": "Bool",
+          "length": 22,
+          "start": [
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            true
+          ]
+        },
+        {
+          "name": "myArrayInt",
+          "type": "Int",
+          "length": 38,
+          "start": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38
+          ]
+        },
+        {
+          "name": "myUdt",
+          "type": "\"udtData\""
+        }
+      ]
+    },
+    {
+      "name": "DataSimulation",
+      "area": "DataBlocksGlobal",
+      "comment": "Global data block of the Siemens client example whose values the PLC program changes every cycle",
+      "tags": [
+        {
+          "name": "myBool",
+          "type": "Bool"
+        },
+        {
+          "name": "myByte",
+          "type": "Byte"
+        },
+        {
+          "name": "myWord",
+          "type": "Word"
+        },
+        {
+          "name": "myDword",
+          "type": "DWord"
+        },
+        {
+          "name": "myInt",
+          "type": "Int"
+        },
+        {
+          "name": "myUInt",
+          "type": "UInt"
+        },
+        {
+          "name": "myReal",
+          "type": "Real"
+        },
+        {
+          "name": "myArray",
+          "type": "Byte",
+          "length": 32
+        }
+      ]
+    },
+    {
+      "name": "DataTypes",
+      "area": "DataBlocksGlobal",
+      "comment": "Global data block with one tag of every SIMATIC data type the server maps",
+      "tags": [
+        {
+          "name": "myBool",
+          "type": "Bool"
+        },
+        {
+          "name": "myByte",
+          "type": "Byte"
+        },
+        {
+          "name": "myWord",
+          "type": "Word"
+        },
+        {
+          "name": "myDWord",
+          "type": "DWord"
+        },
+        {
+          "name": "myLWord",
+          "type": "LWord"
+        },
+        {
+          "name": "mySInt",
+          "type": "SInt"
+        },
+        {
+          "name": "myInt",
+          "type": "Int"
+        },
+        {
+          "name": "myDInt",
+          "type": "DInt"
+        },
+        {
+          "name": "myLInt",
+          "type": "LInt"
+        },
+        {
+          "name": "myUSInt",
+          "type": "USInt"
+        },
+        {
+          "name": "myUInt",
+          "type": "UInt"
+        },
+        {
+          "name": "myUDInt",
+          "type": "UDInt"
+        },
+        {
+          "name": "myULInt",
+          "type": "ULInt"
+        },
+        {
+          "name": "myReal",
+          "type": "Real"
+        },
+        {
+          "name": "myLReal",
+          "type": "LReal"
+        },
+        {
+          "name": "myS5Time",
+          "type": "S5Time"
+        },
+        {
+          "name": "myTime",
+          "type": "Time"
+        },
+        {
+          "name": "myLTime",
+          "type": "LTime"
+        },
+        {
+          "name": "myDate",
+          "type": "Date"
+        },
+        {
+          "name": "myTod",
+          "type": "TOD"
+        },
+        {
+          "name": "myLTod",
+          "type": "LTOD"
+        },
+        {
+          "name": "myDt",
+          "type": "DT"
+        },
+        {
+          "name": "myLdt",
+          "type": "LDT"
+        },
+        {
+          "name": "myChar",
+          "type": "Char"
+        },
+        {
+          "name": "myWChar",
+          "type": "WChar"
+        },
+        {
+          "name": "myString",
+          "type": "String"
+        },
+        {
+          "name": "myWString",
+          "type": "WString"
+        },
+        {
+          "name": "myTimer",
+          "type": "Timer"
+        },
+        {
+          "name": "myCounter",
+          "type": "Counter"
+        },
+        {
+          "name": "myDtl",
+          "type": "DTL"
+        }
+      ]
+    },
+    {
+      "name": "MyDB",
+      "area": "DataBlocksGlobal",
+      "comment": "Array data block: the block holds one array, published as \"THIS\"",
+      "tags": [
+        {
+          "name": "THIS",
+          "type": "Int",
+          "length": 10
+        }
+      ]
+    },
+    {
+      "name": "Data_block_1",
+      "area": "DataBlocksGlobal",
+      "comment": "Global data block used by the S7-1500 example database of the EPICS opcua module",
+      "tags": [
+        {
+          "name": "myInt",
+          "type": "Int"
+        },
+        {
+          "name": "myWord",
+          "type": "Word"
+        },
+        {
+          "name": "myString",
+          "type": "String"
+        },
+        {
+          "name": "myBool",
+          "type": "Bool"
+        },
+        {
+          "name": "myDouble",
+          "type": "LReal"
+        }
+      ]
+    },
+    {
+      "name": "Data_block_2",
+      "area": "DataBlocksGlobal",
+      "comment": "Global data block of the export example in the function manual",
+      "tags": [
+        {
+          "name": "Static_1",
+          "type": "Int"
+        }
+      ]
+    },
+    {
+      "name": "Data_for_OPC_UA_Clients",
+      "area": "DataBlocksGlobal",
+      "comment": "Production line example: data that clients may read only",
+      "tags": [
+        {
+          "name": "NewProduct",
+          "type": "Bool",
+          "access": 1
+        },
+        {
+          "name": "ProductNumber",
+          "type": "Int",
+          "access": 1
+        },
+        {
+          "name": "Temperature",
+          "type": "Real",
+          "length": 10,
+          "access": 1
+        }
+      ]
+    },
+    {
+      "name": "Data_from_OPC_UA_Clients",
+      "area": "DataBlocksGlobal",
+      "comment": "Production line example: data that clients write",
+      "tags": [
+        {
+          "name": "ProductionEnabled",
+          "type": "Bool"
+        }
+      ]
+    },
+    {
+      "name": "IEC_Timer_0_DB",
+      "area": "DataBlocksGlobal",
+      "comment": "Data block of an IEC timer: the members are Variables of the block, the elapsed time and the output are read-only",
+      "flat": true,
+      "tags": [
+        {
+          "name": "PT",
+          "type": "Time",
+          "start": 5000
+        },
+        {
+          "name": "ET",
+          "type": "Time",
+          "access": 1
+        },
+        {
+          "name": "IN",
+          "type": "Bool"
+        },
+        {
+          "name": "Q",
+          "type": "Bool",
+          "access": 1
+        }
+      ]
+    },
+    {
+      "name": "AlarmTriggers",
+      "area": "DataBlocksGlobal",
+      "comment": "Global data block whose tags raise the alarms of the simulation file and report their overloads",
+      "tags": [
+        {
+          "name": "Program_Alarm",
+          "type": "Bool"
+        },
+        {
+          "name": "Program_Alarm_1",
+          "type": "Bool"
+        },
+        {
+          "name": "Program_Alarm_2",
+          "type": "Bool"
+        },
+        {
+          "name": "Program_Alarm_3",
+          "type": "Bool"
+        },
+        {
+          "name": "System_Alarm",
+          "type": "Bool"
+        },
+        {
+          "name": "Overload_Program",
+          "type": "Bool"
+        },
+        {
+          "name": "Overload_System",
+          "type": "Bool"
+        }
+      ]
+    },
+    {
+      "name": "globalDB",
+      "area": "DataBlocksGlobal",
+      "comment": "Global data block of a STEP 7 export with arrays, a structure without a type name, and nested PLC data types",
+      "tags": [
+        {
+          "name": "singleInt",
+          "type": "Int"
+        },
+        {
+          "name": "arrayOfBools",
+          "type": "Bool",
+          "length": 2
+        },
+        {
+          "name": "UntypedStruct",
+          "type": "\"globalDB\".\"UntypedStruct\""
+        },
+        {
+          "name": "instanceOfUdt",
+          "type": "\"udtDemo\""
+        },
+        {
+          "name": "arrayOfUdts",
+          "type": "\"udtDemo\"",
+          "length": 2
+        }
+      ]
+    },
+    {
+      "name": "InstUaMethodAdding",
+      "area": "DataBlocksInstance",
+      "comment": "Server method of the Siemens client example: adds two numbers",
+      "functionBlock": "UaMethodAdding",
+      "method": {
+        "in": [
+          {
+            "name": "number1",
+            "type": "Real"
+          },
+          {
+            "name": "number2",
+            "type": "Real"
+          }
+        ],
+        "out": [
+          {
+            "name": "result",
+            "type": "Real"
+          }
+        ]
+      },
+      "Static": [
+        {
+          "name": "UAMethod_InParameters",
+          "type": "\"InstUaMethodAdding\".\"UAMethod_InParameters\""
+        },
+        {
+          "name": "UAMethod_OutParameters",
+          "type": "\"InstUaMethodAdding\".\"UAMethod_OutParameters\""
+        }
+      ]
+    },
+    {
+      "name": "InstMethodEcho",
+      "area": "DataBlocksInstance",
+      "comment": "Server method that returns each of its inputs unchanged; the inputs cover the data types a method parameter may have",
+      "functionBlock": "MethodEcho",
+      "method": {
+        "in": [
+          {
+            "name": "inBool",
+            "type": "Bool"
+          },
+          {
+            "name": "inSInt",
+            "type": "SInt"
+          },
+          {
+            "name": "inInt",
+            "type": "Int"
+          },
+          {
+            "name": "inDInt",
+            "type": "DInt"
+          },
+          {
+            "name": "inLInt",
+            "type": "LInt"
+          },
+          {
+            "name": "inUSInt",
+            "type": "USInt"
+          },
+          {
+            "name": "inUInt",
+            "type": "UInt"
+          },
+          {
+            "name": "inUDInt",
+            "type": "UDInt"
+          },
+          {
+            "name": "inULInt",
+            "type": "ULInt"
+          },
+          {
+            "name": "inReal",
+            "type": "Real"
+          },
+          {
+            "name": "inLReal",
+            "type": "LReal"
+          },
+          {
+            "name": "inLDT",
+            "type": "LDT"
+          },
+          {
+            "name": "inWString",
+            "type": "WString"
+          }
+        ],
+        "out": [
+          {
+            "name": "outBool",
+            "type": "Bool"
+          },
+          {
+            "name": "outSInt",
+            "type": "SInt"
+          },
+          {
+            "name": "outInt",
+            "type": "Int"
+          },
+          {
+            "name": "outDInt",
+            "type": "DInt"
+          },
+          {
+            "name": "outLInt",
+            "type": "LInt"
+          },
+          {
+            "name": "outUSInt",
+            "type": "USInt"
+          },
+          {
+            "name": "outUInt",
+            "type": "UInt"
+          },
+          {
+            "name": "outUDInt",
+            "type": "UDInt"
+          },
+          {
+            "name": "outULInt",
+            "type": "ULInt"
+          },
+          {
+            "name": "outReal",
+            "type": "Real"
+          },
+          {
+            "name": "outLReal",
+            "type": "LReal"
+          },
+          {
+            "name": "outLDT",
+            "type": "LDT"
+          },
+          {
+            "name": "outWString",
+            "type": "WString"
+          }
+        ]
+      },
+      "Static": [
+        {
+          "name": "UAMethod_InParameters",
+          "type": "\"InstMethodEcho\".\"UAMethod_InParameters\""
+        },
+        {
+          "name": "UAMethod_OutParameters",
+          "type": "\"InstMethodEcho\".\"UAMethod_OutParameters\""
+        }
+      ]
+    },
+    {
+      "name": "InstMethodSort",
+      "area": "DataBlocksInstance",
+      "comment": "Server method that returns an array of Int in ascending order",
+      "functionBlock": "MethodSort",
+      "method": {
+        "in": [
+          {
+            "name": "values",
+            "type": "Int",
+            "length": 10
+          }
+        ],
+        "out": [
+          {
+            "name": "sorted",
+            "type": "Int",
+            "length": 10
+          }
+        ]
+      },
+      "Static": [
+        {
+          "name": "UAMethod_InParameters",
+          "type": "\"InstMethodSort\".\"UAMethod_InParameters\""
+        },
+        {
+          "name": "UAMethod_OutParameters",
+          "type": "\"InstMethodSort\".\"UAMethod_OutParameters\""
+        }
+      ]
+    },
+    {
+      "name": "InstMethodStoreTime",
+      "area": "DataBlocksInstance",
+      "comment": "Server method that takes a time value and returns nothing",
+      "functionBlock": "MethodStoreTime",
+      "method": {
+        "in": [
+          {
+            "name": "time",
+            "type": "LDT"
+          }
+        ],
+        "out": []
+      },
+      "Static": [
+        {
+          "name": "UAMethod_InParameters",
+          "type": "\"InstMethodStoreTime\".\"UAMethod_InParameters\""
+        }
+      ]
+    },
+    {
+      "name": "InstMethodSequence",
+      "area": "DataBlocksInstance",
+      "comment": "Server method without parameters that starts a timed sequence and refuses another call while the sequence runs",
+      "functionBlock": "MethodSequence",
+      "method": {
+        "in": [],
+        "out": []
+      },
+      "Inputs": [
+        {
+          "name": "cancel",
+          "type": "Bool"
+        }
+      ],
+      "Outputs": [
+        {
+          "name": "fault",
+          "type": "Bool",
+          "access": 1
+        }
+      ],
+      "Static": []
+    },
+    {
+      "name": "OpenDoor_DB",
+      "area": "DataBlocksInstance",
+      "comment": "Server method of the production line example",
+      "functionBlock": "OpenDoor",
+      "method": {
+        "in": [
+          {
+            "name": "Number",
+            "type": "Int"
+          }
+        ],
+        "out": [
+          {
+            "name": "Result",
+            "type": "Int"
+          }
+        ]
+      },
+      "Static": [
+        {
+          "name": "UAMethod_InParameters",
+          "type": "\"OpenDoor_DB\".\"UAMethod_InParameters\""
+        },
+        {
+          "name": "UAMethod_OutParameters",
+          "type": "\"OpenDoor_DB\".\"UAMethod_OutParameters\""
+        }
+      ]
+    }
+  ],
+  "memory": [
+    {
+      "name": "StartTimer",
+      "type": "Bool"
+    },
+    {
+      "name": "TimerExpired",
+      "type": "Bool"
+    },
+    {
+      "name": "TimerExpiredMerker",
+      "type": "Bool"
+    },
+    {
+      "name": "MyValue",
+      "type": "Int"
+    },
+    {
+      "name": "Clock_0.5Hz",
+      "type": "Bool"
+    },
+    {
+      "name": "Clock_0.625Hz",
+      "type": "Bool"
+    },
+    {
+      "name": "Clock_1.25Hz",
+      "type": "Bool"
+    },
+    {
+      "name": "Clock_2.5Hz",
+      "type": "Bool"
+    },
+    {
+      "name": "Clock_10Hz",
+      "type": "Bool"
+    },
+    {
+      "name": "Clock_1Hz",
+      "type": "Bool"
+    },
+    {
+      "name": "Clock_2Hz",
+      "type": "Bool"
+    },
+    {
+      "name": "Clock_5Hz",
+      "type": "Bool"
+    },
+    {
+      "name": "Clock_Byte",
+      "type": "Byte"
+    }
+  ]
+}

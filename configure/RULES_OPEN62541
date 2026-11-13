@@ -1,0 +1,18 @@
+.PHONY: open62541 check-open62541-env
+
+check-open62541-env:
+	$(QUIET) if [ ! -f "$(OPEN62541_ENV_PATH)/Makefile" ]; then \
+	    printf "%s\n" "error: open62541-env not found in $(OPEN62541_ENV_PATH)"; \
+	    printf "%s\n" "clone it, or set OPEN62541_ENV_PATH in configure/CONFIG_SITE.local"; \
+	    exit 1; \
+	fi
+
+## Build and install open62541 through open62541-env
+open62541: check-open62541-env
+	$(QUIET) if [ ! -d "$(OPEN62541_ENV_PATH)/open62541-src" ]; then \
+	    $(MAKE) -C $(OPEN62541_ENV_PATH) $(OPEN62541_ENV_ARGS) init && \
+	    $(MAKE) -C $(OPEN62541_ENV_PATH) $(OPEN62541_ENV_ARGS) patch.apply; \
+	fi
+	$(QUIET) $(MAKE) -C $(OPEN62541_ENV_PATH) $(OPEN62541_ENV_ARGS) conf
+	$(QUIET) $(MAKE) -C $(OPEN62541_ENV_PATH) $(OPEN62541_ENV_ARGS) build
+	$(QUIET) $(MAKE) -C $(OPEN62541_ENV_PATH) $(OPEN62541_ENV_ARGS) install

@@ -1,0 +1,42 @@
+# Installation prefix of open62541 (include/ and lib/ below it).
+OPEN62541_PATH := /usr/local
+
+# Checkout of open62541-env used by the open62541 target.
+OPEN62541_ENV_PATH := $(TOP)/../open62541-env
+
+# cmake options passed to open62541-env. The NodeSet loader reads
+# NodeSet2 XML files at server start. Companion NodeSets such as DI
+# reference namespace 0 nodes that only the full namespace 0 provides.
+OPEN62541_NAMESPACE_ZERO := FULL
+OPEN62541_CMAKE_OPTIONS  := -DUA_ENABLE_NODESETLOADER=ON
+OPEN62541_CMAKE_OPTIONS  += -DUA_NAMESPACE_ZERO=$(OPEN62541_NAMESPACE_ZERO)
+
+# Alarms and Conditions. open62541 marks the feature as experimental; it
+# needs event monitoring and the full namespace 0.
+OPEN62541_ALARMS_CONDITIONS := ON
+OPEN62541_CMAKE_OPTIONS  += -DUA_ENABLE_SUBSCRIPTIONS_ALARMS_CONDITIONS=$(OPEN62541_ALARMS_CONDITIONS)
+
+# Model used by the run target: a directory below models/ that holds
+# server.json5 and <MODEL>.NodeSet2.xml, and optionally simulation.conf and
+# pki.cnf. MODEL_NODESETS is loaded in order; the order fixes the namespace
+# indices.
+MODEL           := s7-1500-composite
+MODEL_PATH       = $(TOP)/models/$(MODEL)
+MODEL_CONFIG     = $(MODEL_PATH)/server.json5
+MODEL_NODESETS   = $(UA_NODESET_PATH)/DI/Opc.Ua.Di.NodeSet2.xml
+MODEL_NODESETS  += $(MODEL_PATH)/$(MODEL).NodeSet2.xml
+
+# Simulation file naming the Variables whose values change over time, the
+# methods, the alarms, and the user accounts. Leave empty to run without it.
+MODEL_SIMULATION = $(MODEL_PATH)/simulation.conf
+
+# Self-signed server certificate of a model that carries pki.cnf: RSA key
+# size in bits and validity in days.
+CERT_KEY_BITS := 2048
+CERT_DAYS     := 3650
+
+# OPC Foundation NodeSet2 files; the open62541 source tree carries a copy.
+UA_NODESET_PATH = $(OPEN62541_ENV_PATH)/open62541-src/deps/ua-nodeset
+
+-include $(TOP)/../CONFIG_SITE.local
+-include $(TOP)/configure/CONFIG_SITE.local
