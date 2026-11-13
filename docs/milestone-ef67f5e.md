@@ -7,7 +7,7 @@ Canonical branch or ref: master
 Git upstream: origin/master
 Remote tracker: jeonghanlee/opcua-server-sim (no GitHub milestone)
 
-Next session entry point: M1 and M2 are Complete. M8 is In progress (accepted plan, implementation authorized 2026-11-13). M3 is Ready and needs plan review, plan acceptance, and implementation authorization first.
+Next session entry point: M1, M2, and M8 are Complete. M3 is Ready and needs plan review, plan acceptance, and implementation authorization first. M9 and M4 stay Blocked on their open gates.
 
 ## Milestone
 
@@ -17,7 +17,7 @@ Next session entry point: M1 and M2 are Complete. M8 is In progress (accepted pl
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Verify | M1 | IOC verification | Milestone | Complete | No | D7 | An EPICS IOC reads and writes the tags of the composite model and the checks T1 to T6 pass; [detail](#m1---ioc-verification) |
 | Build | M2 | Simulator completeness | Milestone | Complete | No | D5 | The small and medium items of the owner's selection are built and tested by T1 to T9; [detail](#m2---simulator-completeness) |
-| Build | M8 | Alarm associated values | Milestone | In progress | No | M2, D8 | Events carry `AssociatedValue_01` to `AssociatedValue_10` as the union type, shown by T1 and T2; [detail](#m8---alarm-associated-values) |
+| Build | M8 | Alarm associated values | Milestone | Complete | No | M2, D8 | Events carry `AssociatedValue_01` to `AssociatedValue_10` as the union type, shown by T1 and T2; [detail](#m8---alarm-associated-values) |
 | Build | M9 | GoodOverload and registered nodes | Milestone | Blocked | No | M8, G4 | Each item is built and shown by T1 and T2, or retired by the decision of G4; [detail](#m9---goodoverload-and-registered-nodes) |
 | Document | M3 | Technical documentation | Milestone | Not started | Yes | G2, D6 | The documentation book exists, every command in it ran as shown, and it passed second-person review; [detail](#m3---technical-documentation) |
 | Deliver | M4 | Container image | Milestone | Blocked | No | G1, G3, D2 | A container image runs the server with the composite model and answers a probe read; [detail](#m4---container-image) |
@@ -252,7 +252,7 @@ Rule for later work: a new check gets its fault row in the table when the check 
 Origin: ef67f5e / M8
 Identity History: none
 GitHub Issue: #2 https://github.com/jeonghanlee/opcua-server-sim/issues/2
-Status: In progress
+Status: Complete
 
 ##### Summary
 
@@ -314,7 +314,8 @@ Full tables from 2026-11-13T20:08Z to 21:09Z with `--make-var EPICS_TREE=<tree>`
 
 ##### Closure Evidence
 
-- none
+- Landed: commits `500b1576566c97b68f4eb4e86d23119c5dbeefea` and `799dd1b135f5f32b473050684ff569aa1449d964` pushed to `origin/master`. After `git fetch`, `git rev-parse HEAD origin/master` printed `799dd1b135f5f32b473050684ff569aa1449d964` twice, observed 2026-11-13T21:14Z.
+- Linked issue #2: the body was edited to the shipped state, a closing comment was posted, and the issue was closed with reason `completed`. `gh issue view 2 --repo jeonghanlee/opcua-server-sim` printed state `CLOSED`, state reason `COMPLETED`, closed at 2026-11-13T21:18:50Z.
 
 #### M9 - GoodOverload and registered nodes
 
