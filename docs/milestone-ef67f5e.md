@@ -7,7 +7,7 @@ Canonical branch or ref: master
 Git upstream: origin/master
 Remote tracker: jeonghanlee/opcua-server-sim (no GitHub milestone)
 
-Next session entry point: M2 has all of T1 to T9 recorded as Passed in `docs/milestone-ef67f5e.md`; it stays In progress until the repository changes have landing evidence (commit and push under the git-workflow authorities), then mark it Complete. M1 and M3 are Ready; each needs plan review, plan acceptance, and implementation authorization first. M8 depends on M2.
+Next session entry point: M2 is Complete. M1, M3, and M8 are Ready; each needs plan review, plan acceptance, and implementation authorization first.
 
 ## Milestone
 
@@ -16,8 +16,8 @@ Next session entry point: M2 has all of T1 to T9 recorded as Passed in `docs/mil
 | Group | ID | Work unit | Type | Status | Ready | Deps | Done when / Evidence |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Verify | M1 | IOC verification | Milestone | Not started | Yes | | An EPICS IOC reads and writes the tags of the composite model and the checks T1 to T6 pass; [detail](#m1---ioc-verification) |
-| Build | M2 | Simulator completeness | Milestone | In progress | No | D5 | The small and medium items of the owner's selection are built and tested by T1 to T9; [detail](#m2---simulator-completeness) |
-| Build | M8 | Alarm associated values | Milestone | Not started | No | M2 | Events carry `AssociatedValue_01` to `AssociatedValue_10` as the union type, shown by T1; [detail](#m8---alarm-associated-values) |
+| Build | M2 | Simulator completeness | Milestone | Complete | No | D5 | The small and medium items of the owner's selection are built and tested by T1 to T9; [detail](#m2---simulator-completeness) |
+| Build | M8 | Alarm associated values | Milestone | Not started | Yes | M2 | Events carry `AssociatedValue_01` to `AssociatedValue_10` as the union type, shown by T1; [detail](#m8---alarm-associated-values) |
 | Build | M9 | GoodOverload and registered nodes | Milestone | Blocked | No | M8, G4 | Each item is built and shown by T1 and T2, or retired by the decision of G4; [detail](#m9---goodoverload-and-registered-nodes) |
 | Document | M3 | Technical documentation | Milestone | Not started | Yes | G2, D6 | The documentation book exists, every command in it ran as shown, and it passed second-person review; [detail](#m3---technical-documentation) |
 | Deliver | M4 | Container image | Milestone | Blocked | No | G1, G3, D2 | A container image runs the server with the composite model and answers a probe read; [detail](#m4---container-image) |
@@ -114,7 +114,7 @@ Proving rule for M1 to M4, M8, and M9: before a check is relied on, the fault na
 Origin: ef67f5e / M2
 Identity History: none
 GitHub Issue: none
-Status: In progress
+Status: Complete
 
 ##### Summary
 
@@ -228,7 +228,9 @@ Rule for later work: a new check gets its fault row in the table when the check 
 
 ##### Closure Evidence
 
-- none
+- Landed: commit `358bbd3915f6dba26c8abbf3ebe3cae75ef24670` on `master`, pushed to `origin/master`. Observed 2026-11-13T02:56Z after `git fetch`: `HEAD` and `origin/master` are the same commit, ahead and behind are 0 and 0, `git diff --stat HEAD origin/master` is empty, and `origin/master` holds the 34 committed paths and `LICENSE`. Recheck: `git -C <repository> fetch`, then `git -C <repository> rev-parse HEAD origin/master`.
+- Checks: T1 to T9 are recorded as Passed above; the commit holds the tree on which T8 ran, except that `docs/milestone-ef67f5e.md` records these results.
+- External gates: none.
 
 #### M8 - Alarm associated values
 
