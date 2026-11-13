@@ -43,7 +43,7 @@ Next session entry point: M2 is Complete. M1, M3, and M8 are Ready; each needs p
 
 Origin: ef67f5e / M1
 Identity History: none
-GitHub Issue: none
+GitHub Issue: #1 https://github.com/jeonghanlee/opcua-server-sim/issues/1
 Status: Not started
 
 ##### Summary
@@ -236,7 +236,7 @@ Rule for later work: a new check gets its fault row in the table when the check 
 
 Origin: ef67f5e / M8
 Identity History: none
-GitHub Issue: none
+GitHub Issue: #2 https://github.com/jeonghanlee/opcua-server-sim/issues/2
 Status: Not started
 
 ##### Summary
@@ -291,7 +291,7 @@ Superseded Plan Artifacts: none
 
 Origin: ef67f5e / M9
 Identity History: none
-GitHub Issue: none
+GitHub Issue: #3 https://github.com/jeonghanlee/opcua-server-sim/issues/3
 Status: Blocked
 
 ##### Summary
@@ -348,7 +348,7 @@ Superseded Plan Artifacts: none
 
 Origin: ef67f5e / M3
 Identity History: none
-GitHub Issue: none
+GitHub Issue: #4 https://github.com/jeonghanlee/opcua-server-sim/issues/4
 Status: Not started
 
 ##### Summary
@@ -407,7 +407,7 @@ Superseded Plan Artifacts: none
 
 Origin: ef67f5e / M4
 Identity History: none
-GitHub Issue: none
+GitHub Issue: #5 https://github.com/jeonghanlee/opcua-server-sim/issues/5
 Status: Blocked
 
 ##### Summary
