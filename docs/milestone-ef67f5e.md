@@ -7,7 +7,7 @@ Canonical branch or ref: master
 Git upstream: origin/master
 Remote tracker: jeonghanlee/opcua-server-sim (no GitHub milestone)
 
-Next session entry point: M1 and M2 are Complete. M8 has an accepted plan and implementation authorization and is next. M3 is Ready and needs plan review, plan acceptance, and implementation authorization first.
+Next session entry point: M1 and M2 are Complete. M8 is In progress (accepted plan, implementation authorized 2026-11-13). M3 is Ready and needs plan review, plan acceptance, and implementation authorization first.
 
 ## Milestone
 
@@ -17,7 +17,7 @@ Next session entry point: M1 and M2 are Complete. M8 has an accepted plan and im
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Verify | M1 | IOC verification | Milestone | Complete | No | D7 | An EPICS IOC reads and writes the tags of the composite model and the checks T1 to T6 pass; [detail](#m1---ioc-verification) |
 | Build | M2 | Simulator completeness | Milestone | Complete | No | D5 | The small and medium items of the owner's selection are built and tested by T1 to T9; [detail](#m2---simulator-completeness) |
-| Build | M8 | Alarm associated values | Milestone | Not started | Yes | M2, D8 | Events carry `AssociatedValue_01` to `AssociatedValue_10` as the union type, shown by T1 and T2; [detail](#m8---alarm-associated-values) |
+| Build | M8 | Alarm associated values | Milestone | In progress | No | M2, D8 | Events carry `AssociatedValue_01` to `AssociatedValue_10` as the union type, shown by T1 and T2; [detail](#m8---alarm-associated-values) |
 | Build | M9 | GoodOverload and registered nodes | Milestone | Blocked | No | M8, G4 | Each item is built and shown by T1 and T2, or retired by the decision of G4; [detail](#m9---goodoverload-and-registered-nodes) |
 | Document | M3 | Technical documentation | Milestone | Not started | Yes | G2, D6 | The documentation book exists, every command in it ran as shown, and it passed second-person review; [detail](#m3---technical-documentation) |
 | Deliver | M4 | Container image | Milestone | Blocked | No | G1, G3, D2 | A container image runs the server with the composite model and answers a probe read; [detail](#m4---container-image) |
@@ -252,7 +252,7 @@ Rule for later work: a new check gets its fault row in the table when the check 
 Origin: ef67f5e / M8
 Identity History: none
 GitHub Issue: #2 https://github.com/jeonghanlee/opcua-server-sim/issues/2
-Status: Not started
+Status: In progress
 
 ##### Summary
 
@@ -307,8 +307,10 @@ Superseded Plan Artifacts: none
 
 | Label | Observed At | Environment | Result | Evidence |
 | --- | --- | --- | --- | --- |
-| T1 | Not run | the shipped server and probe | Pending | none |
-| T2 | Not run | the shipped server and probe | Pending | none |
+| T1 | 2026-11-13T20:08Z | the shipped server and probe on this host | Pass | `make test EPICS_TREE=~/epics/1.5.0/debian-13/7.0.10` passed 342 checks, 8 of them the `associated:` checks of T1 that cover all 13 member positions on an event and on an alarm with a state; rows `c-associated-switch` and `p-associated-float-print` KILLED by the T1 checks named in `intended` |
+| T2 | 2026-11-13T20:08Z | the shipped server and probe on this host | Pass | the same run passed the 34 checks of the 17 rejected-line cases of T2; rows `c-associated-member-any`, `c-associated-sbyte-range`, `c-associated-int16-range`, `c-associated-int32-range`, `c-associated-int64-overflow`, `c-associated-uint16-range`, `c-associated-uint32-range`, `c-associated-uint64-overflow`, `c-associated-float-range`, and `c-associated-finite-off` KILLED by the T2 checks named in `intended` |
+
+Full tables from 2026-11-13T20:08Z to 21:09Z with `--make-var EPICS_TREE=<tree>`: the control run passed all 342 checks. `t/mutations/server.json` (145 rows): 140 rows KILLED and 5 EQUIVALENT, none CHECK, SURVIVED, or INCOMPLETE; seven rows (`c-field-event-fields-off`, `c-field-key-slash-off`, `c-field-stateful-write-off`, `c-field-value-first-word`, `c-retain-false`, `c-stop-exit-failure`, `p-events-fields-off`) also fail checks of T1, which were added to their `intended` lists, and were run again alone and KILLED. `t/mutations/tools.json` (16 rows): 16 KILLED. The sources and tests were not changed between the start of the run and its end.
 
 ##### Closure Evidence
 
