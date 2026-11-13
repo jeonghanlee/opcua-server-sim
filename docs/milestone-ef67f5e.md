@@ -7,7 +7,7 @@ Canonical branch or ref: master
 Git upstream: origin/master
 Remote tracker: jeonghanlee/opcua-server-sim (no GitHub milestone)
 
-Next session entry point: M1 and M2 are Complete. M3 and M8 are Ready; each needs plan review, plan acceptance, and implementation authorization first.
+Next session entry point: M1 and M2 are Complete. M8 has an accepted plan and implementation authorization and is next. M3 is Ready and needs plan review, plan acceptance, and implementation authorization first.
 
 ## Milestone
 
@@ -17,7 +17,7 @@ Next session entry point: M1 and M2 are Complete. M3 and M8 are Ready; each need
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Verify | M1 | IOC verification | Milestone | Complete | No | D7 | An EPICS IOC reads and writes the tags of the composite model and the checks T1 to T6 pass; [detail](#m1---ioc-verification) |
 | Build | M2 | Simulator completeness | Milestone | Complete | No | D5 | The small and medium items of the owner's selection are built and tested by T1 to T9; [detail](#m2---simulator-completeness) |
-| Build | M8 | Alarm associated values | Milestone | Not started | Yes | M2 | Events carry `AssociatedValue_01` to `AssociatedValue_10` as the union type, shown by T1; [detail](#m8---alarm-associated-values) |
+| Build | M8 | Alarm associated values | Milestone | Not started | Yes | M2, D8 | Events carry `AssociatedValue_01` to `AssociatedValue_10` as the union type, shown by T1 and T2; [detail](#m8---alarm-associated-values) |
 | Build | M9 | GoodOverload and registered nodes | Milestone | Blocked | No | M8, G4 | Each item is built and shown by T1 and T2, or retired by the decision of G4; [detail](#m9---goodoverload-and-registered-nodes) |
 | Document | M3 | Technical documentation | Milestone | Not started | Yes | G2, D6 | The documentation book exists, every command in it ran as shown, and it passed second-person review; [detail](#m3---technical-documentation) |
 | Deliver | M4 | Container image | Milestone | Blocked | No | G1, G3, D2 | A container image runs the server with the composite model and answers a probe read; [detail](#m4---container-image) |
@@ -37,6 +37,7 @@ Next session entry point: M1 and M2 are Complete. M3 and M8 are Ready; each need
 | D5 | Every candidate item of the simulator completeness work is selected, in the order small, medium, hard: M2 builds the small and medium items, M8 and M9 hold the hard ones | 2026-11-12 |
 | D6 | The documentation is an mdBook book and has a tutorial | 2026-11-12 |
 | D7 | The IOC startup and databases for the composite model live in `ioc/` of this repository and run through `iocsh.bash` of the site EPICS distribution; the distribution tree comes from one variable and the test is skipped when it is absent | 2026-11-13 |
+| D8 | The `field` line sets an associated value as `field <trigger> AssociatedValue_<nn> <member> <value>`, with the member names of the union definition of the model | 2026-11-13 |
 
 ### Milestone Details
 
@@ -257,7 +258,16 @@ Status: Not started
 
 An alarm event carries up to ten associated values, `AssociatedValue_01` to `AssociatedValue_10`, of the union type `SimaticAssociatedAlarmValue` (`ns=3;i=1809`, encoding `ns=3;i=1810` in the model). The server publishes none. The owner selected this item as a hard one (D5).
 
-Premise, read 2026-11-12 in the open62541 sources: the NodeSet loader turns a data type definition with `IsUnion` into a union data type (`DataTypeImporter.c` of the nodesetLoader backend). Hypothesis: the union defined in `nodeset/alarms.xml` is registered with the member order that gives the switch values of the manual (Boolean 2, Int16 3, Int32 4, SByte 6, Byte 7, UInt16 8, Float 11, Double 12, UInt32 9, String 13). The first step checks it.
+Premise, read 2026-11-12 in the open62541 sources: the NodeSet loader turns a data type definition with `IsUnion` into a union data type (`DataTypeImporter.c` of the nodesetLoader backend).
+
+Premise checks, observed 2026-11-13 (recheck with the commands named):
+
+- The union is registered: `opcua-probe read 'ns=3;s=SimaticEventType.AssociatedValue_01'` on the running server returns an ExtensionObject with the encoding id `ns=3;i=1810` and a body of four zero bytes, which is the switch field 0.
+- The members of the union in the model are, in order, `Invalid`, `Boolean`, `Int16`, `Int32`, `Int64`, `SByte`, `Byte`, `UInt16`, `UInt32`, `UInt64`, `Float`, `Double`, and `String` (`nodeset/alarms.xml`). The switch field is the position of the member counted from 1: Boolean 2, Int16 3, Int32 4, Int64 5, SByte 6, Byte 7, UInt16 8, UInt32 9, UInt64 10, Float 11, Double 12, String 13.
+- An alarm event on the notifier `ns=3;s=SimaticAlarmsAndConditions` carries `InfoText` and no associated value (`opcua-probe events ... InfoText AssociatedValue_01 AssociatedValue_02`).
+- The server finds a data type by its node id with `UA_Server_findDataType` (`src/opcua_server_sim.c`).
+
+Hypothesis: an encoded value of the registered union has the switch field of the member position. The first step checks it with an event.
 
 ##### Scope
 
@@ -267,35 +277,38 @@ Out of scope: The text placeholders that clients resolve in the alarm message.
 
 ##### Completion Criteria
 
-- An event carries associated values whose switch field and member match the example of the manual.
+- An event carries associated values whose switch field is the position of the member in the union definition of the model, counted from 1, and whose member holds the configured value.
 
 ##### Dependencies And Decisions
 
 - M2 (work ordering set by D5)
+- D8 (the form of the `field` line for associated values)
 
 ##### Implementation Plan
 
-Plan Status: draft
-Plan Acceptance: none
-Implementation Authorization: none
+Plan Status: accepted
+Plan Acceptance: 2026-11-13, with the form of the `field` line decided as D8
+Implementation Authorization: 2026-11-13 for the plan as accepted (the owner authorized the implementation; commit and push are separate)
 Superseded Plan Artifacts: none
 
-1. Check that the union data type of the model is registered and encodes to the expected switch values; if it is not, register it from its definition at start.
-2. Extend the `field` keyword of M2 step 3 to associated values.
-3. Extend the probe client to print an associated value.
-4. Add the test.
+1. Check that an encoded value of the registered union has the switch value of the member position; if it does not, register the type from its definition at start. Closed by T1.
+2. Extend the `field` keyword of M2 step 3 to associated values: `field <trigger> AssociatedValue_<nn> <member> <value>`, where `<nn>` is 01 to 10 and `<member>` is the name of a member of the union definition of the model (D8). Update the description of `field` in the header of `simulation.conf` and in the comment of `parse_field` in `src/opcua_server_sim.c`. Closed by T1 and T2.
+3. Extend the probe client to print an associated value. Closed by T1.
+4. Add the tests T1 and T2 in `t/server.t` and a fault row for each in `t/mutations/server.json` (a copy that writes a wrong switch value for T1, a copy that accepts any member name for T2), and run the rows with `tools/mutation-check.pl`. Closed by T1, T2, and the proving rule under the Test Plan of M1.
 
 ##### Test Plan
 
 | Label | Layer | Method | Environment | Expected Result |
 | --- | --- | --- | --- | --- |
-| T1 | Integration | Raise an alarm with associated values of several member types and subscribe through the probe | the shipped server and probe | each event field shows the switch value and the member value that was configured; a copy that writes a wrong switch value must fail this check |
+| T1 | Integration | Set associated values of several member types on an event (`Program_Alarm`) and on an alarm with a state (`Program_Alarm_2`), raise each, and subscribe through the probe | the shipped server and probe | each event field shows the switch value and the member value that was configured; a copy that writes a wrong switch value must fail this check |
+| T2 | Integration | In `t/server.t`, start the server with simulation files that set an associated value correctly and incorrectly (unknown member name, a value that does not fit the member type, a field number outside 01 to 10) | the shipped server and probe | a correct line takes effect on the event field; an incorrect line makes the server exit with status 1 and name its line; a copy that accepts any member name must fail this check |
 
 ##### Verification Results
 
 | Label | Observed At | Environment | Result | Evidence |
 | --- | --- | --- | --- | --- |
 | T1 | Not run | the shipped server and probe | Pending | none |
+| T2 | Not run | the shipped server and probe | Pending | none |
 
 ##### Closure Evidence
 
