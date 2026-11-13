@@ -7,7 +7,7 @@ Canonical branch or ref: master
 Git upstream: origin/master
 Remote tracker: jeonghanlee/opcua-server-sim (no GitHub milestone)
 
-Next session entry point: M1, M2, and M8 are Complete. M3 is Ready and needs plan review, plan acceptance, and implementation authorization first. M9 and M4 stay Blocked on their open gates.
+Next session entry point: M1, M2, and M8 are Complete. M3 has an accepted plan and implementation authorization and is next. M9 and M4 stay Blocked on their open gates.
 
 ## Milestone
 
@@ -19,7 +19,7 @@ Next session entry point: M1, M2, and M8 are Complete. M3 is Ready and needs pla
 | Build | M2 | Simulator completeness | Milestone | Complete | No | D5 | The small and medium items of the owner's selection are built and tested by T1 to T9; [detail](#m2---simulator-completeness) |
 | Build | M8 | Alarm associated values | Milestone | Complete | No | M2, D8 | Events carry `AssociatedValue_01` to `AssociatedValue_10` as the union type, shown by T1 and T2; [detail](#m8---alarm-associated-values) |
 | Build | M9 | GoodOverload and registered nodes | Milestone | Blocked | No | M8, G4 | Each item is built and shown by T1 and T2, or retired by the decision of G4; [detail](#m9---goodoverload-and-registered-nodes) |
-| Document | M3 | Technical documentation | Milestone | Not started | Yes | G2, D6 | The documentation book exists, every command in it ran as shown, and it passed second-person review; [detail](#m3---technical-documentation) |
+| Document | M3 | Technical documentation | Milestone | Not started | Yes | G2, D6, D9, D10, D11, D12 | The documentation book exists, every command in it ran as shown, and it passed second-person review; [detail](#m3---technical-documentation) |
 | Deliver | M4 | Container image | Milestone | Blocked | No | G1, G3, D2 | A container image runs the server with the composite model and answers a probe read; [detail](#m4---container-image) |
 | Document | G2 | Owner decides the documentation format and the tutorial | External gate | Complete | No | | The owner records both choices in Decisions; [detail](#g2---owner-decides-the-documentation-format-and-the-tutorial) |
 | Deliver | G1 | open62541-env changes committed | External gate | Open | No | | The wrapper changes are committed in the open62541-env repository; [detail](#g1---open62541-env-changes-committed) |
@@ -38,6 +38,10 @@ Next session entry point: M1, M2, and M8 are Complete. M3 is Ready and needs pla
 | D6 | The documentation is an mdBook book and has a tutorial | 2026-11-12 |
 | D7 | The IOC startup and databases for the composite model live in `ioc/` of this repository and run through `iocsh.bash` of the site EPICS distribution; the distribution tree comes from one variable and the test is skipped when it is absent | 2026-11-13 |
 | D8 | The `field` line sets an associated value as `field <trigger> AssociatedValue_<nn> <member> <value>`, with the member names of the union definition of the model | 2026-11-13 |
+| D9 | The check of the commands of the book is a Perl tool in `tools/` that runs the marked commands of the procedure pages with a substitution table and has fault rows | 2026-11-13 |
+| D10 | The book has a procedure page for running an IOC against the simulator, and the page of the tests names `EPICS_TREE` | 2026-11-13 |
+| D11 | The reader of the book is a controls engineer who knows EPICS and Linux and does not know open62541 or the OPC UA model of a Siemens S7-1500 | 2026-11-13 |
+| D12 | The title of the book is `opcua-server-sim` and its author is Jeong Han Lee, the copyright holder named in `NOTICE` | 2026-11-13 |
 
 ### Milestone Details
 
@@ -383,16 +387,18 @@ Status: Not started
 
 ##### Summary
 
-A documentation book for the simulator: what it is, how to build, run, and verify it, and the exact values of its configuration, model description, and simulation file.
+A documentation book for the simulator: what it is, how to build, run, and verify it, and the exact values of its configuration, model description, and simulation file. The reader is a controls engineer who knows EPICS and Linux and does not know open62541 or the OPC UA model of a Siemens S7-1500 (D11).
 
 ##### Scope
 
 - Concept pages: purpose, architecture, the model and the simulation file.
-- Procedure pages: build, run, generate the NodeSet, create the certificate, run the tests.
+- Procedure pages: build, run, generate the NodeSet, create the certificate, run the tests (including the variable `EPICS_TREE`), and run an IOC against the simulator (`ioc/`, D10).
 - Reference pages: simulation file keywords, server configuration keys, model description format, make targets, the model contents, the probe client.
-- A glossary, and the tutorial when G2 decides to include one.
+- A tutorial (D6) and a glossary.
+- The book layout of the `mdbook` skill: `docs/book.toml`, `docs/src/SUMMARY.md` with `create-missing = false`, the build with the Docker image `jeonghanlee/mdbook`, and `docs/book/` in `.gitignore`.
+- The command check `tools/doc-check.pl` that runs the commands of the procedure pages (D9), the make target `book-check` that runs it, and the option `--make-target` of `tools/mutation-check.pl` (default `test`) that runs the fault rows through that target.
 
-Out of scope: Statements about behavior no test or run has observed.
+Out of scope: Statements about behavior no test or run has observed, and publishing the book to GitHub Pages (decided separately by the owner).
 
 ##### Completion Criteria
 
@@ -402,25 +408,34 @@ Out of scope: Statements about behavior no test or run has observed.
 ##### Dependencies And Decisions
 
 - G2 (format and tutorial), Complete 2026-11-12 with D6: mdBook, with a tutorial
+- D9 (the command check is a Perl tool that runs the commands of the pages)
+- D10 (the book has a procedure page for the IOC)
+- D11 (the reader of the book)
+- D12 (the title and the author of the book)
 
 ##### Implementation Plan
 
-Plan Status: draft
-Plan Acceptance: none
-Implementation Authorization: none
+Plan Status: accepted
+Plan Acceptance: 2026-11-13, with the decisions D9 to D12 accepted by the owner
+Implementation Authorization: 2026-11-13 for the plan as accepted (the owner authorized the implementation; commit, push, and the edit of issue #4 are separate)
 Superseded Plan Artifacts: none
 
-1. Apply the format and tutorial decisions of G2 and plan the pages by type.
-2. Write the pages from the code, the shipped model files, and observed output.
-3. Run every command shown and replace placeholders with real values.
-4. Run the review passes and correct the findings.
+1. Set up the book layout with the title `opcua-server-sim` and the author `Jeong Han Lee` in `docs/book.toml` (D12), build it with the Docker image, and plan the pages by type (G2, D6, D10). Closed by T3.
+2. Write the check design table and the test contract of T1 below before the tool code, then write `tools/doc-check.pl`: it takes the marked commands and expected outputs from the procedure pages, replaces the placeholders from a substitution table whose values it receives at run time, makes a clean checkout of the tree from the files that Git does not ignore (`git ls-files --cached --others --exclude-standard`), runs each command in it, normalizes the volatile text, and compares the exit status and the output with the page (D9). It reads a `bash` code block as a command and the code block without a language that follows it as the output of that command, which is the form of the `technical-writing` skill, and a command that is shown and not run carries a separate mark. It prints TAP with one named check per command and the `Files=` and `Tests=` summary of `prove`, because `tools/mutation-check.pl` reads the failed check names and the summary from that output. Closed by T1.
+3. Write the pages from the code, the shipped model files, and observed output, with the commands and outputs in the code blocks that the tool reads. Closed by T1 and T3.
+4. Add the make target `book-check` and the option `--make-target` of `tools/mutation-check.pl`, add the fault rows of T1 (a changed command, a changed output, a placeholder left unreplaced), and run them with `tools/mutation-check.pl --make-target book-check`. The target `book-check` runs the check through `prove` and is not a part of `make test`, because the page of the tests runs `make test` and would start the check again. Closed by T1 and the proving rule under the Test Plan of M1.
+5. Run the review passes of T2 and T4 and correct the findings. Closed by T2 and T4.
 
 ##### Test Plan
 
 | Label | Layer | Method | Environment | Expected Result |
 | --- | --- | --- | --- | --- |
-| T1 | Documentation | Run every command of every procedure page as shown | clean checkout of the tree | each command succeeds and prints what the page states; a page whose command or stated output is altered in a scratch copy must fail this check |
-| T2 | Review | Second-person pass over every page from the seat of the reader | the finished book | no finding above the severity floor; a seeded defect in a scratch copy of one page must be found by the pass |
+| T1 | Documentation | `tools/doc-check.pl` runs every marked command of every procedure page in a clean checkout of the tree with the values of the substitution table and compares the exit status and the normalized output with the page | a clean checkout of the tree on this host; the substitution table names the library install path, the UA-Nodeset path, and the EPICS tree, and its values are given when the check runs | each command succeeds and prints what the page states; a copy with a changed command, a copy with a changed stated output, and a copy with a placeholder left unreplaced must each fail this check for that reason |
+| T2 | Review | Second-person pass over every page from the seat of the reader named in the Summary (D11), run by a fresh sub-agent | the finished book | no finding above the severity floor; a scratch copy of one page with a seeded defect, given to the same pass, must have the defect found |
+| T3 | Documentation | Build the book with the Docker image `jeonghanlee/mdbook`, and keep the output of `mdbook --version` | the finished book | `docs/book/index.html` and every page linked from `SUMMARY.md` exist, every `.md` file of `docs/src/` except `SUMMARY.md` has its `.html` in `docs/book/`, and the sources are unchanged by the build; a copy whose `SUMMARY.md` links a page that does not exist and a copy with a page file that `SUMMARY.md` does not link must each fail this check |
+| T4 | Review | Third-person pass over every page against the ten items of the review checklist of the `technical-writing` skill, run by a fresh sub-agent, by execution where an item can be counted (words of a heading, words of a sentence, reachability from `SUMMARY.md`) | the finished book | every item passes for every page; a scratch copy of one page with one seeded violation of one item, given to the same pass, must have the violation found |
+
+Contract of T1: the objective is that the commands and outputs the book states are the ones the shipped tree produces. The target is the shipped tools (`make`, the server, the probe, the IOC test) in a clean checkout of the tree, which the check makes itself from the files that Git does not ignore, so that a local setting or a build output of the working tree cannot make a command pass. Each command keeps its exit status, its output bytes, and the SHA-256 of the page and of the tool. The substitution table is part of the check and not of the page text; the repository holds only the names of the placeholders, such as `<open62541_install_path>`, and the values come from options or environment variables when the check runs, because the repository is public and the values are paths of this host. Timestamps, process ids, ports, hashes, modification times, elapsed and CPU times, and the absolute path of the checkout are normalized before the comparison and everything else must match. A page states a line that does not change when a test is added, such as `Result: PASS`, and not the number of checks. A run of `make test` takes about two minutes, so the fault series declares the number of rows that run at once. The check prints one named check per command in TAP and the `Files=` and `Tests=` summary of `prove`, which is the output that `tools/mutation-check.pl` reads. A command that does not end by itself, such as the server of `make run` or an IOC at its prompt, is started in the background, the check waits for the readiness text of its expected output, runs the commands that follow, and stops it with INT; a command that cannot be checked this way is listed as unproven. A missing prerequisite makes a cell Incomplete and not Failed. The setup of a page comes from `make` called directly and not from the commands of the page, so a changed command of a page cannot stop the setup; a check that no setup can reach without that command is listed as unproven. The coverage is each page, its commands, and the three kinds of fault; a cell skipped for a missing EPICS tree is listed as skipped. A run uses the pages and the tool with the recorded SHA-256, and a changed page is run again.
 
 ##### Verification Results
 
@@ -428,6 +443,8 @@ Superseded Plan Artifacts: none
 | --- | --- | --- | --- | --- |
 | T1 | Not run | clean checkout of the tree | Pending | none |
 | T2 | Not run | the finished book | Pending | none |
+| T3 | Not run | the finished book | Pending | none |
+| T4 | Not run | the finished book | Pending | none |
 
 ##### Closure Evidence
 
