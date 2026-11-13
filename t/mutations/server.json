@@ -143,7 +143,8 @@
    "old": "UA_QUALIFIEDNAME(0, \"Retain\"), &active,",
    "new": "UA_QUALIFIEDNAME(0, \"Retain\"), &(UA_Boolean){false},",
    "intended": [
-    "alarm: the first event is active and unacknowledged"
+    "alarm: the first event is active and unacknowledged",
+    "associated: an alarm with a state carries its associated values"
    ],
    "also": [
     "alarm:",
@@ -230,7 +231,8 @@
    "old": "    return status == UA_STATUSCODE_GOOD ? EXIT_SUCCESS : EXIT_FAILURE;",
    "new": "    return EXIT_FAILURE;",
    "intended": [
-    "stop: the server exits with status 0"
+    "stop: the server exits with status 0",
+    "associated: the server exits with status 0"
    ],
    "also": [
     "anonymous no: the server exits with status 0",
@@ -979,7 +981,8 @@
    "old": "alarm->fields_size ? &fields : NULL, NULL, NULL);",
    "new": "NULL, NULL, NULL);",
    "intended": [
-    "field: an event carries its fields"
+    "field: an event carries its fields",
+    "associated: an event carries its associated values"
    ],
    "also": []
   },
@@ -989,7 +992,8 @@
    "old": "alarm->stateful ? \"\" : \"/\", name)",
    "new": "\"\", name)",
    "intended": [
-    "field: an event carries its fields"
+    "field: an event carries its fields",
+    "associated: an event carries its associated values"
    ],
    "also": []
   },
@@ -999,7 +1003,8 @@
    "old": "    if(good && alarm->stateful)\n        good = UA_Server_writeObjectProperty(",
    "new": "    if(false && alarm->stateful)\n        good = UA_Server_writeObjectProperty(",
    "intended": [
-    "field: an alarm with a state carries its fields"
+    "field: an alarm with a state carries its fields",
+    "associated: an alarm with a state carries its associated values"
    ],
    "also": []
   },
@@ -1009,7 +1014,15 @@
    "old": "    value_text = save + strspn(save, \" \\t\");",
    "new": "    value_text = save + strspn(save, \" \\t\");\n    value_text[strcspn(value_text, \" \\t\")] = '\\0';",
    "intended": [
-    "field: an event carries its fields"
+    "field: an event carries its fields",
+    "associated: subscription accepted",
+    "associated: raise the event",
+    "associated: an event carries its associated values",
+    "associated: raise the alarm with a state",
+    "associated: an alarm with a state carries its associated values",
+    "associated: clear the event trigger",
+    "associated: clear the alarm trigger",
+    "associated: the server exits with status 0"
    ],
    "also": [
     "field:"
@@ -1077,7 +1090,9 @@
    "new": "    for(int i = 0; i < 0; i++) {\n        for(int k = 0; k < 2; k++) {",
    "intended": [
     "field: an event carries its fields",
-    "field: an alarm with a state carries its fields"
+    "field: an alarm with a state carries its fields",
+    "associated: an event carries its associated values",
+    "associated: an alarm with a state carries its associated values"
    ],
    "also": []
   },
@@ -1527,6 +1542,137 @@
     "include of a directory: names line 1",
     "simulation file that is a directory: exit status",
     "simulation file that is a directory: message"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-associated-switch",
+   "file": "src/opcua_server_sim.c",
+   "old": "*(UA_UInt32 *)buffer = (UA_UInt32)(i + 1);",
+   "new": "*(UA_UInt32 *)buffer = (UA_UInt32)i;",
+   "intended": [
+    "associated: an event carries its associated values",
+    "associated: an alarm with a state carries its associated values"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-associated-member-any",
+   "file": "src/opcua_server_sim.c",
+   "old": "        if(strcmp(type->members[i].memberName, member) != 0)\n            continue;",
+   "new": "        if(strcmp(type->members[i].memberName, member) != 0 && i + 1 < type->membersSize)\n            continue;",
+   "intended": [
+    "associated value with an unknown member: exit status",
+    "associated value with an unknown member: names line 2"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-associated-sbyte-range",
+   "file": "src/opcua_server_sim.c",
+   "old": "if(signed_value < INT8_MIN || signed_value > INT8_MAX)",
+   "new": "if(signed_value < INT8_MIN && signed_value > INT8_MAX)",
+   "intended": [
+    "associated value of an SByte above 127: exit status",
+    "associated value of an SByte above 127: names line 2"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-associated-int16-range",
+   "file": "src/opcua_server_sim.c",
+   "old": "if(signed_value < INT16_MIN || signed_value > INT16_MAX)",
+   "new": "if(signed_value < INT16_MIN && signed_value > INT16_MAX)",
+   "intended": [
+    "associated value of an Int16 above 32767: exit status",
+    "associated value of an Int16 above 32767: names line 2"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-associated-int32-range",
+   "file": "src/opcua_server_sim.c",
+   "old": "if(signed_value < INT32_MIN || signed_value > INT32_MAX)",
+   "new": "if(signed_value < INT32_MIN && signed_value > INT32_MAX)",
+   "intended": [
+    "associated value of an Int32 above 2147483647: exit status",
+    "associated value of an Int32 above 2147483647: names line 2"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-associated-int64-overflow",
+   "file": "src/opcua_server_sim.c",
+   "old": "signed_value = strtoll(text, &end, 10);\n        if(end == text || *end != '\\0' || errno != 0)",
+   "new": "signed_value = strtoll(text, &end, 10);\n        if(end == text || *end != '\\0')",
+   "intended": [
+    "associated value of an Int64 above 9223372036854775807: exit status",
+    "associated value of an Int64 above 9223372036854775807: names line 2"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-associated-uint16-range",
+   "file": "src/opcua_server_sim.c",
+   "old": "if(unsigned_value > UINT16_MAX)",
+   "new": "if(unsigned_value > UINT32_MAX)",
+   "intended": [
+    "associated value of a UInt16 above 65535: exit status",
+    "associated value of a UInt16 above 65535: names line 2"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-associated-uint32-range",
+   "file": "src/opcua_server_sim.c",
+   "old": "if(unsigned_value > UINT32_MAX)",
+   "new": "if(unsigned_value > 4294967296ULL)",
+   "intended": [
+    "associated value of a UInt32 above 4294967295: exit status",
+    "associated value of a UInt32 above 4294967295: names line 2"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-associated-uint64-overflow",
+   "file": "src/opcua_server_sim.c",
+   "old": "unsigned_value = strtoull(text, &end, 10);\n        if(end == text || *end != '\\0' || errno != 0)",
+   "new": "unsigned_value = strtoull(text, &end, 10);\n        if(end == text || *end != '\\0')",
+   "intended": [
+    "associated value of a UInt64 above 18446744073709551615: exit status",
+    "associated value of a UInt64 above 18446744073709551615: names line 2"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-associated-float-range",
+   "file": "src/opcua_server_sim.c",
+   "old": "if(fabs(real) > FLT_MAX)",
+   "new": "if(fabs(real) > DBL_MAX)",
+   "intended": [
+    "associated value of a Float above the largest float: exit status",
+    "associated value of a Float above the largest float: names line 2"
+   ],
+   "also": []
+  },
+  {
+   "id": "c-associated-finite-off",
+   "file": "src/opcua_server_sim.c",
+   "old": "|| errno != 0 || !isfinite(real))",
+   "new": "|| errno != 0)",
+   "intended": [
+    "associated value of a Double that is not finite: exit status",
+    "associated value of a Double that is not finite: names line 2"
+   ],
+   "also": []
+  },
+  {
+   "id": "p-associated-float-print",
+   "file": "tools/opcua-probe.c",
+   "old": "else if(type == &UA_TYPES[UA_TYPES_FLOAT])",
+   "new": "else if(type == &UA_TYPES[UA_TYPES_FLOAT] && 0)",
+   "intended": [
+    "associated: an event carries its associated values"
    ],
    "also": []
   }

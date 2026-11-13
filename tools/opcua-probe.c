@@ -13,7 +13,12 @@
  *   refs <node>                          all references in both directions
  *   endpoints                            endpoints of the server
  *   events <node> <seconds> [<field> ...] events reported by an Object; each <field> is
- *                                        a field of SimaticEventType, printed as <field>=<value>
+ *                                        a field of SimaticEventType, printed as <field>=<value>;
+ *                                        an associated value is printed as
+ *                                        <switch>:<member>:<value>; an alarm with
+ *                                        a state that holds no value prints the
+ *                                        switch 0, and an event that holds no value
+ *                                        has no such field and prints nothing
  *   intervals [<node>]                   revised intervals for a request of 1 ms on a node
  *                                        (CurrentTime when none is given)
  *   sessions                             opens sessions until one is refused
@@ -502,6 +507,84 @@ command_endpoints(UA_Client *client, const char *url) {
 static char **extra_fields = NULL;
 static int extra_field_count = 0;
 
+/* The members of the union SimaticAssociatedAlarmValue in the order of the
+ * model. The switch field of a value is the position of its member counted
+ * from 1; the encoded value is the switch field as a UInt32 and then the
+ * member. */
+static const struct {
+    const char *name;
+    const UA_DataType *type;
+} associated_members[] = {
+    {"Invalid", &UA_TYPES[UA_TYPES_BOOLEAN]}, {"Boolean", &UA_TYPES[UA_TYPES_BOOLEAN]},
+    {"Int16", &UA_TYPES[UA_TYPES_INT16]},     {"Int32", &UA_TYPES[UA_TYPES_INT32]},
+    {"Int64", &UA_TYPES[UA_TYPES_INT64]},     {"SByte", &UA_TYPES[UA_TYPES_SBYTE]},
+    {"Byte", &UA_TYPES[UA_TYPES_BYTE]},       {"UInt16", &UA_TYPES[UA_TYPES_UINT16]},
+    {"UInt32", &UA_TYPES[UA_TYPES_UINT32]},   {"UInt64", &UA_TYPES[UA_TYPES_UINT64]},
+    {"Float", &UA_TYPES[UA_TYPES_FLOAT]},     {"Double", &UA_TYPES[UA_TYPES_DOUBLE]},
+    {"String", &UA_TYPES[UA_TYPES_STRING]}};
+
+/* Prints a Float with the fewest digits that read back as the same Float, so
+ * that 3.14 prints as 3.14 and not as the double that holds it. */
+static void
+print_float(UA_Float value) {
+    char text[32];
+
+    for(int digits = 1; digits <= 9; digits++) {
+        snprintf(text, sizeof(text), "%.*g", digits, (double)value);
+        if(strtof(text, NULL) == value)
+            break;
+    }
+    printf("%s", text);
+}
+
+/* Prints an associated value from the encoded body of its ExtensionObject as
+ * "<switch>:<member>:<value>", or as 0 when the switch field is 0. */
+static void
+print_associated_value(const UA_ByteString *body) {
+    const size_t count = sizeof(associated_members) / sizeof(associated_members[0]);
+    UA_UInt32 selection = 0;
+    UA_ByteString payload = UA_BYTESTRING_NULL;
+    const UA_DataType *type = NULL;
+    void *value = NULL;
+
+    if(body->length < 4) {
+        printf("<invalid>");
+        return;
+    }
+    selection = (UA_UInt32)body->data[0] | ((UA_UInt32)body->data[1] << 8) |
+                ((UA_UInt32)body->data[2] << 16) | ((UA_UInt32)body->data[3] << 24);
+    if(selection == 0) {
+        printf("0");
+        return;
+    }
+    if(selection > count) {
+        printf("%u:unknown", (unsigned)selection);
+        return;
+    }
+    printf("%u:%s:", (unsigned)selection, associated_members[selection - 1].name);
+    type = associated_members[selection - 1].type;
+    payload.length = body->length - 4;
+    payload.data = body->data + 4;
+    value = UA_new(type);
+    if(value && UA_decodeBinary(&payload, value, type, NULL) == UA_STATUSCODE_GOOD) {
+        if(type == &UA_TYPES[UA_TYPES_STRING])
+            printf("%.*s", (int)((const UA_String *)value)->length,
+                   (const char *)((const UA_String *)value)->data);
+        else if(type == &UA_TYPES[UA_TYPES_FLOAT])
+            print_float(*(const UA_Float *)value);
+        else if(type == &UA_TYPES[UA_TYPES_INT64])
+            printf("%lld", (long long)*(const UA_Int64 *)value);
+        else if(type == &UA_TYPES[UA_TYPES_UINT64])
+            printf("%llu", (unsigned long long)*(const UA_UInt64 *)value);
+        else
+            print_element(value, type);
+    } else {
+        printf("<invalid>");
+    }
+    if(value)
+        UA_delete(value, type);
+}
+
 /* Prints a LocalizedText as its text and any other value as UA_print does. */
 static void
 print_field_value(const UA_Variant *v) {
@@ -567,7 +650,13 @@ on_event(UA_Client *client, UA_UInt32 subscription, void *subscription_context,
             v = &fields.map[EVENT_BASE_FIELDS + 2 * i + k].value;
             if(v->type && v->data && UA_Variant_isScalar(v)) {
                 printf(" %s=", extra_fields[i]);
-                print_field_value(v);
+                if(strncmp(extra_fields[i], "AssociatedValue_", 16) == 0 &&
+                   UA_Variant_hasScalarType(v, &UA_TYPES[UA_TYPES_EXTENSIONOBJECT]) &&
+                   ((const UA_ExtensionObject *)v->data)->encoding ==
+                       UA_EXTENSIONOBJECT_ENCODED_BYTESTRING)
+                    print_associated_value(&((const UA_ExtensionObject *)v->data)->content.encoded.body);
+                else
+                    print_field_value(v);
                 break;
             }
         }

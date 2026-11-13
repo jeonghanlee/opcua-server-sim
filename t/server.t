@@ -503,6 +503,59 @@ is(read_node($port, 'ns=3;s="DataStatic"."myArrayInt"[3]'), 'Good 4', 'RUN: an a
     waitpid($events_pid, 0);
 }
 
+# Associated values that field lines of the simulation file set on an event and
+# on an alarm with a state. A field carries the union SimaticAssociatedAlarmValue
+# and the probe prints it as "<switch>:<member>:<value>"; the switch is the
+# position of the member in the union definition, counted from 1 (Invalid 1,
+# Boolean 2, Int16 3, Int32 4, Int64 5, SByte 6, Byte 7, UInt16 8, UInt32 9,
+# UInt64 10, Float 11, Double 12, String 13). A value that is not set on an alarm
+# with a state prints as the switch 0.
+{
+    my $event_trigger = 'ns=3;s="AlarmTriggers"."Program_Alarm"';
+    my $alarm_trigger = 'ns=3;s="AlarmTriggers"."Program_Alarm_2"';
+    my @on_event = (
+        'Boolean true', 'Int16 -5', 'Int32 -70000', 'Int64 -9000000000', 'SByte -128',
+        'Byte 255', 'UInt16 65535', 'UInt32 4000000000', 'UInt64 18446744073709551615', 'Float 3.14',
+    );
+    my @on_alarm = ('Double 2.5', 'String hello world', 'Invalid true', 'Boolean false');
+    my %position = (Invalid => 1, Boolean => 2, Int16 => 3, Int32 => 4, Int64 => 5, SByte => 6, Byte => 7,
+        UInt16 => 8, UInt32 => 9, UInt64 => 10, Float => 11, Double => 12, String => 13);
+    my $conf = File::Spec->catfile($dir, 'associated.conf');
+    my $lines = '';
+    for my $i (0 .. $#on_event) {
+        $lines .= sprintf("field %s AssociatedValue_%02d %s\n", $event_trigger, $i + 1, $on_event[$i]);
+    }
+    for my $i (0 .. $#on_alarm) {
+        $lines .= sprintf("field %s AssociatedValue_%02d %s\n", $alarm_trigger, $i + 1, $on_alarm[$i]);
+    }
+    spew($conf, slurp($SIMULATION) . $lines);
+    my @names = map { sprintf('AssociatedValue_%02d', $_) } 1 .. 10;
+    my ($associated_pid, $associated_port) = start_server($conf, $config_text);
+    my ($events_pid, $events) = start_events($associated_port, $NOTIFIER, 12, @names);
+    like(next_line($events, $EVENT_SECONDS) // '', qr/^monitor Good$/, 'associated: subscription accepted');
+    is(write_node($associated_port, $event_trigger, 'bool', 'true'), 'Good', 'associated: raise the event');
+    my $expected_event = join ' ', map {
+        my ($member, $value) = split / /, $on_event[$_], 2;
+        sprintf('%s=%d:%s:%s', $names[$_], $position{$member}, $member, $value);
+    } 0 .. $#on_event;
+    is((next_line($events, $EVENT_SECONDS) // '') =~ / (AssociatedValue_01=.*)$/ ? $1 : '',
+        $expected_event, 'associated: an event carries its associated values');
+    is(write_node($associated_port, $alarm_trigger, 'bool', 'true'), 'Good', 'associated: raise the alarm with a state');
+    my @alarm_words = map {
+        my ($member, $value) = split / /, $on_alarm[$_], 2;
+        sprintf('%s=%d:%s:%s', $names[$_], $position{$member}, $member, $value);
+    } 0 .. $#on_alarm;
+    push @alarm_words, map { "$names[$_]=0" } scalar(@on_alarm) .. 9;
+    is((next_line($events, $EVENT_SECONDS) // '') =~ / (AssociatedValue_01=.*)$/ ? $1 : '',
+        join(' ', @alarm_words), 'associated: an alarm with a state carries its associated values');
+    is(write_node($associated_port, $event_trigger, 'bool', 'false'), 'Good', 'associated: clear the event trigger');
+    is(write_node($associated_port, $alarm_trigger, 'bool', 'false'), 'Good', 'associated: clear the alarm trigger');
+    1 while defined next_line($events, $EVENT_SECONDS);
+    close($events);
+    waitpid($events_pid, 0);
+    is(stop_server($associated_pid), 0, 'associated: the server exits with status 0');
+}
+
 # User accounts.
 {
     my ($status, $out) = run_probe($port, [qw(-u simulator -p composite)], 'read', $MODE);
@@ -643,6 +696,23 @@ my @cases = (
     { name => 'field with an ID above 65535', text => "${EV}field $PA ID 70000\n", line => 2 },
     { name => 'field with a group above 255', text => "${EV}field $PA GroupID 300\n", line => 2 },
     { name => 'field set twice', text => "${EV}field $PA InfoText one\nfield $PA InfoText two\n", line => 3 },
+    { name => 'associated value with an unknown member', text => "${EV}field $PA AssociatedValue_01 Nope 5\n", line => 2 },
+    { name => 'associated value with a number of 11', text => "${EV}field $PA AssociatedValue_11 Int16 5\n", line => 2 },
+    { name => 'associated value with a number of 00', text => "${EV}field $PA AssociatedValue_00 Int16 5\n", line => 2 },
+    { name => 'associated value without a value', text => "${EV}field $PA AssociatedValue_01 Int16\n", line => 2 },
+    { name => 'associated value with a text instead of a number', text => "${EV}field $PA AssociatedValue_01 Int16 abc\n", line => 2 },
+    { name => 'associated value of a Byte above 255', text => "${EV}field $PA AssociatedValue_01 Byte 256\n", line => 2 },
+    { name => 'associated value of a UInt16 below zero', text => "${EV}field $PA AssociatedValue_01 UInt16 -1\n", line => 2 },
+    { name => 'associated value of a Boolean with a number', text => "${EV}field $PA AssociatedValue_01 Boolean 2\n", line => 2 },
+    { name => 'associated value of an SByte above 127', text => "${EV}field $PA AssociatedValue_01 SByte 128\n", line => 2 },
+    { name => 'associated value of an Int16 above 32767', text => "${EV}field $PA AssociatedValue_01 Int16 32768\n", line => 2 },
+    { name => 'associated value of an Int32 above 2147483647', text => "${EV}field $PA AssociatedValue_01 Int32 2147483648\n", line => 2 },
+    { name => 'associated value of an Int64 above 9223372036854775807', text => "${EV}field $PA AssociatedValue_01 Int64 9223372036854775808\n", line => 2 },
+    { name => 'associated value of a UInt16 above 65535', text => "${EV}field $PA AssociatedValue_01 UInt16 65536\n", line => 2 },
+    { name => 'associated value of a UInt32 above 4294967295', text => "${EV}field $PA AssociatedValue_01 UInt32 4294967296\n", line => 2 },
+    { name => 'associated value of a UInt64 above 18446744073709551615', text => "${EV}field $PA AssociatedValue_01 UInt64 18446744073709551616\n", line => 2 },
+    { name => 'associated value of a Float above the largest float', text => "${EV}field $PA AssociatedValue_01 Float 1e39\n", line => 2 },
+    { name => 'associated value of a Double that is not finite', text => "${EV}field $PA AssociatedValue_01 Double inf\n", line => 2 },
 );
 for my $case (@cases) {
     my $conf = File::Spec->catfile($dir, 'case.conf');

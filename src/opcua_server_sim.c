@@ -20,6 +20,7 @@
 #include <open62541/server_config_file_based.h>
 
 #include <errno.h>
+#include <float.h>
 #include <math.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -46,6 +47,9 @@
 #define SIM_CONTROL_SWITCH "Run"
 #define SIM_CONTROL_SWITCH_ID SIM_CONTROL_OBJECT "." SIM_CONTROL_SWITCH
 #define SIM_LOCALE "en-US"
+/* Node id, in the SIMATIC namespace, of the union SimaticAssociatedAlarmValue. */
+#define SIM_ASSOCIATED_VALUE_TYPE 1809
+#define SIM_ASSOCIATED_VALUE_COUNT 10
 
 /* Identity of the build, set by the build system: the commit of the source
  * tree, the version derived from its tags, and the time of the compilation in
@@ -1306,7 +1310,7 @@ bind_queues(void) {
 /* Namespace URI of the SIMATIC interface; the event fields belong to it. */
 #define SIM_SIMATIC_URI "http://www.siemens.com/simatic-s7-opcua"
 
-typedef enum { FIELD_TEXT, FIELD_UINT16, FIELD_BYTE, FIELD_UNKNOWN } FieldKind;
+typedef enum { FIELD_TEXT, FIELD_UINT16, FIELD_BYTE, FIELD_UNION, FIELD_UNKNOWN } FieldKind;
 
 /* Data type of an event field that a "field" line can set. */
 static FieldKind
@@ -1320,12 +1324,149 @@ field_kind(const char *name) {
         return FIELD_UINT16;
     if(strcmp(name, "GroupID") == 0)
         return FIELD_BYTE;
+    /* AssociatedValue_01 to AssociatedValue_10 */
+    if(strncmp(name, "AssociatedValue_", 16) == 0 && name[16] >= '0' && name[16] <= '9' &&
+       name[17] >= '0' && name[17] <= '9' && name[18] == '\0') {
+        int number = (name[16] - '0') * 10 + (name[17] - '0');
+        if(number >= 1 && number <= SIM_ASSOCIATED_VALUE_COUNT)
+            return FIELD_UNION;
+    }
     return FIELD_UNKNOWN;
+}
+
+/* Parses the text of a member of an associated value into the payload of the
+ * union. The text must be a whole number, a whole floating point number,
+ * true or false (or 1 or 0), or a non-empty string, and must fit the member
+ * type. */
+static UA_Boolean
+parse_member_value(const UA_DataType *type, const char *text, void *payload) {
+    char *end = NULL;
+    long long signed_value = 0;
+    unsigned long long unsigned_value = 0;
+    double real = 0.0;
+
+    if(*text == '\0')
+        return false;
+    errno = 0;
+    switch(type->typeKind) {
+    case UA_DATATYPEKIND_BOOLEAN:
+        if(strcmp(text, "true") != 0 && strcmp(text, "1") != 0 && strcmp(text, "false") != 0 &&
+           strcmp(text, "0") != 0)
+            return false;
+        *(UA_Boolean *)payload = (strcmp(text, "true") == 0 || strcmp(text, "1") == 0);
+        return true;
+    case UA_DATATYPEKIND_SBYTE:
+    case UA_DATATYPEKIND_INT16:
+    case UA_DATATYPEKIND_INT32:
+    case UA_DATATYPEKIND_INT64:
+        signed_value = strtoll(text, &end, 10);
+        if(end == text || *end != '\0' || errno != 0)
+            return false;
+        if(type->typeKind == UA_DATATYPEKIND_SBYTE) {
+            if(signed_value < INT8_MIN || signed_value > INT8_MAX)
+                return false;
+            *(UA_SByte *)payload = (UA_SByte)signed_value;
+        } else if(type->typeKind == UA_DATATYPEKIND_INT16) {
+            if(signed_value < INT16_MIN || signed_value > INT16_MAX)
+                return false;
+            *(UA_Int16 *)payload = (UA_Int16)signed_value;
+        } else if(type->typeKind == UA_DATATYPEKIND_INT32) {
+            if(signed_value < INT32_MIN || signed_value > INT32_MAX)
+                return false;
+            *(UA_Int32 *)payload = (UA_Int32)signed_value;
+        } else {
+            *(UA_Int64 *)payload = (UA_Int64)signed_value;
+        }
+        return true;
+    case UA_DATATYPEKIND_BYTE:
+    case UA_DATATYPEKIND_UINT16:
+    case UA_DATATYPEKIND_UINT32:
+    case UA_DATATYPEKIND_UINT64:
+        if(text[0] == '-')
+            return false;
+        unsigned_value = strtoull(text, &end, 10);
+        if(end == text || *end != '\0' || errno != 0)
+            return false;
+        if(type->typeKind == UA_DATATYPEKIND_BYTE) {
+            if(unsigned_value > UINT8_MAX)
+                return false;
+            *(UA_Byte *)payload = (UA_Byte)unsigned_value;
+        } else if(type->typeKind == UA_DATATYPEKIND_UINT16) {
+            if(unsigned_value > UINT16_MAX)
+                return false;
+            *(UA_UInt16 *)payload = (UA_UInt16)unsigned_value;
+        } else if(type->typeKind == UA_DATATYPEKIND_UINT32) {
+            if(unsigned_value > UINT32_MAX)
+                return false;
+            *(UA_UInt32 *)payload = (UA_UInt32)unsigned_value;
+        } else {
+            *(UA_UInt64 *)payload = (UA_UInt64)unsigned_value;
+        }
+        return true;
+    case UA_DATATYPEKIND_FLOAT:
+    case UA_DATATYPEKIND_DOUBLE:
+        real = strtod(text, &end);
+        if(end == text || *end != '\0' || errno != 0 || !isfinite(real))
+            return false;
+        if(type->typeKind == UA_DATATYPEKIND_FLOAT) {
+            if(fabs(real) > FLT_MAX)
+                return false;
+            *(UA_Float *)payload = (UA_Float)real;
+        } else {
+            *(UA_Double *)payload = real;
+        }
+        return true;
+    case UA_DATATYPEKIND_STRING:
+        *(UA_String *)payload = UA_STRING_ALLOC(text);
+        return ((UA_String *)payload)->data != NULL;
+    default:
+        return false;
+    }
+}
+
+/* Builds the Variant of an associated value from the text "<member> <value>".
+ * The member is a member name of the union SimaticAssociatedAlarmValue of the
+ * model; the switch field of the union is the position of the member counted
+ * from 1. */
+static UA_Boolean
+set_associated_value(UA_Server *server, size_t ns, char *text, UA_Variant *variant) {
+    UA_NodeId type_id = UA_NODEID_NUMERIC((UA_UInt16)ns, SIM_ASSOCIATED_VALUE_TYPE);
+    const UA_DataType *type = UA_Server_findDataType(server, &type_id);
+    char *member = text;
+    char *value = text + strcspn(text, " \t");
+    void *buffer = NULL;
+    UA_Boolean good = false;
+
+    if(*value != '\0') {
+        *value++ = '\0';
+        value += strspn(value, " \t");
+    }
+    if(!type || type->typeKind != UA_DATATYPEKIND_UNION || *member == '\0')
+        return false;
+    for(size_t i = 0; i < type->membersSize; i++) {
+        if(strcmp(type->members[i].memberName, member) != 0)
+            continue;
+        buffer = UA_calloc(1, type->memSize);
+        if(!buffer)
+            return false;
+        *(UA_UInt32 *)buffer = (UA_UInt32)(i + 1);
+        good = parse_member_value(type->members[i].memberType, value,
+                                  (char *)buffer + type->members[i].padding) &&
+               UA_Variant_setScalarCopy(variant, buffer, type) == UA_STATUSCODE_GOOD;
+        UA_clear(buffer, type);
+        UA_free(buffer);
+        return good;
+    }
+    return false;
 }
 
 /* Reads one line "field <trigger-node-id> <browse-name> <value>": sets an
  * event field of the alarm or event that the trigger names. The value is the
- * rest of the line. The line follows the alarm or event line of the trigger. */
+ * rest of the line. For an associated value, the browse name is
+ * AssociatedValue_01 to AssociatedValue_10 and the value is
+ * "<member> <value>" with a member name of the union
+ * SimaticAssociatedAlarmValue. The line follows the alarm or event line of the
+ * trigger. */
 static UA_Boolean
 parse_field(UA_Server *server, char *arguments) {
     char *save = NULL;
@@ -1372,7 +1513,9 @@ parse_field(UA_Server *server, char *arguments) {
 
     memset(&field, 0, sizeof(field));
     field.key = UA_QUALIFIEDNAME_ALLOC((UA_UInt16)ns, key_name);
-    if(kind == FIELD_TEXT) {
+    if(kind == FIELD_UNION) {
+        good = set_associated_value(server, ns, value_text, &field.value);
+    } else if(kind == FIELD_TEXT) {
         UA_LocalizedText text = UA_LOCALIZEDTEXT_ALLOC(SIM_LOCALE, value_text);
         good = UA_Variant_setScalarCopy(&field.value, &text,
                                         &UA_TYPES[UA_TYPES_LOCALIZEDTEXT]) ==
