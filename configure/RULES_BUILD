@@ -1,6 +1,6 @@
 .DEFAULT_GOAL := help
 
-.PHONY: help build probe clean run certificate nodeset test check-open62541
+.PHONY: help build probe clean run certificate nodeset test book-check check-open62541
 
 help:
 	$(info Usage: make <target> [VAR=value])
@@ -12,6 +12,7 @@ help:
 	$(info probe             Build the client that checks a running server)
 	$(info nodeset           Write the NodeSet of a model from its plc.json)
 	$(info test              Run the tests: the tools, and the server with the model MODEL)
+	$(info book-check        Run the commands of the pages of the book and compare their output)
 	$(info certificate       Create the server certificate of a model that carries pki.cnf)
 	$(info run               Run the server with the model MODEL (default: $(MODEL)))
 	$(info clean             Remove the build directory)
@@ -72,6 +73,11 @@ endif
 ## Run the tests of the tools, and of the server with the composite model
 test: check-tool.perl check-tool.prove build probe certificate
 	$(QUIET) SIM_SERVER=$(SERVER_BIN) SIM_PROBE=$(PROBE_BIN) SIM_DI=$(UA_NODESET_PATH)/DI/Opc.Ua.Di.NodeSet2.xml SIM_EPICS_TREE=$(EPICS_TREE) prove $(TOP)/t
+
+## Run the commands of the pages of the book in clean checkouts and compare their
+## output with the pages; the values of the placeholders come from the variables
+book-check: check-tool.perl check-tool.prove check-tool.git
+	$(QUIET) DOC_CHECK_VALUE_open62541_install_path=$(OPEN62541_PATH) DOC_CHECK_VALUE_ua_nodeset_path=$(UA_NODESET_PATH) DOC_CHECK_VALUE_epics_tree=$(EPICS_TREE) prove $(TOP)/tools/doc-check.pl $(if $(BOOK_PAGE),:: --page $(BOOK_PAGE))
 
 ## Create the self-signed server certificate of a model that carries pki.cnf
 certificate: $(if $(MODEL_PKI_CONFIG),$(MODEL_CERT))

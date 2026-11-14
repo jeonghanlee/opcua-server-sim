@@ -43,5 +43,9 @@ UA_NODESET_PATH = $(OPEN62541_ENV_PATH)/open62541-src/deps/ua-nodeset
 # make test EPICS_TREE=<tree>.
 EPICS_TREE =
 
+# Page of the book that book-check runs, relative to docs/src. Empty runs every
+# page.
+BOOK_PAGE =
+
 -include $(TOP)/../CONFIG_SITE.local
 -include $(TOP)/configure/CONFIG_SITE.local

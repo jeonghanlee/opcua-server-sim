@@ -1,7 +1,8 @@
 #!/usr/bin/env perl
 #
 # Proves that the tests can fail. For each row of a fault table the tool makes a
-# scratch copy of the tree, applies the fault to one file, runs "make test" in
+# scratch copy of the tree, applies the fault to one file, runs "make" with the
+# target (default "test") in
 # the copy, and compares the failed checks with the checks the row expects.
 # See the POD at the end of the file.
 
@@ -25,10 +26,12 @@ my $EXIT_USAGE = 2;
 # fault may leave an unused value behind.
 my $CFLAGS = '-std=c99 -O2 -g -Wall -Wextra';
 
-# Seconds one "make test" run may take.
+# Seconds one run of the target may take.
 my $RUN_SECONDS = 900;
 
-# Variables given to "make test" with --make-var, as NAME=VALUE.
+# The make target that every copy runs, and the variables given to it with
+# --make-var, as NAME=VALUE.
+my $MAKE_TARGET = 'test';
 my @MAKE_VARS;
 
 # Number of checks of the control run; a copy that runs fewer died on the way.
@@ -147,11 +150,11 @@ sub build_copy {
     return ($copy, sha256_hex($text), sha256_hex($changed));
 }
 
-# Runs "make test" in a copy and returns the verdict facts: whether the run is
+# Runs the make target in a copy and returns the verdict facts: whether the run is
 # complete, the failed check names, and the exit status.
 sub run_copy {
     my ($copy, $log) = @_;
-    my $status = run_logged($copy, $log, $RUN_SECONDS, 'make', 'test', "CFLAGS=$CFLAGS", @MAKE_VARS);
+    my $status = run_logged($copy, $log, $RUN_SECONDS, 'make', $MAKE_TARGET, "CFLAGS=$CFLAGS", @MAKE_VARS);
     my $text = -f $log ? read_file($log) : '';
     my @failed = $text =~ /^#\s+Failed test '(.*)'$/mg;
     my $summary = $text =~ /^Files=\d+, Tests=(\d+)/m ? $1 : undef;
@@ -191,7 +194,7 @@ sub run_row {
     }
     elsif (!$complete) {
         $result{verdict} = 'INCOMPLETE';
-        $result{detail} = "make test status $status; see $log";
+        $result{detail} = "make $MAKE_TARGET status $status; see $log";
     }
     elsif (!@missed && !@unexpected) {
         $result{verdict} = 'KILLED';
@@ -212,7 +215,8 @@ sub main {
     my @args = @_;
     my ($tree, $table, $work, $jobs, $help) = (undef, undef, undef, 3, 0);
     GetOptionsFromArray(\@args, 'tree=s' => \$tree, 'table=s' => \$table, 'work=s' => \$work,
-        'jobs=i' => \$jobs, 'make-var=s' => \@MAKE_VARS, 'help|h' => \$help) or return $EXIT_USAGE;
+        'jobs=i' => \$jobs, 'make-var=s' => \@MAKE_VARS, 'make-target=s' => \$MAKE_TARGET,
+        'help|h' => \$help) or return $EXIT_USAGE;
     if ($help) {
         pod2usage(-exitval => 'NOEXIT', -verbose => 1, -output => \*STDOUT);
         return $EXIT_OK;
@@ -246,7 +250,7 @@ sub main {
     }
     if (!$complete || $status ne '0') {
         print STDERR "control run: the unchanged tree did not run every check (a test was skipped or stopped; "
-            . "make test status $status); see $control_log; no series run\n"
+            . "make $MAKE_TARGET status $status); see $control_log; no series run\n"
             . "a skipped server test usually needs --make-var UA_NODESET_PATH=<absolute path of the UA-Nodeset directory>\n";
         return $EXIT_FAIL;
     }
@@ -310,7 +314,8 @@ mutation-check.pl - show that the tests of the tree can fail
 
 =head1 SYNOPSIS
 
-mutation-check.pl --tree DIR --table FILE --work DIR [--jobs N] [--make-var NAME=VALUE ...] [ID ...]
+mutation-check.pl --tree DIR --table FILE --work DIR [--jobs N] [--make-target TARGET]
+[--make-var NAME=VALUE ...] [ID ...]
 
 =head1 DESCRIPTION
 
@@ -321,10 +326,12 @@ optionally C<also> (text of the names of other checks it may fail) and
 C<equivalent> (the reason the fault changes no observable).
 
 The tool first copies the unchanged tree to C<WORK/control> and runs
-C<make test> in the copy; the series starts only when every check passes. Each
-row then gets its own copy, with the fault applied to the named file and the
-SHA-256 of that file recorded before and after, and runs C<make test> in it.
-C<make test> runs with the shipped compiler flags without C<-Werror>.
+the make target in the copy (C<test> unless C<--make-target> names another); the
+series starts only when every check passes. Each row then gets its own copy, with
+the fault applied to the named file and the SHA-256 of that file recorded before
+and after, and runs the target in it. The target runs with the shipped compiler
+flags without C<-Werror>. The tool reads the failed check names and the
+C<Files=N, Tests=N> summary from the C<prove> output of the target.
 
 A row is C<KILLED> when every intended check failed and no check failed
 outside C<intended> and C<also>, C<SURVIVED> when no check failed,
@@ -353,9 +360,14 @@ Where the copies and run logs go. C<DIR/control> must not exist.
 
 Runs at the same time; the default is 3.
 
+=item B<--make-target> TARGET
+
+The make target that every copy runs. The default is C<test>; C<book-check> runs the
+command check of the book. The target must print the C<prove> summary.
+
 =item B<--make-var> NAME=VALUE
 
-A variable for C<make test> in every copy, for a path that is relative to the
+A variable for the make target in every copy, for a path that is relative to the
 tree and breaks in a copy, such as C<UA_NODESET_PATH>. May be repeated.
 
 =item B<--help>
