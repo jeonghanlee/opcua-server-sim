@@ -1,0 +1,13 @@
+[book]
+title = "opcua-server-sim"
+authors = ["Jeong Han Lee"]
+language = "en"
+src = "src"
+
+[build]
+create-missing = false
+
+[output.html]
+site-url = "/opcua-server-sim/"
+git-repository-url = "https://github.com/jeonghanlee/opcua-server-sim"
+edit-url-template = "https://github.com/jeonghanlee/opcua-server-sim/edit/master/docs/src/{path}"
