@@ -7,7 +7,7 @@ Canonical branch or ref: master
 Git upstream: origin/master
 Remote tracker: jeonghanlee/opcua-server-sim (no GitHub milestone)
 
-Next session entry point: M1, M2, and M8 are Complete. M3 has passed T1 to T4; it stays In progress until the last commit lands and issue #4 is closed. M9 and M4 stay Blocked on their open gates.
+Next session entry point: M1, M2, M3, and M8 are Complete. M9 and M4 stay Blocked on their open gates.
 
 ## Milestone
 
@@ -19,7 +19,7 @@ Next session entry point: M1, M2, and M8 are Complete. M3 has passed T1 to T4; i
 | Build | M2 | Simulator completeness | Milestone | Complete | No | D5 | The small and medium items of the owner's selection are built and tested by T1 to T9; [detail](#m2---simulator-completeness) |
 | Build | M8 | Alarm associated values | Milestone | Complete | No | M2, D8 | Events carry `AssociatedValue_01` to `AssociatedValue_10` as the union type, shown by T1 and T2; [detail](#m8---alarm-associated-values) |
 | Build | M9 | GoodOverload and registered nodes | Milestone | Blocked | No | M8, G4 | Each item is built and shown by T1 and T2, or retired by the decision of G4; [detail](#m9---goodoverload-and-registered-nodes) |
-| Document | M3 | Technical documentation | Milestone | In progress | No | G2, D6, D9, D10, D11, D12 | The documentation book exists, every command in it ran as shown, and it passed second-person review; [detail](#m3---technical-documentation) |
+| Document | M3 | Technical documentation | Milestone | Complete | No | G2, D6, D9, D10, D11, D12 | The documentation book exists, every command in it ran as shown, and it passed second-person review; [detail](#m3---technical-documentation) |
 | Deliver | M4 | Container image | Milestone | Blocked | No | G1, G3, D2 | A container image runs the server with the composite model and answers a probe read; [detail](#m4---container-image) |
 | Document | G2 | Owner decides the documentation format and the tutorial | External gate | Complete | No | | The owner records both choices in Decisions; [detail](#g2---owner-decides-the-documentation-format-and-the-tutorial) |
 | Deliver | G1 | open62541-env changes committed | External gate | Open | No | | The wrapper changes are committed in the open62541-env repository; [detail](#g1---open62541-env-changes-committed) |
@@ -383,7 +383,7 @@ Superseded Plan Artifacts: none
 Origin: ef67f5e / M3
 Identity History: none
 GitHub Issue: #4 https://github.com/jeonghanlee/opcua-server-sim/issues/4
-Status: In progress
+Status: Complete
 
 ##### Summary
 
@@ -480,6 +480,9 @@ Check design of T1 (the checks share one run of the tool, and every page runs in
 
 ##### Closure Evidence
 
+- Landed: commits `c9d9dadd3676907fc34f7f3a7dbed631611e69cc` (book), `141b574` (command check), `627a7b7` (diagnostics on standard error), `adb4829` (key generation), `b35f292` (skipped-test detection), and `75884c5` (work register) pushed to `origin/master`. After `git fetch`, `git rev-parse --short HEAD origin/master` printed `75884c5` twice, no outgoing or incoming commit, and `git diff --stat origin/master HEAD` over `docs/src`, `docs/book.toml`, `tools`, `t`, `configure`, and `.gitignore` printed nothing, observed 2026-11-14T18:57Z.
+- Linked issue #4: the body was edited to the shipped state, a closing comment was posted, and the issue was closed with reason `completed`. `gh issue view 4 --repo jeonghanlee/opcua-server-sim` printed state `CLOSED`, state reason `COMPLETED`, closed at 2026-11-14T18:57:02Z.
+- Not run: the fault rows of the blocks of each page that the T1 row does not name.
 - Found during the check: `openssl genpkey -quiet` fails on OpenSSL 1.1.1; removed from `configure/RULES_BUILD` and `t/server.t` (adb4829).
 - Found during the check: `prove` hides `#` lines on standard output, so `tools/doc-check.pl` prints failure diagnostics on standard error.
 - Found during the check: `tools/mutation-check.pl` took the text `skipped:` in a check name for a skipped test; it now reads only the summary line of `prove`.
