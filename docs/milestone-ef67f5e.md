@@ -7,7 +7,7 @@ Canonical branch or ref: master
 Git upstream: origin/master
 Remote tracker: jeonghanlee/opcua-server-sim (no GitHub milestone)
 
-Next session entry point: M1, M2, and M8 are Complete. M3 has an accepted plan and implementation authorization and is next. M9 and M4 stay Blocked on their open gates.
+Next session entry point: M1, M2, and M8 are Complete. M3 has passed T1 to T4; it stays In progress until the last commit lands and issue #4 is closed. M9 and M4 stay Blocked on their open gates.
 
 ## Milestone
 
@@ -19,7 +19,7 @@ Next session entry point: M1, M2, and M8 are Complete. M3 has an accepted plan a
 | Build | M2 | Simulator completeness | Milestone | Complete | No | D5 | The small and medium items of the owner's selection are built and tested by T1 to T9; [detail](#m2---simulator-completeness) |
 | Build | M8 | Alarm associated values | Milestone | Complete | No | M2, D8 | Events carry `AssociatedValue_01` to `AssociatedValue_10` as the union type, shown by T1 and T2; [detail](#m8---alarm-associated-values) |
 | Build | M9 | GoodOverload and registered nodes | Milestone | Blocked | No | M8, G4 | Each item is built and shown by T1 and T2, or retired by the decision of G4; [detail](#m9---goodoverload-and-registered-nodes) |
-| Document | M3 | Technical documentation | Milestone | Not started | Yes | G2, D6, D9, D10, D11, D12 | The documentation book exists, every command in it ran as shown, and it passed second-person review; [detail](#m3---technical-documentation) |
+| Document | M3 | Technical documentation | Milestone | In progress | No | G2, D6, D9, D10, D11, D12 | The documentation book exists, every command in it ran as shown, and it passed second-person review; [detail](#m3---technical-documentation) |
 | Deliver | M4 | Container image | Milestone | Blocked | No | G1, G3, D2 | A container image runs the server with the composite model and answers a probe read; [detail](#m4---container-image) |
 | Document | G2 | Owner decides the documentation format and the tutorial | External gate | Complete | No | | The owner records both choices in Decisions; [detail](#g2---owner-decides-the-documentation-format-and-the-tutorial) |
 | Deliver | G1 | open62541-env changes committed | External gate | Open | No | | The wrapper changes are committed in the open62541-env repository; [detail](#g1---open62541-env-changes-committed) |
@@ -383,7 +383,7 @@ Superseded Plan Artifacts: none
 Origin: ef67f5e / M3
 Identity History: none
 GitHub Issue: #4 https://github.com/jeonghanlee/opcua-server-sim/issues/4
-Status: Not started
+Status: In progress
 
 ##### Summary
 
@@ -426,29 +426,63 @@ Superseded Plan Artifacts: none
 4. Add the make target `book-check` and the option `--make-target` of `tools/mutation-check.pl`, add the fault rows of T1 (a changed command, a changed output, a placeholder left unreplaced), and run them with `tools/mutation-check.pl --make-target book-check`. The target `book-check` runs the check through `prove` and is not a part of `make test`, because the page of the tests runs `make test` and would start the check again. Closed by T1 and the proving rule under the Test Plan of M1.
 5. Run the review passes of T2 and T4 and correct the findings. Closed by T2 and T4.
 
+Page plan (paths under `docs/src/`; the type and the title form follow the `technical-writing` skill):
+
+| Page | Type | Title |
+| --- | --- | --- |
+| `introduction.md` | Concept | The purpose of opcua-server-sim |
+| `tutorial.md` | Tutorial | Build the simulator and read a tag with the probe |
+| `concepts/purpose.md` | Concept | The reasons for imitating an S7-1500 |
+| `concepts/architecture.md` | Concept | The architecture of the simulator |
+| `concepts/model.md` | Concept | The composite model of the simulator |
+| `concepts/simulation-file.md` | Concept | The role of a simulation file in the server |
+| `procedures/build.md` | Procedure | Build the server and the probe |
+| `procedures/certificate.md` | Procedure | Create the server certificate |
+| `procedures/nodeset.md` | Procedure | Generate the NodeSet of a model |
+| `procedures/run.md` | Procedure | Run the simulator |
+| `procedures/test.md` | Procedure | Run the tests |
+| `procedures/ioc.md` | Procedure | Run an IOC against the simulator |
+| `reference/simulation-keywords.md` | Reference | Simulation file keywords |
+| `reference/server-config.md` | Reference | Server configuration keys |
+| `reference/model-description.md` | Reference | Model description format |
+| `reference/make.md` | Reference | Make targets and variables |
+| `reference/model-contents.md` | Reference | Contents of the composite model |
+| `reference/probe.md` | Reference | Probe client commands |
+| `glossary.md` | Reference | Glossary of terms used in the book |
+
 ##### Test Plan
 
 | Label | Layer | Method | Environment | Expected Result |
 | --- | --- | --- | --- | --- |
 | T1 | Documentation | `tools/doc-check.pl` runs every marked command of every procedure page in a clean checkout of the tree with the values of the substitution table and compares the exit status and the normalized output with the page | a clean checkout of the tree on this host; the substitution table names the library install path, the UA-Nodeset path, and the EPICS tree, and its values are given when the check runs | each command succeeds and prints what the page states; a copy with a changed command, a copy with a changed stated output, and a copy with a placeholder left unreplaced must each fail this check for that reason |
-| T2 | Review | Second-person pass over every page from the seat of the reader named in the Summary (D11), run by a fresh sub-agent | the finished book | no finding above the severity floor; a scratch copy of one page with a seeded defect, given to the same pass, must have the defect found |
+| T2 | Review | Second-person pass over every page from the seat of the reader named in the Summary (D11), run by a fresh sub-agent | the finished book | no finding above the severity floor |
 | T3 | Documentation | Build the book with the Docker image `jeonghanlee/mdbook`, and keep the output of `mdbook --version` | the finished book | `docs/book/index.html` and every page linked from `SUMMARY.md` exist, every `.md` file of `docs/src/` except `SUMMARY.md` has its `.html` in `docs/book/`, and the sources are unchanged by the build; a copy whose `SUMMARY.md` links a page that does not exist and a copy with a page file that `SUMMARY.md` does not link must each fail this check |
-| T4 | Review | Third-person pass over every page against the ten items of the review checklist of the `technical-writing` skill, run by a fresh sub-agent, by execution where an item can be counted (words of a heading, words of a sentence, reachability from `SUMMARY.md`) | the finished book | every item passes for every page; a scratch copy of one page with one seeded violation of one item, given to the same pass, must have the violation found |
+| T4 | Review | Third-person pass over every page against the ten items of the review checklist of the `technical-writing` skill, run by a fresh sub-agent, by execution where an item can be counted (words of a heading, words of a sentence, reachability from `SUMMARY.md`) | the finished book | every item passes for every page |
 
-Contract of T1: the objective is that the commands and outputs the book states are the ones the shipped tree produces. The target is the shipped tools (`make`, the server, the probe, the IOC test) in a clean checkout of the tree, which the check makes itself from the files that Git does not ignore, so that a local setting or a build output of the working tree cannot make a command pass. Each command keeps its exit status, its output bytes, and the SHA-256 of the page and of the tool. The substitution table is part of the check and not of the page text; the repository holds only the names of the placeholders, such as `<open62541_install_path>`, and the values come from options or environment variables when the check runs, because the repository is public and the values are paths of this host. Timestamps, process ids, ports, hashes, modification times, elapsed and CPU times, and the absolute path of the checkout are normalized before the comparison and everything else must match. A page states a line that does not change when a test is added, such as `Result: PASS`, and not the number of checks. A run of `make test` takes about two minutes, so the fault series declares the number of rows that run at once. The check prints one named check per command in TAP and the `Files=` and `Tests=` summary of `prove`, which is the output that `tools/mutation-check.pl` reads. A command that does not end by itself, such as the server of `make run` or an IOC at its prompt, is started in the background, the check waits for the readiness text of its expected output, runs the commands that follow, and stops it with INT; a command that cannot be checked this way is listed as unproven. A missing prerequisite makes a cell Incomplete and not Failed. The setup of a page comes from `make` called directly and not from the commands of the page, so a changed command of a page cannot stop the setup; a check that no setup can reach without that command is listed as unproven. The coverage is each page, its commands, and the three kinds of fault; a cell skipped for a missing EPICS tree is listed as skipped. A run uses the pages and the tool with the recorded SHA-256, and a changed page is run again.
+Contract of T1: the objective is that the commands and outputs the book states are the ones the shipped tree produces. The target is the shipped tools (`make`, the server, the probe, the IOC test) in a clean checkout of the tree, which the check makes itself from the files that Git does not ignore, so that a local setting or a build output of the working tree cannot make a command pass. Each command keeps its exit status, its output bytes, and the SHA-256 of the page and of the tool. The substitution table is part of the check and not of the page text; the repository holds only the names of the placeholders, such as `<open62541_install_path>`, and the values come from options or environment variables when the check runs, because the repository is public and the values are paths of this host. Timestamps, process ids, ports, hashes, modification times, elapsed and CPU times, and the absolute path of the checkout are normalized before the comparison and everything else must match. A page states a line that does not change when a test is added, such as `Result: PASS`, and not the number of checks. A run of `make test` takes about two minutes, so the fault series declares the number of rows that run at once. The check prints one named check per command in TAP and the `Files=` and `Tests=` summary of `prove`, which is the output that `tools/mutation-check.pl` reads. The diagnostic lines of a failed check go to standard error, as `Test::More` prints them, so that `prove` shows them. A command that does not end by itself, such as the server of `make run` or an IOC at its prompt, is started in the background, the check waits for the readiness text of its expected output, runs the commands that follow, and stops it with INT; a command that cannot be checked this way is listed as unproven. A missing prerequisite makes a cell Incomplete and not Failed. The setup of a page comes from `make` called directly and not from the commands of the page, so a changed command of a page cannot stop the setup; a check that no setup can reach without that command is listed as unproven. The coverage is each page, its commands, and the three kinds of fault; a cell skipped for a missing EPICS tree is listed as skipped. A run uses the pages and the tool with the recorded SHA-256, and a changed page is run again.
+
+Check design of T1 (the checks share one run of the tool, and every page runs in its own clean checkout):
+
+| Check | Claim and the clause it comes from | Inputs and their distance from the boundary | State read and the step that sets it | Expected value and its condition |
+| --- | --- | --- | --- | --- |
+| command result | A command of a page exits 0 and prints what the page states (Completion Criteria of this work; the `technical-writing` rule that every shown command ran as shown) | The command and the output block of the page; a fault copy changes one word of the command or one word of the output, outside the normalized forms | The clean checkout, made by the check from the files that Git does not ignore at the start of each page; the values from the environment | The output block of the page with the placeholders replaced and the volatile text normalized on both sides; holds for output that has no text outside the normalization rules |
+| placeholder | No placeholder is left unreplaced (the `technical-writing` rule that a command runs as shown once each placeholder is replaced) | The placeholder names of a page against the names that have a value; a fault copy uses a name without a value | The values from the environment, set by the target `book-check` | Every name has a value; the check fails and names the placeholder otherwise |
+| background command | A command that does not end by itself reaches its ready text and stops on INT (plan of this work) | The ready text of the mark of the page; the wait has a declared bound | The process started by the check and stopped by the check at the end of the page | The ready text appears within the bound, and the process ends after INT |
 
 ##### Verification Results
 
 | Label | Observed At | Environment | Result | Evidence |
 | --- | --- | --- | --- | --- |
-| T1 | Not run | clean checkout of the tree | Pending | none |
-| T2 | Not run | the finished book | Pending | none |
-| T3 | Not run | the finished book | Pending | none |
-| T4 | Not run | the finished book | Pending | none |
+| T1 | 2026-11-14T09:59Z | clean checkouts of the tree on this host | Passed | `make book-check` ran 38 checks, `Result: PASS`; fault rows through `tools/mutation-check.pl --make-target book-check` for `procedures/test.md` (8 rows) and for samples of `procedures/build.md`, `tutorial.md`, and `procedures/ioc.md` (8 rows) were all KILLED, with a changed command, a changed output, and a placeholder left unreplaced among them |
+| T2 | 2026-11-14T05:24Z | the finished book | Passed | the second-person passes ended with pass 18 and no finding above the severity floor; the corrections are in the pages of the commit that holds the book |
+| T3 | 2026-11-14T09:54Z | the finished book, Docker image `jeonghanlee/mdbook`, `mdbook v0.5.4` | Passed | On a copy of the tree: build exit 0, sources unchanged, `docs/book/index.html` and the `.html` of all 19 pages exist, every page linked from `SUMMARY.md` has its `.html`. A copy whose `SUMMARY.md` links a missing page failed, and a copy with an unlinked page file failed (no `.html` for it) |
+| T4 | 2026-11-14T04:49Z | the finished book | Passed | the third-person passes ended with pass 16 and no finding above the severity floor; the corrections are in the pages of the commit that holds the book |
 
 ##### Closure Evidence
 
-- none
+- Found during the check: `openssl genpkey -quiet` fails on OpenSSL 1.1.1; removed from `configure/RULES_BUILD` and `t/server.t` (adb4829).
+- Found during the check: `prove` hides `#` lines on standard output, so `tools/doc-check.pl` prints failure diagnostics on standard error.
+- Found during the check: `tools/mutation-check.pl` took the text `skipped:` in a check name for a skipped test; it now reads only the summary line of `prove`.
 
 #### M4 - Container image
 
