@@ -70,7 +70,8 @@ sub read_file {
 }
 
 # Prints one TAP check. A failed check also prints the lines that the Test::More
-# diagnostics have, so that tools that read those lines work with this output.
+# diagnostics have, on standard error as Test::More does, so that prove shows
+# them and tools that read those lines work with this output.
 sub report {
     my ($ok, $name, $directive, @diagnostics) = @_;
     $CHECK_COUNT++;
@@ -81,9 +82,10 @@ sub report {
     }
     $FAILED++;
     print "not ok $CHECK_COUNT - $name\n";
-    print "#   Failed test '$name'\n";
+    STDOUT->flush();
+    print STDERR "#   Failed test '$name'\n";
     for my $line (map { split /\n/, $_, -1 } @diagnostics) {
-        print "#   $line\n";
+        print STDERR "#   $line\n";
     }
     return;
 }

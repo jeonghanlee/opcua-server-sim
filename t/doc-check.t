@@ -88,20 +88,22 @@ my @cases = (
         name   => 'a changed command is found',
         files  => { 'docs/src/a.md' => page("```bash\necho world\n```\n\n```\nhello\n```\n") },
         status => 1,
-        tap    => [qr/^not ok 1 - a\.md: block 1: echo world$/m, qr/^#\s+Failed test 'a\.md: block 1: echo world'$/m,
-            qr/output differs from the page/],
+        tap    => [qr/^not ok 1 - a\.md: block 1: echo world$/m],
+        diag   => [qr/^#\s+Failed test 'a\.md: block 1: echo world'$/m, qr/output differs from the page/],
     },
     {
         name   => 'a changed output is found',
         files  => { 'docs/src/a.md' => page("```bash\necho hello\n```\n\n```\nhellp\n```\n") },
         status => 1,
-        tap    => [qr/^not ok 1 /m, qr/^#   expected:\n#   hellp\n#   got:\n#   hello$/m],
+        tap    => [qr/^not ok 1 /m],
+        diag   => [qr/^#   expected:\n#   hellp\n#   got:\n#   hello$/m],
     },
     {
         name   => 'a command that fails is found',
         files  => { 'docs/src/a.md' => page("```bash\nfalse\n```\n") },
         status => 1,
-        tap    => [qr/^not ok 1 /m, qr/exit status 1, expected 0/],
+        tap    => [qr/^not ok 1 /m],
+        diag   => [qr/exit status 1, expected 0/],
     },
     {
         name   => 'a placeholder with a value is replaced',
@@ -114,7 +116,8 @@ my @cases = (
         name   => 'a placeholder without a value is found',
         files  => { 'docs/src/a.md' => page("```bash\necho <missing_name>\n```\n") },
         status => 1,
-        tap    => [qr/^not ok 1 /m, qr/no value for the placeholder <missing_name>/],
+        tap    => [qr/^not ok 1 /m],
+        diag   => [qr/no value for the placeholder <missing_name>/],
     },
     {
         name   => 'a placeholder with an empty value is skipped',
@@ -133,7 +136,8 @@ my @cases = (
         name   => 'a placeholder in the output that the command does not print is found',
         files  => { 'docs/src/a.md' => page("```bash\necho hello\n```\n\n```\n<missing_output>\n```\n") },
         status => 1,
-        tap    => [qr/^not ok 1 /m, qr/output differs from the page/],
+        tap    => [qr/^not ok 1 /m],
+        diag   => [qr/output differs from the page/],
     },
     {
         name   => 'the volatile text of both sides is normalized',
@@ -158,7 +162,8 @@ my @cases = (
         name   => 'a command block with two commands is found',
         files  => { 'docs/src/a.md' => page("```bash\necho a\necho b\n```\n") },
         status => 1,
-        tap    => [qr/^not ok 1 /m, qr/holds 2 commands; it must hold one/],
+        tap    => [qr/^not ok 1 /m],
+        diag   => [qr/holds 2 commands; it must hold one/],
     },
     {
         name   => 'a file that Git ignores is not in the clean checkout, and a new file is',
@@ -203,14 +208,16 @@ my @cases = (
             . "```bash\nsh -c 'trap \"exit 0\" INT; echo other; sleep 3'\n```\n") },
         args   => ['--ready-seconds', '1'],
         status => 1,
-        tap    => [qr/^not ok 1 /m, qr/the ready text \/never-printed\/ did not appear within 1 seconds/],
+        tap    => [qr/^not ok 1 /m],
+        diag   => [qr/the ready text \/never-printed\/ did not appear within 1 seconds/],
     },
     {
         name   => 'a command that runs too long is found',
         files  => { 'docs/src/a.md' => page("```bash\nsleep 30\n```\n") },
         args   => ['--seconds', '1'],
         status => 1,
-        tap    => [qr/^not ok 1 /m, qr/timeout after 1 seconds/],
+        tap    => [qr/^not ok 1 /m],
+        diag   => [qr/timeout after 1 seconds/],
     },
     {
         name   => 'escape sequences are removed from both sides',
@@ -320,13 +327,15 @@ my @cases = (
             "<!-- doc-check: background ready=ready -->\n"
             . "```bash\nsh -c 'trap \"exit 0\" INT; echo ready; while :; do sleep 1; done'\n```\n\n```\nabsent\n```\n") },
         status => 1,
-        tap    => [qr/^not ok 1 /m, qr/output differs from the page/],
+        tap    => [qr/^not ok 1 /m],
+        diag   => [qr/output differs from the page/],
     },
     {
         name   => 'a command that fails with another status reports that status',
         files  => { 'docs/src/a.md' => page("```bash\nsh -c 'exit 3'\n```\n") },
         status => 1,
-        tap    => [qr/exit status 3, expected 0/],
+        tap    => [],
+        diag   => [qr/exit status 3, expected 0/],
     },
     {
         name   => 'a page without a command and the summary page are not checked',
@@ -343,7 +352,9 @@ for my $case (@cases) {
     my $tree = make_tree($case->{modes} || {}, %{ $case->{files} });
     my ($status, $stdout, $stderr) = run_tool($case->{ignore_int}, $tree, @{ $case->{args} || [] });
     is($status, $case->{status}, "$case->{name}: exit status");
-    like($stdout, $_, "$case->{name}: TAP") for @{ $case->{tap} };
+    like($stdout, $_, "$case->{name}: TAP") for @{ $case->{tap} || [] };
+    like($stderr, $_, "$case->{name}: diagnostic") for @{ $case->{diag} || [] };
+    unlike($stdout, qr/^#/m, "$case->{name}: no diagnostic on standard output") if $case->{status} == 1;
 }
 
 {
