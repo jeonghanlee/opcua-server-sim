@@ -158,7 +158,8 @@ sub run_copy {
     my $text = -f $log ? read_file($log) : '';
     my @failed = $text =~ /^#\s+Failed test '(.*)'$/mg;
     my $summary = $text =~ /^Files=\d+, Tests=(\d+)/m ? $1 : undef;
-    my $broken = $text =~ /Parse errors|Bailout|No plan found|skipped:/;
+    # A skipped test shows in the summary line of prove: "<file> ..... skipped: <reason>".
+    my $broken = $text =~ /Parse errors|Bailout|No plan found|^\S+ \.+ skipped:/m;
     $broken ||= defined $EXPECTED && defined $summary && $summary != $EXPECTED;
     my $complete = defined $summary && !$broken
         && (($status eq '0' && !@failed) || ($status ne '0' && @failed));
