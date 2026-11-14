@@ -79,7 +79,7 @@ certificate: $(if $(MODEL_PKI_CONFIG),$(MODEL_CERT))
 
 $(MODEL_KEY): | check-tool.openssl
 	$(QUIET) mkdir -p $(MODEL_PKI_PATH)
-	$(QUIET) openssl genpkey -quiet -algorithm RSA -pkeyopt rsa_keygen_bits:$(CERT_KEY_BITS) -outform DER -out $@
+	$(QUIET) openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:$(CERT_KEY_BITS) -outform DER -out $@
 	$(QUIET) chmod 600 $@
 
 $(MODEL_CERT): $(MODEL_PKI_CONFIG) $(MODEL_KEY) | check-tool.openssl

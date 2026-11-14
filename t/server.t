@@ -585,7 +585,7 @@ keyUsage = critical, digitalSignature, nonRepudiation, keyEncipherment, dataEnci
 extendedKeyUsage = serverAuth, clientAuth
 subjectAltName = URI:urn:opcua-server-sim:probe
 CNF
-    my $made = system { $openssl } $openssl, 'genpkey', '-quiet', '-algorithm', 'RSA',
+    my $made = system { $openssl } $openssl, 'genpkey', '-algorithm', 'RSA',
         '-pkeyopt', 'rsa_keygen_bits:2048', '-outform', 'DER', '-out', $key;
     $made ||= system { $openssl } $openssl, 'req', '-x509', '-new', '-sha256', '-days', '2', '-config', $cnf,
         '-key', $key, '-keyform', 'DER', '-outform', 'DER', '-out', $cert;
