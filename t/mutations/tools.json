@@ -181,6 +181,131 @@
     "malformed JSON: the path is named once"
    ],
    "also": []
+  },
+  {
+   "id": "s-access-all-write",
+   "file": "tools/server-interface-nodeset.pl",
+   "old": "my $level = $ACCESS_LEVEL{ $node->{access} };",
+   "new": "my $level = 3;",
+   "intended": [
+    "demoInterface.sensors.unitA.flag: access level",
+    "demoInterface.sensors.unitA.level: access level",
+    "demoInterface.sensors.unitA.count: access level",
+    "demoInterface.sensors.unitA.label: access level"
+   ],
+   "also": [
+    ": user access level",
+    ": a write is refused",
+    ": the value is unchanged after the refused write"
+   ]
+  },
+  {
+   "id": "s-node-id-rule",
+   "file": "tools/server-interface-nodeset.pl",
+   "old": "return $NS . 's=' . join($PATH_SEPARATOR, @names);",
+   "new": "return $NS . 's=' . join($PATH_SEPARATOR, $names[-1]);",
+   "intended": [
+    "the NodeSet holds exactly the NodeIds of the description, made by the path rule",
+    "the server loads the NodeSet and answers a read"
+   ],
+   "also": [
+    ": the zero value of the type",
+    ": a write is refused",
+    ": the value is unchanged after the refused write",
+    ": a write is accepted",
+    ": the written value is read back",
+    "a name with a dot that gives the NodeId of another node:",
+    ": browse name",
+    ": parent",
+    ": type definition",
+    ": reference type from the parent",
+    ": element",
+    ": data type",
+    ": access level",
+    ": user access level",
+    ": description",
+    "one XML file: the server starts and answers a read of a variable of the NodeSet"
+   ]
+  },
+  {
+   "id": "s-exit-error",
+   "file": "tools/server-interface-nodeset.pl",
+   "old": "my $EXIT_ERROR = 1;",
+   "new": "my $EXIT_ERROR = 0;",
+   "intended": [
+    "malformed JSON: exit status"
+   ],
+   "also": [
+    ": exit status"
+   ]
+  },
+  {
+   "id": "s-exit-usage",
+   "file": "tools/server-interface-nodeset.pl",
+   "old": "my $EXIT_USAGE = 2;",
+   "new": "my $EXIT_USAGE = 3;",
+   "intended": [
+    "no arguments: exit status",
+    "an unknown option: exit status",
+    "two descriptions: exit status"
+   ],
+   "also": []
+  },
+  {
+   "id": "s-sibling-names",
+   "file": "tools/server-interface-nodeset.pl",
+   "old": "!$names_seen{ $child->{name} }++",
+   "new": "1",
+   "intended": [
+    "duplicate sibling: the message names the cause"
+   ],
+   "also": []
+  },
+  {
+   "id": "s-type-check",
+   "file": "tools/server-interface-nodeset.pl",
+   "old": "defined $node->{type} && exists $DATA_TYPE{ $node->{type} }",
+   "new": "defined $node->{type}",
+   "intended": [
+    "unknown type: exit status"
+   ],
+   "also": [
+    "unknown type: the message names the cause",
+    "unknown type: an existing output file is not changed"
+   ]
+  },
+  {
+   "id": "s-mode",
+   "file": "tools/server-interface-nodeset.pl",
+   "old": "atomic_write($output, $text, 0644);",
+   "new": "atomic_write($output, $text, 0600);",
+   "intended": [
+    "mode of the output file"
+   ],
+   "also": []
+  },
+  {
+   "id": "s-folder-reference",
+   "file": "tools/server-interface-nodeset.pl",
+   "old": "folder   => 'Organizes',",
+   "new": "folder   => 'HasComponent',",
+   "intended": [
+    "demoInterface.sensors: reference type from the parent",
+    "demoInterface.settings: reference type from the parent"
+   ],
+   "also": []
+  },
+  {
+   "id": "s-description",
+   "file": "tools/server-interface-nodeset.pl",
+   "old": "if (defined $node->{description} && !ref $node->{description}) {",
+   "new": "if (0) {",
+   "intended": [
+    "demoInterface.sensors.unitA.flag: description"
+   ],
+   "also": [
+    ": description"
+   ]
   }
  ]
 }
