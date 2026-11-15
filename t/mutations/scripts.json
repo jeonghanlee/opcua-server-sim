@@ -1,0 +1,91 @@
+{
+ "mutations": [
+  {
+   "id": "r-xml-count",
+   "file": "scripts/run-model.bash",
+   "old": "elif (( ${#xml_files[@]} > 1 )); then",
+   "new": "elif false; then",
+   "intended": [
+    "two XML files: exit status"
+   ],
+   "also": [
+    "two XML files: nothing on standard output",
+    "two XML files: the message names the directory",
+    "two XML files: the message names the cause"
+   ]
+  },
+  {
+   "id": "r-config-check",
+   "file": "scripts/run-model.bash",
+   "old": "[[ -f \"$config\" ]] || fail \"$model holds no ${CONFIG_NAME}\"",
+   "new": ":",
+   "intended": [
+    "no server.json5: the message names the cause"
+   ],
+   "also": [
+    "no server.json5: exit status",
+    "no server.json5: nothing on standard output",
+    "no server.json5: the message names the directory"
+   ]
+  },
+  {
+   "id": "r-recursive",
+   "file": "scripts/run-model.bash",
+   "old": "xml_files=(\"${model}\"/*.xml)",
+   "new": "mapfile -t xml_files < <(find \"$model\" -name '*.xml')",
+   "intended": [
+    "an XML file only in a subdirectory: exit status",
+    "one XML file with --di: the composite model starts and answers a read",
+    "one XML file with --di: the simulation file of the directory is used"
+   ],
+   "also": [
+    "an XML file only in a subdirectory:",
+    "two XML files: the message names the cause"
+   ]
+  },
+  {
+   "id": "r-di-ignored",
+   "file": "scripts/run-model.bash",
+   "old": "command+=(\"$(cd \"$(dirname \"$di\")\" && pwd)/$(basename \"$di\")\")",
+   "new": ":",
+   "intended": [
+    "one XML file with --di: the composite model starts and answers a read",
+    "one XML file with --di: the simulation file of the directory is used"
+   ],
+   "also": []
+  },
+  {
+   "id": "r-simulation-ignored",
+   "file": "scripts/run-model.bash",
+   "old": "command+=(-s \"$simulation\")",
+   "new": ":",
+   "intended": [
+    "one XML file with --di: the simulation file of the directory is used"
+   ],
+   "also": []
+  },
+  {
+   "id": "r-exit-usage",
+   "file": "scripts/run-model.bash",
+   "old": "readonly EXIT_USAGE=2",
+   "new": "readonly EXIT_USAGE=3",
+   "intended": [
+    "no arguments: exit status",
+    "an unknown option: exit status",
+    "--di without a file: exit status"
+   ],
+   "also": []
+  },
+  {
+   "id": "r-no-cd",
+   "file": "scripts/run-model.bash",
+   "old": "    cd \"$model\"\n    exec",
+   "new": "    exec",
+   "intended": [
+    "one XML file with --di: the composite model starts and answers a read",
+    "one XML file with --di: the simulation file of the directory is used"
+   ],
+   "also": []
+  }
+ ]
+}

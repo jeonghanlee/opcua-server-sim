@@ -50,3 +50,7 @@ Good 8
 To stop the server, press Ctrl+C in the first terminal.
 
 The server uses the model that the variable `MODEL` names and the simulation file that `MODEL_SIMULATION` names; give that file as an absolute path, for example the path of `simulation-1517-1518.conf`. [Make targets and variables](../reference/make.md) lists both. To run the server without a simulation file, add an empty `MODEL_SIMULATION=` to the command of step 1.
+
+A model directory holds three files: `server.json5`, the server configuration; one NodeSet2 XML file with the nodes; and `simulation.conf`, the simulation file, which is optional. The target `make run` reads the XML file as `<MODEL>.NodeSet2.xml`.
+
+`scripts/run-model.bash <model-directory>` starts the server from such a directory without `make`. It uses the one XML file that lies directly in the directory and stops with an error when there is none or more than one. The option `--di <file>` loads a Device Integration (DI) NodeSet before the XML file, which the composite model needs. This description covers the models known so far; the model of another device can need other files.

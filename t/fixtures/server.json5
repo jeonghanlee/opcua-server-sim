@@ -1,0 +1,5 @@
+// A minimal server configuration for the tests: one endpoint without security.
+{
+  serverUrls: ["opc.tcp://:4840"],
+  maxSessions: 4,
+}
