@@ -20,9 +20,9 @@ Next session entry point: M1, M2, M3, and M8 are Complete. M9 and M4 stay Blocke
 | Build | M8 | Alarm associated values | Milestone | Complete | No | M2, D8 | Events carry `AssociatedValue_01` to `AssociatedValue_10` as the union type, shown by T1 and T2; [detail](#m8---alarm-associated-values) |
 | Build | M9 | GoodOverload and registered nodes | Milestone | Blocked | No | M8, G4 | Each item is built and shown by T1 and T2, or retired by the decision of G4; [detail](#m9---goodoverload-and-registered-nodes) |
 | Document | M3 | Technical documentation | Milestone | Complete | No | G2, D6, D9, D10, D11, D12 | The documentation book exists, every command in it ran as shown, and it passed second-person review; [detail](#m3---technical-documentation) |
-| Deliver | M4 | Container image | Milestone | Blocked | No | G1, G3, D2 | A container image runs the server with the composite model and answers a probe read; [detail](#m4---container-image) |
+| Deliver | M4 | Container image | Milestone | Blocked | No | G1, G3, D2, D13 | A container image runs the server with the composite model and answers a probe read; [detail](#m4---container-image) |
 | Document | G2 | Owner decides the documentation format and the tutorial | External gate | Complete | No | | The owner records both choices in Decisions; [detail](#g2---owner-decides-the-documentation-format-and-the-tutorial) |
-| Deliver | G1 | open62541-env changes committed | External gate | Open | No | | The wrapper changes are committed in the open62541-env repository; [detail](#g1---open62541-env-changes-committed) |
+| Deliver | G1 | open62541-env changes committed | External gate | Open | No | D13 | The wrapper changes are committed on the branch `open62541-1.5` of the open62541-env repository; [detail](#g1---open62541-env-changes-committed) |
 | Deliver | G3 | Owner decides the Dockerfile location and the image publication | External gate | Open | No | | The owner records both choices in Decisions; [detail](#g3---owner-decides-the-dockerfile-location-and-the-image-publication) |
 | Build | G4 | Owner decides how to build GoodOverload and registered nodes | External gate | Open | No | | The owner records the decision in Decisions; [detail](#g4---owner-decides-how-to-build-goodoverload-and-registered-nodes) |
 
@@ -42,6 +42,7 @@ Next session entry point: M1, M2, M3, and M8 are Complete. M9 and M4 stay Blocke
 | D10 | The book has a procedure page for running an IOC against the simulator, and the page of the tests names `EPICS_TREE` | 2026-11-13 |
 | D11 | The reader of the book is a controls engineer who knows EPICS and Linux and does not know open62541 or the OPC UA model of a Siemens S7-1500 | 2026-11-13 |
 | D12 | The title of the book is `opcua-server-sim` and its author is Jeong Han Lee, the copyright holder named in `NOTICE` | 2026-11-13 |
+| D13 | The simulator builds open62541 1.5.10 from the branch `open62541-1.5` of the open62541-env repository; the master branch of that repository stays on open62541 1.3.15 for the EPICS opcua module | 2026-11-15 |
 
 ### Milestone Details
 
@@ -515,6 +516,7 @@ Out of scope: Publishing the image to a registry unless G3 records the owner's a
 - G1 (wrapper changes committed); resume as Not started
 - G3 (Dockerfile location and publication); resume as Not started
 - D2 (the wrapper provides the open62541 build requirements)
+- D13 (the branch `open62541-1.5` of the wrapper carries open62541 1.5.10)
 
 ##### Implementation Plan
 
@@ -577,17 +579,17 @@ Status: Open
 
 ##### Summary
 
-The open62541-env repository holds uncommitted changes that `make open62541` needs: the `CMAKE_EXTRA_OPTIONS` support in `configure/CONFIG_SITE` and `configure/RULES_INSTALL`, and `patch/1.5.10.p0.patch`. The owner commits them there. This gates M4.
+The open62541-env repository holds uncommitted changes that `make open62541` needs: the `CMAKE_EXTRA_OPTIONS` support in `configure/CONFIG_SITE` and `configure/RULES_INSTALL`, and `patch/1.5.10.p0.patch`. The owner commits them on the branch `open62541-1.5` of that repository (D13); its master branch stays on open62541 1.3.15. This gates M4.
 
 ##### Completion Criteria
 
-- `git status` of the open62541-env repository shows those paths committed.
+- `git status` of the open62541-env repository shows those paths committed on the branch `open62541-1.5`, and its master branch is unchanged.
 
 ##### Verification Results
 
 | Observed At | Result | Evidence |
 | --- | --- | --- |
-| Not run | Pending | `git -C <open62541-env path> status --short` |
+| Not run | Pending | `git -C <open62541-env path> status --short` and `git -C <open62541-env path> log --oneline master..open62541-1.5` |
 
 ##### Closure Evidence
 
