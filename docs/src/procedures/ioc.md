@@ -59,7 +59,7 @@ An EPICS (Experimental Physics and Industrial Control System) IOC (input output 
    printf 'EPICS_CA_SERVER_PORT=5164\nEPICS_CA_ADDR_LIST=127.0.0.1\nEPICS_CA_AUTO_ADDR_LIST=NO\n' >> tls/ioc.env
    ```
 
-9. In the repository root, start the IOC. The standard input of the IOC stays open through `sleep infinity`, because `iocsh.bash` ends when its input ends. The command runs until you stop it with Ctrl+C, so run the next step in a third terminal:
+9. In the repository root, start the IOC. The standard input of the IOC stays open through `sleep infinity`, because `iocsh.bash` ends when its input ends. The command runs until you stop it with Ctrl+C, so run the commands of the Verification section in a third terminal:
 
    <!-- doc-check: background ready=session OPC2: connected -->
    ```bash
