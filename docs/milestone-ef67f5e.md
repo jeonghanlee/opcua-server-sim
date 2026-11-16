@@ -653,7 +653,7 @@ Backlog rows are unassigned, use the same schema, and are excluded from the rele
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Verify | M5 | Third-person review of the corrected tree | Milestone | Open | No | | Open until the owner assigns it (named condition, 2026-11-12); [detail](#m5---third-person-review-of-the-corrected-tree) |
 | Verify | M6 | Verify ConditionRefresh and alarm behavior while the CPU is in STOP | Milestone | Open | No | | Open until the owner assigns it (named condition, 2026-11-12); [detail](#m6---verify-conditionrefresh-and-alarm-behavior-while-the-cpu-is-in-stop) |
-| Deliver | M7 | Commit the working tree | Milestone | Open | No | | Open until the owner delegates commits (named condition, 2026-11-12); [detail](#m7---commit-the-working-tree) |
+| Deliver | M7 | Commit the working tree | Milestone | Complete | No | | `git status` shows a clean tree and the commit messages follow the repository rules, observed 2026-11-15; [detail](#m7---commit-the-working-tree) |
 
 ### Backlog Details
 
@@ -766,7 +766,7 @@ Superseded Plan Artifacts: none
 Origin: ef67f5e / M7
 Identity History: none
 GitHub Issue: none
-Status: Open
+Status: Complete
 
 ##### Summary
 
@@ -806,8 +806,8 @@ Superseded Plan Artifacts: none
 
 | Label | Observed At | Environment | Result | Evidence |
 | --- | --- | --- | --- | --- |
-| T1 | Not run | the repository | Pending | none |
+| T1 | 2026-11-15 | the repository | Passed | `git -C <repository path> status --short` printed no line; the tree has 69 tracked files and 25 commits |
 
 ##### Closure Evidence
 
-- none
+- The commits were made by the owner or under the owner's commit delegation, and they are on `origin/master`, so the condition of the row is met on 2026-11-15.
