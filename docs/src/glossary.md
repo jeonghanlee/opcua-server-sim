@@ -14,6 +14,7 @@ This page defines the terms that the pages of this book use, in alphabetical ord
 | CPU | The central processing unit of an S7-1500 controller. It runs the PLC program and the OPC UA server. |
 | CPU class profile | A simulation file that includes another simulation file and then sets the limits of one CPU class. |
 | Data block | A named group of tags of a PLC (programmable logic controller) program. A global data block holds tags of its own. An instance data block belongs to a function block and holds a method. |
+| Device Integration (DI) | The OPC Foundation NodeSet2 file `Opc.Ua.Di.NodeSet2.xml`, with the namespace `http://opcfoundation.org/UA/DI/`, whose types the composite model uses. The server loads it before the NodeSet of the model, so that it has the namespace index 2. |
 | Device support module | EPICS software that connects the records of an IOC to a device or protocol. The opcua device support module connects them to OPC UA servers. |
 | Endpoint | An address of the server together with a security policy and a message security mode. A client connects to one endpoint. |
 | Event | A message that the server reports from a source Object. An `event` line of a simulation file makes one each time its Boolean trigger becomes true, and an alarm makes one at each change of its state. |

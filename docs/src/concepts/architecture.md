@@ -9,9 +9,11 @@ The simulator is a generic OPC UA (Open Platform Communications Unified Architec
 | Server | `src/opcua_server_sim.c` | The program `opcua-server-sim`. It builds on the open62541 library, release 1.5.10, with the NodeSet loader and the Alarms and Conditions support. |
 | Probe | `tools/opcua-probe.c` | The program `opcua-probe`, a client that reads, writes, browses, and calls a running server. |
 | NodeSet generator | `tools/simatic-nodeset.pl` | A Perl tool that writes the NodeSet2 XML file of a model from its description `plc.json`. |
+| Interface NodeSet generator | `tools/server-interface-nodeset.pl` | A Perl tool that writes the NodeSet2 XML file of a user-defined server interface from a JSON description of its folders, objects, and variables. |
+| Run script | `scripts/run-model.bash` | A Bash script that starts the server from a model directory. |
 | Model | `models/<model>/` | The files of one device: `server.json5`, the NodeSet2 XML file, `plc.json`, `simulation.conf`, and `pki.cnf`. |
 | Build system | `Makefile`, `configure/` | GNU Make files that build the programs and run the server and the tests. |
-| Tests | `t/` | Perl tests that run under `prove`: for the server, the NodeSet generator, an EPICS (Experimental Physics and Industrial Control System) IOC (input output controller), and the command check of the book. |
+| Tests | `t/` | Perl tests that run under `prove`: for the server, the two NodeSet generators, the run script, an EPICS (Experimental Physics and Industrial Control System) IOC (input output controller), and the command check of the book. |
 | Command check | `tools/doc-check.pl` | A Perl tool that runs the commands of the pages of this book and compares their output with the pages. |
 | Mutation check | `tools/mutation-check.pl` | A Perl tool that proves the tests can fail: it applies the faults of a table to a copy of the tree and runs the tests on each copy. |
 | IOC files | `ioc/` | A startup script and a database for an EPICS IOC that reads the model. |
