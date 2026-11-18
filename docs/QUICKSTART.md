@@ -2,7 +2,7 @@
 
 **Document:** opcua-server-sim quick start
 
-**Revision:** draft
+**Revision:** a733dc7
 
 **Date:** 2026-11-18
 

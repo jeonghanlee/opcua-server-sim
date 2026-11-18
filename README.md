@@ -4,7 +4,7 @@ An OPC UA (Open Platform Communications Unified Architecture) server that imitat
 
 ## Build and run
 
-With an open62541 installation `<open62541_install_path>` and the OPC Foundation NodeSet2 directory `<ua_nodeset_path>`:
+The [quick start](docs/QUICKSTART.md) installs open62541 first. With an open62541 installation `<open62541_install_path>` and the OPC Foundation NodeSet2 directory `<ua_nodeset_path>`:
 
 ```bash
 make build OPEN62541_PATH=<open62541_install_path>
@@ -14,7 +14,7 @@ make run OPEN62541_PATH=<open62541_install_path> UA_NODESET_PATH=<ua_nodeset_pat
 
 ## Documentation
 
-The book is in `docs/src/`; start with the [tutorial](docs/src/tutorial.md). The sources of the model data are in [docs/references.md](docs/references.md).
+The [quick start](docs/QUICKSTART.md), also as a [one-page PDF](docs/QUICKSTART.pdf), runs the demo server step by step. The book is in `docs/src/`; start with the [tutorial](docs/src/tutorial.md). The sources of the model data are in [docs/references.md](docs/references.md).
 
 ## License
 
