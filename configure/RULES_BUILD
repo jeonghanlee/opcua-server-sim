@@ -31,6 +31,7 @@ check-open62541:
 	    printf "%s\n" "error: open62541 in $(OPEN62541_PATH) is built without Alarms and Conditions"; \
 	    printf "%s\n" "make open62541 builds it through open62541-env, which needs CMAKE_EXTRA_OPTIONS"; \
 	    printf "%s\n" "support and the nodesetLoader patch (see OPEN62541_ENV_PATH in CONFIG_SITE)"; \
+	    printf "%s\n" "OPEN62541_ENV_PATH must hold a checkout of the branch 1.5 of open62541-env"; \
 	    exit 1; \
 	fi
 

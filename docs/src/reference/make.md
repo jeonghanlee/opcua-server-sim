@@ -31,7 +31,7 @@ vars              Print the active configuration variables
 
 | Target | Dependencies | Effect |
 | --- | --- | --- |
-| `open62541` | `open62541-env` checkout | Builds and installs open62541 through `open62541-env` into `OPEN62541_PATH`. |
+| `open62541` | `open62541-env` checkout on the branch `1.5` | Builds and installs open62541 through `open62541-env` into `OPEN62541_PATH`. |
 | `build` | open62541 check | Compiles `src/opcua_server_sim.c` into `build/opcua-server-sim`. |
 | `probe` | open62541 check | Compiles `tools/opcua-probe.c` into `build/opcua-probe`. |
 | `nodeset` | `perl`, `plc.json` of the model | Writes `<MODEL>.NodeSet2.xml` when the description, the XML (Extensible Markup Language) sections, or the tool are newer than it. |
@@ -51,7 +51,7 @@ Set a variable on the command line, as in `make build OPEN62541_PATH=<open62541_
 | Variable | Default | Meaning |
 | --- | --- | --- |
 | `OPEN62541_PATH` | `/usr/local` | Installation prefix of open62541, the directory that holds `include` and `lib`. |
-| `OPEN62541_ENV_PATH` | `../open62541-env` | Checkout of `open62541-env`, used by the target `open62541`. `open62541-env` is the repository `jeonghanlee/open62541-env` on GitHub, which builds and installs open62541; the target stops with an error when the checkout is missing. |
+| `OPEN62541_ENV_PATH` | `../open62541-env` | Checkout of `open62541-env`, used by the target `open62541`. `open62541-env` is the repository `jeonghanlee/open62541-env` on GitHub, which builds and installs open62541; the target stops with an error when the checkout is missing. The checkout must be on the branch `1.5`, which builds open62541 1.5.10. |
 | `OPEN62541_NAMESPACE_ZERO` | `FULL` | Namespace zero option that the target `open62541` passes to cmake. |
 | `OPEN62541_ALARMS_CONDITIONS` | `ON` | Alarms and Conditions option that the target `open62541` passes to cmake. |
 | `OPEN62541_CMAKE_OPTIONS` | NodeSet loader on, plus the two options above | cmake options that the target `open62541` passes to `open62541-env`. |

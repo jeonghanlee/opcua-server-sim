@@ -1,7 +1,7 @@
 # Installation prefix of open62541 (include/ and lib/ below it).
 OPEN62541_PATH := /usr/local
 
-# Checkout of open62541-env used by the open62541 target.
+# Checkout of the branch 1.5 of open62541-env used by the open62541 target.
 OPEN62541_ENV_PATH := $(TOP)/../open62541-env
 
 # cmake options passed to open62541-env. The NodeSet loader reads
