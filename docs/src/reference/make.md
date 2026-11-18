@@ -50,7 +50,7 @@ Set a variable on the command line, as in `make build OPEN62541_PATH=<open62541_
 
 | Variable | Default | Meaning |
 | --- | --- | --- |
-| `OPEN62541_PATH` | `/usr/local` | Installation prefix of open62541, the directory that holds `include` and `lib`. |
+| `OPEN62541_PATH` | `/usr/local` | Installation prefix of open62541, the directory that holds `include` and `lib`. Give the target `open62541` an absolute path, because it runs cmake in the build directory of `open62541-env`. |
 | `OPEN62541_ENV_PATH` | `../open62541-env` | Checkout of `open62541-env`, used by the target `open62541`. `open62541-env` is the repository `jeonghanlee/open62541-env` on GitHub, which builds and installs open62541; the target stops with an error when the checkout is missing. The checkout must be on the branch `1.5`, which builds open62541 1.5.10. |
 | `OPEN62541_NAMESPACE_ZERO` | `FULL` | Namespace zero option that the target `open62541` passes to cmake. |
 | `OPEN62541_ALARMS_CONDITIONS` | `ON` | Alarms and Conditions option that the target `open62541` passes to cmake. |

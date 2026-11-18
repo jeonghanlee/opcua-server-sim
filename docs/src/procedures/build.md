@@ -5,7 +5,7 @@ The simulator is one C program, `opcua-server-sim`, and its client `opcua-probe`
 ## Prerequisites
 
 - A Linux host with `cc` and `make` in `PATH`.
-- An installation of open62541 1.5.10 that has the NodeSet loader and the Alarms and Conditions support. To build one, clone the branch `1.5` of `https://github.com/jeonghanlee/open62541-env` into the directory `../open62541-env`. Install the packages `build-essential`, `git`, `pkg-config`, `cmake`, `python3`, `libssl-dev`, and `libxml2-dev` (Debian names). Run `make open62541 OPEN62541_PATH=<open62541_install_path>` with an install path that you can write to. The branch `1.5` builds open62541 1.5.10, passes `CMAKE_EXTRA_OPTIONS` to cmake, and carries the patch for that release; the branch `master` builds open62541 1.3.15. When the installation lacks a required feature, `make build` stops with a message that names it. The target downloads the open62541 source, so it needs network access. [Make targets and variables](../reference/make.md) lists its variables.
+- An installation of open62541 1.5.10 that has the NodeSet loader and the Alarms and Conditions support. [Install open62541 for the simulator](open62541.md) builds one. When the installation lacks a required feature, `make build` stops with a message that names it.
 - The path of that installation, which this page names `<open62541_install_path>`. It is the directory that holds `include/open62541` and `lib`.
 
 1. In the repository root, build the server. The command compiles `src/opcua_server_sim.c` into `build/opcua-server-sim`:

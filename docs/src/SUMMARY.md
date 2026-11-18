@@ -13,6 +13,7 @@
 
 # Procedures
 
+- [Install open62541 for the simulator](procedures/open62541.md)
 - [Build the server and the probe](procedures/build.md)
 - [Create the server certificate](procedures/certificate.md)
 - [Generate the NodeSet of a model](procedures/nodeset.md)
