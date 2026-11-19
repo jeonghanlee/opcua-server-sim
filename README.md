@@ -1,21 +1,18 @@
 # opcua-server-sim
 
-An OPC UA (Open Platform Communications Unified Architecture) server that imitates the OPC UA server of a Siemens S7-1500 controller, so that a client, for example an EPICS (Experimental Physics and Industrial Control System) IOC, can be tested without the device. It is built on open62541 1.5.10, loads its information model from NodeSet2 files, and takes its behavior from a simulation file.
+Test an OPC UA client, including an EPICS IOC, against a simulated Siemens S7-1500. The server uses open62541 1.5.10 and ships with an S7-1500 model that includes tags, methods, alarms, and RUN/STOP behavior.
 
-## Build and run
+## Start with the demo
 
-The [quick start](docs/QUICKSTART.md) installs open62541 first. With an open62541 installation `<open62541_install_path>` and the OPC Foundation NodeSet2 directory `<ua_nodeset_path>`:
-
-```bash
-make build OPEN62541_PATH=<open62541_install_path>
-make probe OPEN62541_PATH=<open62541_install_path>
-make run OPEN62541_PATH=<open62541_install_path> UA_NODESET_PATH=<ua_nodeset_path>
-```
+The [Quick Start](docs/QUICKSTART.md) takes you from installation to a live server, a probe read, and an IOC read. It also lists the demo IOC's PVs. [Download the Quick Start PDF](docs/QUICKSTART.pdf).
 
 ## Documentation
 
-The [quick start](docs/QUICKSTART.md), also as a [one-page PDF](docs/QUICKSTART.pdf), runs the demo server step by step. The book is in `docs/src/`; start with the [tutorial](docs/src/tutorial.md). The sources of the model data are in [docs/references.md](docs/references.md).
+- [Probe tutorial](docs/src/tutorial.md) for browsing and writing tags, calling a method, and checking RUN/STOP behavior.
+- [IOC procedure](docs/src/procedures/ioc.md) for connecting an EPICS IOC and reading its PVs.
+- [Full documentation](docs/src/SUMMARY.md) for build options, model files, and the command reference.
+- [Model sources](docs/references.md) for the Siemens material behind the simulated model.
 
 ## License
 
-Apache License 2.0; see `LICENSE` and `NOTICE`.
+See [Apache License 2.0](LICENSE) and [NOTICE](NOTICE).

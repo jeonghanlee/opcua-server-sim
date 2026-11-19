@@ -1,6 +1,6 @@
 # Simulation file keywords
 
-A simulation file is a text file that describes the behavior of the simulated CPU (central processing unit). It names the Variables that change over time, the logic elements, the alarms, the methods, the operating state, and the user accounts. The server reads it when you start the server with the option `-s`. This page lists each keyword with its arguments and its effect.
+Pass a simulation file with `-s` to set values and define the simulator's behavior. For the order in which these rules take effect, see [How the simulation runs](../concepts/simulation-file.md).
 
 ## Format of a line
 

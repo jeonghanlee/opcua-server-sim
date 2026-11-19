@@ -1,24 +1,22 @@
 # Generate the NodeSet of a model
 
-The NodeSet2 XML (Extensible Markup Language) file of the composite model is generated from its description `plc.json`. This procedure writes the file again after you change the description, one of the XML section files in `models/s7-1500-composite/nodeset`, or the tool.
+Regenerate the composite model's NodeSet after editing its `plc.json`, its XML sections, or the generator.
 
 ## Prerequisites
 
-- A Linux host with `make` and `perl` in `PATH`.
+- Have `make` and `perl` available. Run the commands from the checkout root.
 
-The procedure has one step.
+Regenerate the NodeSet for `s7-1500-composite`.
 
-- In the repository root, write the NodeSet of the default model `s7-1500-composite`:
+```bash
+make nodeset
+```
 
-  ```bash
-  make nodeset
-  ```
-
-The target writes `models/s7-1500-composite/s7-1500-composite.NodeSet2.xml` when the description, a section file, or the tool is newer than it. The tool replaces the file only when it has built the whole NodeSet. [Model description format](../reference/model-description.md) lists the keys of the description.
+The target writes `models/s7-1500-composite/s7-1500-composite.NodeSet2.xml` when an input changes. See [Model description format](../reference/model-description.md) for the keys in `plc.json`.
 
 ## Verification
 
-Compare the file with the NodeSet that the tool writes to standard output. The command prints nothing and exits with status 0 when the two are identical:
+Compare the generated file with a fresh result from the generator. A match exits successfully without output.
 
 ```bash
 perl tools/simatic-nodeset.pl models/s7-1500-composite/plc.json | cmp - models/s7-1500-composite/*.NodeSet2.xml

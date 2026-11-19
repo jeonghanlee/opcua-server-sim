@@ -2,13 +2,7 @@
 
 ## Scope
 
-This document records where each element of the S7-1500 composite model
-and of the simulated server behavior comes from, and which documented behavior
-the server does not reproduce. Every row names the source and the place in it
-that states the data.
-
-**Out of scope:** how to build and run the server, and the format of the
-model files.
+Use these tables to trace the composite model and simulated server behavior to their sources. For a list of nodes, see [Contents of the composite model](src/reference/model-contents.md). To run the simulator, start with the [Quick Start](QUICKSTART.md).
 
 ## Namespaces and names
 
@@ -167,8 +161,7 @@ The export [20] is from STEP 7 V16 and the export [19] from STEP 7 V19.
 
 ## Documents without data for the standard interface
 
-One Siemens document describes user-defined server interfaces and was read
-for the notation of mapped PLC tags only: the SiOME application example [23].
+The SiOME application example shows mapped PLC tag notation for user-defined server interfaces [23].
 
 ## Software
 

@@ -1,6 +1,6 @@
 # Model description format
 
-The description of a model is a JSON (JavaScript Object Notation) file, `plc.json`, in the model directory. It lists the structures, data blocks, tags, method instances, and memory tags of a PLC (programmable logic controller) program. The tool `tools/simatic-nodeset.pl` writes the NodeSet2 XML (Extensible Markup Language) file of the model from it. This page lists the keys of the description and the options of the tool.
+`plc.json` describes the structures, data blocks, tags, and methods that `tools/simatic-nodeset.pl` writes to the NodeSet. See [Generate the NodeSet of a model](../procedures/nodeset.md) for how to rebuild it.
 
 ## Tool and its options
 

@@ -1,32 +1,13 @@
 # Make targets and variables
 
-The build system is a GNU Make tree: the `Makefile` in the repository root includes the files of the directory `configure/`. This page lists the make targets and the variables that you can set on the command line or in a local settings file.
+Use these targets and variables from the checkout root. For the usual build and run sequence, see [Run the simulator](../procedures/run.md).
 
 ## Targets of the build system
 
-The target `help` is the default target. Print the table of targets with:
+The default target prints the available commands.
 
 ```bash
 make help
-```
-
-The command prints:
-
-```
-Usage: make <target> [VAR=value]
-
-Target            Action
----------------   ------------------------------------------------------
-open62541         Build and install open62541 through open62541-env
-build             Build the server
-probe             Build the client that checks a running server
-nodeset           Write the NodeSet of a model from its plc.json
-test              Run the tests: the tools, and the server with the model MODEL
-book-check        Run the commands of the pages of the book and compare their output
-certificate       Create the server certificate of a model that carries pki.cnf
-run               Run the server with the model MODEL (default: s7-1500-composite)
-clean             Remove the build directory
-vars              Print the active configuration variables
 ```
 
 | Target | Dependencies | Effect |
@@ -36,7 +17,7 @@ vars              Print the active configuration variables
 | `probe` | open62541 check | Compiles `tools/opcua-probe.c` into `build/opcua-probe`. |
 | `nodeset` | `perl`, `plc.json` of the model | Writes `<MODEL>.NodeSet2.xml` when the description, the XML (Extensible Markup Language) sections, or the tool are newer than it. |
 | `certificate` | `openssl` | Creates the server key and the self-signed certificate of a model that carries `pki.cnf`. |
-| `run` | `build`, `certificate`, `nodeset` | Starts the server from the model directory with the model `MODEL`. |
+| `run` | `build`, `certificate`, `nodeset` (if the model has `plc.json`) | Starts the server from the model directory. Supply the model's NodeSet2 XML before running a model without `plc.json`. |
 | `test` | `perl`, `prove`, `build`, `probe`, `certificate` | Runs the tests of the directory `t` with `prove`. |
 | `book-check` | `perl`, `prove`, `git` | Runs the commands of the pages of the book in clean checkouts and compares their output with the pages. |
 | `clean` | none | Removes the directory `build`. |
@@ -51,7 +32,7 @@ Set a variable on the command line, as in `make build OPEN62541_PATH=<open62541_
 | Variable | Default | Meaning |
 | --- | --- | --- |
 | `OPEN62541_PATH` | `/usr/local` | Installation prefix of open62541, the directory that holds `include` and `lib`. Give the target `open62541` an absolute path, because it runs cmake in the build directory of `open62541-env`. |
-| `OPEN62541_ENV_PATH` | `../open62541-env` | Checkout of `open62541-env`, used by the target `open62541`. `open62541-env` is the repository `jeonghanlee/open62541-env` on GitHub, which builds and installs open62541; the target stops with an error when the checkout is missing. The checkout must be on the branch `1.5`, which builds open62541 1.5.10. |
+| `OPEN62541_ENV_PATH` | `../open62541-env` | Checkout of the `1.5` branch used by `make open62541`. The [install script](../procedures/open62541.md) uses `work/open62541-env-1.5`. |
 | `OPEN62541_NAMESPACE_ZERO` | `FULL` | Namespace zero option that the target `open62541` passes to cmake. |
 | `OPEN62541_ALARMS_CONDITIONS` | `ON` | Alarms and Conditions option that the target `open62541` passes to cmake. |
 | `OPEN62541_CMAKE_OPTIONS` | NodeSet loader on, plus the two options above | cmake options that the target `open62541` passes to `open62541-env`. |
@@ -66,10 +47,14 @@ Set a variable on the command line, as in `make build OPEN62541_PATH=<open62541_
 | `CERT_KEY_BITS` | `2048` | RSA (Rivest-Shamir-Adleman) key size of the server certificate in bits. |
 | `CERT_DAYS` | `3650` | Validity of the server certificate in days. |
 | `UA_NODESET_PATH` | `$(OPEN62541_ENV_PATH)/open62541-src/deps/ua-nodeset` | Directory of the OPC Foundation NodeSet2 files. Give an absolute path, because `make run` starts the server from the model directory. |
-| `EPICS_TREE` | empty | EPICS (Experimental Physics and Industrial Control System) distribution tree for the test of an IOC (input output controller). An empty value skips that test. |
+| `EPICS_TREE` | empty | EPICS installation directory for the IOC test. Use the value of `EPICS_PATH` from `setEpicsEnv.bash`. An empty value skips the IOC test. |
 | `BOOK_PAGE` | empty | Page of the book, relative to `docs/src`, that the target `book-check` runs. An empty value runs every page. |
 | `APPNAME` | `opcua-server-sim` | Name of the server program. |
 
 ## Local settings files
 
-Make reads two optional files after `configure/CONFIG_SITE`: `../CONFIG_SITE.local` and `configure/CONFIG_SITE.local`. The file `configure/RELEASE` reads `../RELEASE.local` and `configure/RELEASE.local` in the same way. The variables `OPEN62541_NAMESPACE_ZERO`, `OPEN62541_ALARMS_CONDITIONS`, `OPEN62541_VERSION`, and `OPEN62541_TAG` take effect for `make open62541` only on the command line, because the files expand `OPEN62541_CMAKE_OPTIONS` and `OPEN62541_TAG` before they read the local files. Git ignores the files `configure/*.local`.
+Use `configure/CONFIG_SITE.local` or `configure/RELEASE.local` for local settings. Make also reads the corresponding files from the checkout's parent directory. Git ignores `configure/*.local`.
+
+Set `OPEN62541_NAMESPACE_ZERO` and `OPEN62541_ALARMS_CONDITIONS` on the command line, or set `OPEN62541_CMAKE_OPTIONS` directly in local settings. Make expands the default CMake options before reading local settings.
+
+If you override `OPEN62541_VERSION` in `RELEASE.local`, set `OPEN62541_TAG` there as well. Make expands the default tag before reading that file.

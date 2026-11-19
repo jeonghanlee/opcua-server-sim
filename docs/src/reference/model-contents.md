@@ -1,6 +1,6 @@
 # Contents of the composite model
 
-The composite model `s7-1500-composite` is the OPC UA (Open Platform Communications Unified Architecture) information model that the simulator serves by default. The model combines the data blocks of several Siemens examples and exports in one namespace. This page lists the namespaces, the data blocks, the memory tags, the structures, the methods, and the behavior that the shipped simulation file gives to them.
+Find the namespaces, tag IDs, methods, and default behavior of `s7-1500-composite` here. These are OPC UA nodes. See the [demo IOC PV list](https://github.com/jeonghanlee/opcua-server-sim/blob/master/docs/QUICKSTART.md#3-demo-ioc-pv-list) for the names exposed over Channel Access.
 
 ## Namespaces of the server
 
@@ -31,7 +31,7 @@ A tag is the node `ns=3;s="<block>"."<tag>"`.
 | `Data_for_OPC_UA_Clients` | `NewProduct`, `ProductNumber`, `Temperature` (10 `Real` values) | Production line example, read only for clients. |
 | `Data_from_OPC_UA_Clients` | `ProductionEnabled` | Production line example, written by clients. |
 | `IEC_Timer_0_DB` | `PT`, `ET`, `IN`, `Q` | IEC (International Electrotechnical Commission) timer data block. |
-| `AlarmTriggers` | `Program_Alarm`, `Program_Alarm_1`, `Program_Alarm_2`, `Program_Alarm_3`, `System_Alarm`, `Overload_Program`, `Overload_System` | Boolean triggers of the alarms. The queue logic writes `Overload_Program` and `Overload_System` in every step, so a client cannot set them. |
+| `AlarmTriggers` | `Program_Alarm`, `Program_Alarm_1`, `Program_Alarm_2`, `Program_Alarm_3`, `System_Alarm`, `Overload_Program`, `Overload_System` | Boolean triggers of the alarms. Clients can write both overload triggers. In RUN, each simulation step sets them from the alarm queues. |
 | `globalDB` | `singleInt`, `arrayOfBools`, `UntypedStruct`, `instanceOfUdt`, `arrayOfUdts` | STEP 7 export with arrays and nested structures. |
 
 The member NodeIds of `IEC_Timer_0_DB` are written without quotation marks: `ns=3;s="IEC_Timer_0_DB".IN`.

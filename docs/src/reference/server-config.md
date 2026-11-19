@@ -1,6 +1,6 @@
 # Server configuration keys
 
-The server reads its configuration from one JSON5 (JavaScript Object Notation, version 5) file that the open62541 library parses. This page lists the keys of the shipped file `models/s7-1500-composite/server.json5` with their values and meaning. The file holds comments that start with `//`.
+`models/s7-1500-composite/server.json5` defines the default server's identity, network settings, limits, and security policies. It uses JSON5 and accepts `//` comments.
 
 ## Application identity and build information
 

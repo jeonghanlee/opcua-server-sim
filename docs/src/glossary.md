@@ -1,6 +1,4 @@
-# Glossary of terms used in the book
-
-This page defines the terms that the pages of this book use, in alphabetical order. Each term appears once, with the meaning that the pages give it.
+# Glossary
 
 | Term | Definition |
 | --- | --- |
@@ -19,7 +17,7 @@ This page defines the terms that the pages of this book use, in alphabetical ord
 | Endpoint | An address of the server together with a security policy and a message security mode. A client connects to one endpoint. |
 | Event | A message that the server reports from a source Object. An `event` line of a simulation file makes one each time its Boolean trigger becomes true, and an alarm makes one at each change of its state. |
 | Information model | The nodes, the types, and the references that a server publishes. |
-| IOC | An EPICS input output controller, a program that runs records. With the opcua device support module, its records read and write the tags of an OPC UA server. |
+| IOC | An EPICS input/output controller. In this demo, the IOC uses the `opcua` module to connect its records to OPC UA tags. |
 | Logic element | A rule that combines Variables in each simulation step: `pack`, `count`, or `on-delay`. |
 | Memory tag | A tag of a PLC program that is not in a data block, in the area `Memory` of the model. |
 | Message security mode | The protection of the messages of a session: None, Sign, or SignAndEncrypt. |
@@ -29,10 +27,11 @@ This page defines the terms that the pages of this book use, in alphabetical ord
 | NodeSet loader | The part of open62541 that reads NodeSet2 files when the server starts. |
 | NodeSet2 file | Also called NodeSet. An XML (Extensible Markup Language) file that defines the nodes and types of an information model. |
 | OPC UA | Open Platform Communications Unified Architecture, a client and server protocol and information model standard for automation. |
-| Operating state | The state of the simulated CPU: RUN or STOP. The Variable `OperatingMode` shows it, and the Boolean `Simulator.Run` changes it. |
+| Operating state | RUN or STOP. Read `OperatingMode` to get the state or write `Simulator.Run` to change it. |
 | PKI store | A directory of certificates that an application trusts, as a public key infrastructure (PKI) store does, with the subdirectories `trusted/certs` and `issuers/certs`. |
 | PLC | Programmable logic controller. |
 | Probe | The client program `opcua-probe` that reads, writes, browses, and calls a running server. |
+| PV | An EPICS process variable. In the demo, names such as `SIM:Mode` identify the IOC records that clients read or write through Channel Access. |
 | Queue | The part of a simulation file that limits how many alarms of one source are active at once. The others are outstanding. |
 | Security policy | The set of algorithms that protect a session, such as `Basic256Sha256`. |
 | Self-signed certificate | A certificate that the key it certifies signed itself. |

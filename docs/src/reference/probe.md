@@ -1,6 +1,6 @@
 # Probe client commands
 
-The probe `opcua-probe` is a command-line OPC UA (Open Platform Communications Unified Architecture) client that checks a running server. This page lists its options, its commands, and the value types that the commands accept.
+`opcua-probe` is a command-line OPC UA client for a running server. For working examples, follow the [probe tutorial](../tutorial.md).
 
 ## Command line of the probe
 

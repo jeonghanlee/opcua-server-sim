@@ -1,69 +1,138 @@
-# Run the demo server
+# Run and verify the demo server
 
 **Document:** opcua-server-sim quick start
 
-**Revision:** a733dc7
+**Revision:** draft
 
-**Date:** 2026-11-18
+**Date:** 2026-11-19
 
 **Prepared by:** Jeong Han Lee
 
 **Applies to:** the demo server of opcua-server-sim.
 
-This page builds the simulator of a Siemens S7-1500 OPC UA (Open Platform Communications Unified Architecture) server, starts it, and reads one value with the probe, its client. The tutorial in the repository, `docs/src/tutorial.md`, explains each step.
+Run the S7-1500 simulator and check it with OPC UA and EPICS.
 
-## Prerequisites
+## 1. Install and run the server
 
-- A Linux host with network access and TCP (Transmission Control Protocol) port 4840 free.
-- A directory that you can write to for the open62541 installation, which this page names `<open62541_install_path>`.
+Run the server and verification commands on the same Linux host with network access. Use a writable checkout path without spaces and keep TCP port 4840 free.
 
-**Step 1.** Install the build tools (Debian names):
+Install the build dependencies for your OS. The example below uses Debian package names.
 
 ```bash
-sudo apt install build-essential git pkg-config cmake python3 perl openssl
-sudo apt install libssl-dev libxml2-dev
+sudo apt install build-essential git pkg-config cmake python3 perl openssl libssl-dev libxml2-dev
 ```
 
-**Step 2.** Clone the repository, and change to its directory, which this page calls the repository root:
+For a new checkout, run these commands from the directory where you want the repository to go.
 
 ```bash
 git clone https://github.com/jeonghanlee/opcua-server-sim
 cd opcua-server-sim
 ```
 
-**Step 3.** In the repository root, clone the branch `1.5` of open62541-env next to the repository:
+From the checkout root, set the paths below. Choose one method for each step.
 
 ```bash
-git clone -b 1.5 https://github.com/jeonghanlee/open62541-env ../open62541-env
+ua="$PWD/work/open62541-1.5.10" env_repo="$PWD/work/open62541-env-1.5"
 ```
 
-**Step 4.** Download, build, and install open62541 1.5.10. The command takes several minutes:
+**Step 1.** Install open62541 1.5.10 with the script.
 
 ```bash
-make open62541 OPEN62541_PATH=<open62541_install_path>
+bash scripts/install-open62541.bash
 ```
 
-**Step 5.** Build the server and the probe:
+For Make, clone `open62541-env` if `$env_repo` is absent, then install.
 
 ```bash
-make build OPEN62541_PATH=<open62541_install_path>
-make probe OPEN62541_PATH=<open62541_install_path>
+git clone -b 1.5 https://github.com/jeonghanlee/open62541-env "$env_repo"
+make open62541 OPEN62541_PATH="$ua" OPEN62541_ENV_PATH="$env_repo"
 ```
 
-**Step 6.** In the first terminal, start the server. It runs until you press Ctrl+C. `<ua_nodeset_path>` is the absolute path of `../open62541-env/open62541-src/deps/ua-nodeset`:
+**Step 2.** Build the server with either command.
 
 ```bash
-make run OPEN62541_PATH=<open62541_install_path> UA_NODESET_PATH=<ua_nodeset_path>
+bash scripts/build-server.bash
+make build OPEN62541_PATH="$ua"
 ```
 
-## Verification
-
-In a second terminal, in the repository root, read the operating state of the simulated CPU (central processing unit). The probe prints the status name and the value 8, which means RUN:
+**Step 3.** Start the server with Make and leave it running.
 
 ```bash
+make run OPEN62541_PATH="$ua" OPEN62541_ENV_PATH="$env_repo"
+```
+
+To start the built server with the run script, prepare the certificate and NodeSet first.
+
+```bash
+make certificate nodeset
+di="$env_repo/open62541-src/deps/ua-nodeset/DI/Opc.Ua.Di.NodeSet2.xml"
+bash scripts/run-model.bash --di "$di" models/s7-1500-composite
+```
+
+## 2. Verify the server
+
+### 2.1 Verify with the OPC UA client
+
+**Step 4.** In terminal two at the checkout root, read the CPU mode with the probe.
+
+```bash
+make probe OPEN62541_PATH="$PWD/work/open62541-1.5.10"
 build/opcua-probe opc.tcp://127.0.0.1:4840 read 'ns=3;s=OperatingMode'
 ```
 
+**Expected output** `Good 8` (RUN).
+
+### 2.2 Verify with the EPICS IOC
+
+For IOC verification, the same host must be x86_64 and use an OS version listed under [supported operating systems](https://github.com/jeonghanlee/EPICS-env-distribution#supported-operating-systems). Keep Channel Access (CA) port 5164 free.
+
+**Step 5.** In terminal two at the checkout root, install EPICS. The script selects the distribution for your OS and version.
+
+```bash
+bash scripts/install-epics.bash
 ```
-Good 8
+
+**Step 6.** In the same terminal, activate EPICS, start the IOC, and wait for `session OPC2: connected`.
+
+```bash
+source work/epics/setEpicsEnv.bash
+bash scripts/run-ioc.bash
 ```
+
+**Step 7.** In terminal three at the checkout root, activate the same EPICS distribution and read both process variables.
+
+```bash
+source work/epics/setEpicsEnv.bash
+export EPICS_CA_ADDR_LIST=127.0.0.1:5164 EPICS_CA_AUTO_ADDR_LIST=NO
+caget SIM:Static:Int SIM:Mode
+```
+
+**Expected output**
+
+```
+SIM:Static:Int                 42
+SIM:Mode                       8
+```
+
+Stop the IOC and server with Ctrl+C.
+
+## 3. Demo IOC PV list
+
+The demo IOC loads these 14 records from `ioc/composite.db`.
+
+| PV | Signal |
+| -------------------- | ---------------------------------------- |
+| `SIM:Static:Bool` | Static Boolean value |
+| `SIM:Static:Byte` | Static byte value |
+| `SIM:Static:Word` | Static word value |
+| `SIM:Static:Int` | Static integer value |
+| `SIM:Udt` | Parent record for the `myUdt` structure |
+| `SIM:Udt:Int` | Integer member of `myUdt` |
+| `SIM:Udt:Year` | Year member of `myUdt` |
+| `SIM:Array:Int` | Integer array |
+| `SIM:Array:Elem3` | Integer array element at index 3 |
+| `SIM:Clock:Byte` | Simulated clock byte |
+| `SIM:Sim:Int` | Simulated integer value |
+| `SIM:Run` | CPU RUN/STOP command |
+| `SIM:Mode` | CPU operating mode, `8` for RUN and `4` for STOP |
+| `SIM:Secure:Byte` | Static byte read through the encrypted OPC UA session |
