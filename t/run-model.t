@@ -192,6 +192,18 @@ sub stop_server {
     stop_server($pid);
 }
 
+# A quoted NodeId in a simulation file addresses a variable with a space.
+{
+    my ($path, $port) = new_model();
+    my $node = "ns=2;s=demoInterface.sensors.unitA.pump's count";
+    write_nodeset(File::Spec->catfile($path, 'fixture.NodeSet2.xml'));
+    spew(File::Spec->catfile($path, 'simulation.conf'), "value 'ns=2;s=demoInterface.sensors.unitA.pump''s count' 17\n");
+    my ($pid, $ready, $log) = start_script($port, $node, $path);
+    is($ready ? probe($port, 'read', $node) : '', 'Good 17',
+        'a quoted NodeId sets the value of a variable with a space') or diag(slurp($log));
+    stop_server($pid);
+}
+
 # One XML file and the option --di: the DI NodeSet is loaded first, so that the
 # composite model, which refers to it and holds XML files in a subdirectory,
 # starts.

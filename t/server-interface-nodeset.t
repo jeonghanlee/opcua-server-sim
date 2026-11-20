@@ -42,7 +42,7 @@ my @NODES = (
     [ 'demoInterface.sensors.unitA',    'object' ],
     [ 'demoInterface.sensors.unitA.flag',  'variable', 'Boolean', 1, 'Flag of the unit' ],
     [ 'demoInterface.sensors.unitA.level', 'variable', 'Float',   1, 'Level of the unit' ],
-    [ 'demoInterface.sensors.unitA.count', 'variable', 'Int16',   1, 'Count of the unit' ],
+    [ "demoInterface.sensors.unitA.pump's count", 'variable', 'Int16',   1, 'Count of the unit' ],
     [ 'demoInterface.sensors.unitA.label', 'variable', 'Byte',    1, 'Label of the unit' ],
     [ 'demoInterface.settings',         'folder' ],
     [ 'demoInterface.settings.setpoint', 'variable', 'Float',   3, 'Setpoint' ],

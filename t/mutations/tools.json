@@ -190,7 +190,7 @@
    "intended": [
     "demoInterface.sensors.unitA.flag: access level",
     "demoInterface.sensors.unitA.level: access level",
-    "demoInterface.sensors.unitA.count: access level",
+    "demoInterface.sensors.unitA.pump's count: access level",
     "demoInterface.sensors.unitA.label: access level"
    ],
    "also": [

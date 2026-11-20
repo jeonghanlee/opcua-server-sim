@@ -888,14 +888,53 @@ logic_step(UA_Server *server) {
     }
 }
 
+/* Splits rule arguments on blanks. Single quotes around a whole argument
+ * preserve blanks and decode doubled single quotes; unquoted text stays literal.
+ * An invalid quoted argument remains one invalid token for the rule parser. */
+static char *
+next_argument(char **cursor) {
+    char *word = *cursor;
+    if(!word)
+        return NULL;
+    word += strspn(word, " \t");
+    if(!*word)
+        return NULL;
+
+    char *end;
+    if(*word == '\'') {
+        char *out = word + 1;
+        end = out;
+        while(*end) {
+            if(*end == '\'') {
+                end++;
+                if(*end != '\'') {
+                    if(!*end || *end == ' ' || *end == '\t') {
+                        *out = '\0';
+                        *cursor = end;
+                        return word + 1;
+                    }
+                    break;
+                }
+            }
+            *out++ = *end++;
+        }
+        *cursor = NULL;
+        return word;
+    }
+    end = word + strcspn(word, " \t");
+    *cursor = *end ? end + 1 : end;
+    *end = '\0';
+    return word;
+}
+
 /* Reads one line "pack <target-node-id> <bit-node-id> ..." or the same line
  * with the keyword "count". */
 static UA_Boolean
 parse_pack(UA_Server *server, char *arguments, UA_Boolean count) {
     SimPack pack;
     SimPack *grown = NULL;
-    char *save = NULL;
-    char *token = strtok_r(arguments, " \t", &save);
+    char *save = arguments;
+    char *token = next_argument(&save);
     UA_Boolean good = token != NULL;
     double number = 0.0;
 
@@ -903,8 +942,8 @@ parse_pack(UA_Server *server, char *arguments, UA_Boolean count) {
     pack.count = count;
     good = good && UA_NodeId_parse(&pack.target, UA_STRING(token)) == UA_STATUSCODE_GOOD &&
            read_number(server, &pack.target, &number);
-    for(token = strtok_r(NULL, " \t", &save); good && token;
-        token = strtok_r(NULL, " \t", &save)) {
+    for(token = next_argument(&save); good && token;
+        token = next_argument(&save)) {
         good = pack.bits_size < SIM_PACK_BITS &&
                UA_NodeId_parse(&pack.bits[pack.bits_size], UA_STRING(token)) ==
                    UA_STATUSCODE_GOOD;
@@ -931,18 +970,18 @@ static UA_Boolean
 parse_on_delay(UA_Server *server, char *arguments) {
     SimOnDelay element;
     SimOnDelay *grown = NULL;
-    char *save = NULL;
-    char *input = strtok_r(arguments, " \t", &save);
-    char *output = strtok_r(NULL, " \t", &save);
-    char *delay = strtok_r(NULL, " \t", &save);
-    char *elapsed = strtok_r(NULL, " \t", &save);
+    char *save = arguments;
+    char *input = next_argument(&save);
+    char *output = next_argument(&save);
+    char *delay = next_argument(&save);
+    char *elapsed = next_argument(&save);
     char *end = NULL;
     double number = 0.0;
     UA_Boolean good = false;
 
     memset(&element, 0, sizeof(element));
     if(!input || !output || !delay || strncmp(delay, "delay=", 6) != 0 ||
-       (elapsed && strncmp(elapsed, "elapsed=", 8) != 0) || strtok_r(NULL, " \t", &save))
+       (elapsed && strncmp(elapsed, "elapsed=", 8) != 0) || next_argument(&save))
         return false;
 
     element.delay_ms = strtod(delay + 6, &end);
@@ -1184,11 +1223,11 @@ static UA_Boolean
 parse_alarm(UA_Server *server, char *arguments, UA_Boolean stateful) {
     SimAlarm alarm;
     SimAlarm *grown = NULL;
-    char *save = NULL;
-    char *type = strtok_r(arguments, " \t", &save);
-    char *source = strtok_r(NULL, " \t", &save);
-    char *trigger = strtok_r(NULL, " \t", &save);
-    char *severity = strtok_r(NULL, " \t", &save);
+    char *save = arguments;
+    char *type = next_argument(&save);
+    char *source = next_argument(&save);
+    char *trigger = next_argument(&save);
+    char *severity = next_argument(&save);
     char *end = NULL;
     long level = severity ? strtol(severity, &end, 10) : 0;
     double number = 0.0;
@@ -1253,18 +1292,18 @@ static UA_Boolean
 parse_queue(UA_Server *server, char *arguments) {
     SimQueue queue;
     SimQueue *grown = NULL;
-    char *save = NULL;
+    char *save = arguments;
     char *token[6];
     double number = 0.0;
     UA_Boolean good = true;
 
     memset(&queue, 0, sizeof(queue));
-    token[0] = strtok_r(arguments, " \t", &save);
+    token[0] = next_argument(&save);
     for(size_t i = 1; i < 6; i++)
-        token[i] = strtok_r(NULL, " \t", &save);
+        token[i] = next_argument(&save);
     for(size_t i = 0; i < 6; i++)
         good = good && token[i];
-    if(!good || strtok_r(NULL, " \t", &save))
+    if(!good || next_argument(&save))
         return false;
 
     good = UA_NodeId_parse(&queue.max_node, UA_STRING(token[0])) == UA_STATUSCODE_GOOD &&
@@ -1469,9 +1508,9 @@ set_associated_value(UA_Server *server, size_t ns, char *text, UA_Variant *varia
  * trigger. */
 static UA_Boolean
 parse_field(UA_Server *server, char *arguments) {
-    char *save = NULL;
-    char *trigger_text = strtok_r(arguments, " \t", &save);
-    char *name = strtok_r(NULL, " \t", &save);
+    char *save = arguments;
+    char *trigger_text = next_argument(&save);
+    char *name = next_argument(&save);
     char *value_text = NULL;
     char *end = NULL;
     char key_name[128];
@@ -1603,9 +1642,9 @@ parse_signal(UA_Server *server, char *arguments) {
     static const char *kinds[] = {"random", "ramp", "toggle", "sine"};
     SimSignal signal;
     SimSignal *grown = NULL;
-    char *save = NULL;
-    char *node = strtok_r(arguments, " \t", &save);
-    char *kind = strtok_r(NULL, " \t", &save);
+    char *save = arguments;
+    char *node = next_argument(&save);
+    char *kind = next_argument(&save);
     UA_Boolean known_kind = false;
 
     memset(&signal, 0, sizeof(signal));
@@ -1625,8 +1664,8 @@ parse_signal(UA_Server *server, char *arguments) {
     if(!known_kind)
         return false;
 
-    for(char *token = strtok_r(NULL, " \t", &save); token;
-        token = strtok_r(NULL, " \t", &save)) {
+    for(char *token = next_argument(&save); token;
+        token = next_argument(&save)) {
         if(!parse_signal_parameter(&signal, token))
             return false;
     }
@@ -1848,9 +1887,9 @@ static UA_Boolean
 parse_method(UA_Server *server, char *arguments) {
     SimMethod method;
     SimMethod *grown = NULL;
-    char *save = NULL;
-    char *node = strtok_r(arguments, " \t", &save);
-    char *kind = strtok_r(NULL, " \t", &save);
+    char *save = arguments;
+    char *node = next_argument(&save);
+    char *kind = next_argument(&save);
     char *token = NULL;
 
     memset(&method, 0, sizeof(method));
@@ -1867,7 +1906,7 @@ parse_method(UA_Server *server, char *arguments) {
     else
         return false;
 
-    for(token = strtok_r(NULL, " \t", &save); token; token = strtok_r(NULL, " \t", &save)) {
+    for(token = next_argument(&save); token; token = next_argument(&save)) {
         char *end = NULL;
         UA_NodeId *target = NULL;
         if(strncmp(token, "busy=", 5) == 0) {
@@ -2017,16 +2056,16 @@ add_mode_switch(UA_Server *server) {
  * also adds the mode switch. */
 static UA_Boolean
 parse_operating_mode(UA_Server *server, char *arguments) {
-    char *save = NULL;
-    char *node = strtok_r(arguments, " \t", &save);
+    char *save = arguments;
+    char *node = next_argument(&save);
     UA_Boolean has_run = false;
     UA_Boolean has_stop = false;
     UA_NodeClass node_class = UA_NODECLASS_UNSPECIFIED;
 
     if(!node || cpu_mode_node_set)
         return false;
-    for(char *token = strtok_r(NULL, " \t", &save); token;
-        token = strtok_r(NULL, " \t", &save)) {
+    for(char *token = next_argument(&save); token;
+        token = next_argument(&save)) {
         char *end = NULL;
         const char *text = strchr(token, '=');
         long number = text ? strtol(text + 1, &end, 10) : 0;
@@ -2153,15 +2192,15 @@ refresh_start_values(UA_Server *server) {
  * when the file is read; the number becomes the start value of the Variable. */
 static UA_Boolean
 parse_value(UA_Server *server, char *arguments) {
-    char *save = NULL;
-    char *node_text = strtok_r(arguments, " \t", &save);
-    char *number_text = strtok_r(NULL, " \t", &save);
+    char *save = arguments;
+    char *node_text = next_argument(&save);
+    char *number_text = next_argument(&save);
     char *end = NULL;
     UA_NodeId node = UA_NODEID_NULL;
     double number = 0.0;
     UA_Boolean good = false;
 
-    if(!node_text || !number_text || strtok_r(NULL, " \t", &save))
+    if(!node_text || !number_text || next_argument(&save))
         return false;
     number = strtod(number_text, &end);
     if(end == number_text || *end != '\0' || number != number)

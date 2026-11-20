@@ -6,7 +6,7 @@ Pass a simulation file with `-s` to set values and define the simulator's behavi
 
 - Each line is empty, a comment, or one keyword line.
 - A line is a comment when its first word starts with `#`.
-- Words are separated by blanks or tabs, so a node id holds no blank.
+- Separate arguments with spaces or tabs. In rules that take NodeIds, put single quotes around a whole argument containing spaces, for example `value 'ns=2;s=Pump A.pressure' 2.5` or `'delay=ns=2;s=Pump A.delay'`. Double quotes in a NodeId remain literal. Inside a quoted argument, write a single quote twice: `value 'ns=2;s=Pump A''s pressure' 2.5` sets `Pump A's pressure`.
 - A node id is written as OPC UA (Open Platform Communications Unified Architecture) text, for example `ns=3;s="DataStatic"."myInt"`.
 - The server stops at the first line it cannot apply. It logs the file name and the line number.
 - The default values are `min=0`, `max=100`, `step=1`, and `period=1000` for a signal, and 100 ms for `cycle`.

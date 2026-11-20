@@ -15,7 +15,7 @@
             "children": [
               { "name": "flag",  "type": "Bool", "access": "ro", "description": "Flag of the unit" },
               { "name": "level", "type": "Real", "access": "ro", "description": "Level of the unit" },
-              { "name": "count", "type": "Int",  "access": "ro", "description": "Count of the unit" },
+              { "name": "pump's count", "type": "Int",  "access": "ro", "description": "Count of the unit" },
               { "name": "label", "type": "Char", "access": "ro", "description": "Label of the unit" }
             ]
           }
