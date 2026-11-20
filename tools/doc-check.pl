@@ -370,7 +370,8 @@ sub check_page {
             next;
         }
         my ($status, $text) = run_command($checkout, $line, $COMMAND_SECONDS);
-        evaluate($label, $status, $text, $expected, $checkout, 0);
+        my @suites = $mark =~ /^prove-ok=(.+)$/ ? split(/,/, $1) : ();
+        evaluate($label, $status, $text, $expected, $checkout, 0, @suites);
     }
     for my $item (@started) {
         my ($label, $entry, $expected, $seen, $ready) = @{$item};
@@ -388,9 +389,13 @@ sub check_page {
 # background command stops on INT, so its output only has to contain the output
 # that the page states.
 sub evaluate {
-    my ($label, $status, $text, $expected, $checkout, $contains) = @_;
+    my ($label, $status, $text, $expected, $checkout, $contains, @suites) = @_;
     my @problems;
     push @problems, "exit status $status, expected 0" if $status ne '0';
+    for my $suite (@suites) {
+        push @problems, "missing successful prove result for $suite"
+            unless $text =~ m{^(?:[^\n]*/)?\Q$suite\E\s+\.+[ \t]+ok[ \t]*$}m;
+    }
     if (defined $expected) {
         my $want = normalize($expected, $checkout);
         my $got  = normalize($text, $checkout);
@@ -505,7 +510,11 @@ prints TAP with one check per command block.
 A command block is a code fence with the language C<bash> and holds one command
 without a prompt. The first code fence without a language after it, before the next
 heading or the next C<bash> fence, is the output that the page states. A comment
-before the command block sets a mark: C<E<lt>!-- doc-check: skip --E<gt>> for a
+before the command block sets a mark:
+
+    <!-- doc-check: prove-ok=t/server.t,t/ioc.t -->
+
+This mark requires an ok summary for each named suite. Use C<E<lt>!-- doc-check: skip --E<gt>> for a
 command that the page shows and the tool does not run, and
 C<E<lt>!-- doc-check: background ready=REGEX --E<gt>> for a command that does not end
 by itself. A background command is started, the tool waits until its output matches

@@ -11,7 +11,7 @@ help:
 	$(info build             Build the server)
 	$(info probe             Build the client that checks a running server)
 	$(info nodeset           Write the NodeSet of a model from its plc.json)
-	$(info test              Run the tests: the tools, and the server with the model MODEL)
+	$(info test              Run the tests: the tools, and the server with s7-1500-composite)
 	$(info book-check        Run the commands of the pages of the book and compare their output)
 	$(info certificate       Create the server certificate of a model that carries pki.cnf)
 	$(info run               Run the server with the model MODEL (default: $(MODEL)))

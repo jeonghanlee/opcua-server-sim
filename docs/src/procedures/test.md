@@ -9,12 +9,14 @@ Use `make test` to check the server, probe, and model tools. Add an EPICS instal
 
 1. Run the simulator tests. The target builds the server and probe and prepares the server certificate. This command skips the IOC test.
 
+   <!-- doc-check: prove-ok=t/server.t -->
    ```bash
    make test OPEN62541_PATH="<open62541_install_path>" UA_NODESET_PATH="<ua_nodeset_path>" EPICS_TREE=
    ```
 
 2. Optional: To include the IOC test, use an EPICS distribution with `iocsh.bash` and the `opcua` module. For `<epics_path>`, use the value of `EPICS_PATH` after sourcing `setEpicsEnv.bash`.
 
+   <!-- doc-check: prove-ok=t/server.t,t/ioc.t -->
    ```bash
    make test OPEN62541_PATH="<open62541_install_path>" UA_NODESET_PATH="<ua_nodeset_path>" EPICS_TREE="<epics_path>"
    ```
